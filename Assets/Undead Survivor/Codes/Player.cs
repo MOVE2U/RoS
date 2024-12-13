@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
     SpriteRenderer spriter;
     Animator anim;
 
+    // 유니티는 게임 오브젝트를 씬에 로드하면서 메모리 생성을 함
+    // 오브젝트가 생성된 후 가장 먼저 호출되는 메서드가 Awake. 이 시점에 오브젝트와 연결된 모든 컴포넌트들이 초기화되어 있음.
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -20,13 +22,13 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         Vector2 nextVec = inputVec.normalized * speed * Time.fixedDeltaTime;
-        //1. ���� �ش�.
+        //1. 힘을 준다.
         //rigid.AddForce (inputVec);
 
-        //2. �ӵ� ����
+        //2. 속도 제어
         //rigid.velocity = inputVec;
 
-        //3. ��ġ ����
+        //3. 위치 변경
         rigid.MovePosition(rigid.position + nextVec);
     }
 

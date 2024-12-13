@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class Reposition : MonoBehaviour
 {
-    // Æ®¸®°ÅÀÇ ÁÖÃ¼´Â ÀÌ ½ºÅ©¸³Æ®¸¦ °¡Áø °´Ã¼
-    // ÀÌ °´Ã¼´Â Æ®¸®°Å·Î ¼³Á¤µÈ ÄÝ¶óÀÌ´õ¿©¾ß ÇÔ
-    // Æ®¸®°Å ¾È¿¡ µé¾î¿À°Å³ª ³ª°¡¸é¼­ ÀÌº¥Æ®¸¦ ¹ß»ý½ÃÅ°´Â °´Ã¼°¡ collisionÀ» ÅëÇØ Àü´ÞµÊ
-    // collisionÀ» ÅëÇØ ÀÌº¥Æ®¸¦ ¹ß»ý½ÃÅ² °´Ã¼ÀÇ Á¤º¸¸¦ ¾Ë ¼ö ÀÖÀ½. 
-    // collision.gameObject: Æ®¸®°Å¿Í »óÈ£ÀÛ¿ëÇÑ °ÔÀÓ ¿ÀºêÁ§Æ®
-    // collision.transform.position: ÇØ´ç °´Ã¼ÀÇ À§Ä¡
-    // collision.CompareTag: ÇØ´ç °´Ã¼ÀÇ ÅÂ±×¸¦ È®ÀÎ
+    // íŠ¸ë¦¬ê±°ì˜ ì£¼ì²´ëŠ” ì´ ìŠ¤í¬ë¦½íŠ¸ë¥¼ ê°€ì§„ ê°ì²´
+    // ì´ ê°ì²´ëŠ” íŠ¸ë¦¬ê±°ë¡œ ì„¤ì •ëœ ì½œë¼ì´ë”ì—¬ì•¼ í•¨
+    // íŠ¸ë¦¬ê±° ì•ˆì— ë“¤ì–´ì˜¤ê±°ë‚˜ ë‚˜ê°€ë©´ì„œ ì´ë²¤íŠ¸ë¥¼ ë°œìƒì‹œí‚¤ëŠ” ê°ì²´ê°€ collisionì„ í†µí•´ ì „ë‹¬ë¨
+    // collisionì„ í†µí•´ ì´ë²¤íŠ¸ë¥¼ ë°œìƒì‹œí‚¨ ê°ì²´ì˜ ì •ë³´ë¥¼ ì•Œ ìˆ˜ ìžˆìŒ. 
+    // collision.gameObject: íŠ¸ë¦¬ê±°ì™€ ìƒí˜¸ìž‘ìš©í•œ ê²Œìž„ ì˜¤ë¸Œì íŠ¸
+    // collision.transform.position: í•´ë‹¹ ê°ì²´ì˜ ìœ„ì¹˜
+    // collision.CompareTag: í•´ë‹¹ ê°ì²´ì˜ íƒœê·¸ë¥¼ í™•ì¸
     Collider2D coll;
 
     void Awake()
