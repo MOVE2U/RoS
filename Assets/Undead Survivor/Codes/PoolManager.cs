@@ -18,6 +18,8 @@ public class PoolManager : MonoBehaviour
             pools[index] = new List<GameObject>();
         }
     }
+    // void가 아닌 메서드는 항상 해당 변수형으로 값을 반환해줘야 한다.
+    // 메서드는 수식이 있기 때문에 매번 다른 값을 동적으로 반환해줄 수 있다.
     public GameObject Get(int index)
     {
         GameObject select = null;
