@@ -5056,8 +5056,8 @@ MonoBehaviour:
   IgnoreTimeScale: 0
   WorldUpOverride: {fileID: 0}
   ChannelMask: -1
-  UpdateMethod: 2
-  BlendUpdateMethod: 0
+  UpdateMethod: 0
+  BlendUpdateMethod: 1
   LensModeOverride:
     Enabled: 0
     DefaultMode: 2
@@ -18753,6 +18753,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf99f71e05ff3e44bbf693292feb85e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameTime: 0
+  maxGameTime: 20
   pool: {fileID: 465963564}
   player: {fileID: 156295049}
 --- !u!4 &1668607266
