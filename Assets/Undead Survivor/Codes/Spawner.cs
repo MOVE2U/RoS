@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    // Transform 컴포넌트를 배열에 담는데
     public Transform[] spawnPoint;
     public SpawnData[] spawnData;
 
@@ -18,9 +17,11 @@ public class Spawner : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
-        level = Mathf.FloorToInt(GameManager.instance.gameTime / 10f);
+        // 유니티에서 spawnData의 개수를 정해놨을꺼임. 이게 내가 정의한 레벨의 개수임. 그런데 시간은 계속 흐르니까 맥스를 정해놓기 위해 내가 정의한 레벨의 개수를 안넘게 하는 장치
+        // 배열은 0부터 시작하니까 배열의 인덱스 개수는 길이 -1임.
+        level = Mathf.Min(Mathf.FloorToInt(GameManager.instance.gameTime / 10f),spawnData.Length-1);
 
-        if (timer > 0.2f)
+        if (timer > spawnData[level].spawnTime)
         {
             timer = 0;
             Spawn();
@@ -28,9 +29,13 @@ public class Spawner : MonoBehaviour
 
         void Spawn()
         {
-            GameObject enemy = GameManager.instance.pool.Get(level);
+            // public PoolManager pool;과 같이 선언하고, Awake에서 pool = GetComponent<PoolManager>();과 같이 초기화해서 pool.Get(0);으로도 사용할 수 있다. 근데 싱글톤을 사용하는게 더 효율적이다.
+            // MonoBehaviour를 상속받은 Class는 모두 컴포넌트이기 때문에 GetComponent<PoolManager>처럼 쓸 수 있다.
+            GameObject enemy = GameManager.instance.pool.Get(0);
+
             // GetComponentsInChildren은 현재 오브젝트도 가져오기 때문에 0은 현재 오브젝트가 된다. 자식만 가져오기 위해 1부터 시작한것
             enemy.transform.position = spawnPoint[Random.Range(1, spawnPoint.Length)].position;
+            enemy.GetComponent<Enemy>().Init(spawnData[level]);
         }
 
     }
@@ -39,8 +44,8 @@ public class Spawner : MonoBehaviour
 [System.Serializable]
 public class SpawnData
 {
-    public int spriteType;
     public float spawnTime;
+    public int spriteType;
     public int health;
     public float speed;
 }
