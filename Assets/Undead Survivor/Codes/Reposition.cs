@@ -18,6 +18,7 @@ public class Reposition : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D collision)
     {
+        // 충돌한 객체의 태그가 Area일 때만 이하가 실행됨
         if (!collision.CompareTag("Area"))
             return;
         
