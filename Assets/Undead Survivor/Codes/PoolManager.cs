@@ -7,14 +7,16 @@ public class PoolManager : MonoBehaviour
     public GameObject[] prefabs;
 
     // 복사한 프리팹을 담아두는 공간. 크기가 유동적이어야 해서 배열이 아닌 List로 선언한다.
-    // List형 변수지만, 배열로 생성한 것임. 리스트를 저장하는 배열임.
+    // 배열에 리스트를 저장
     List<GameObject>[] pools;
 
     void Awake()
     {
+        // 배열의 초기화
         // prefabs의 길이만큼 배열 생성
         pools = new List<GameObject>[prefabs.Length];
 
+        // 리스트의 초기화
         // 배열만 초기화하면 배열 안의 각 요소는 null로 되기 때문에 각 요소도 초기화해준다.
         // pools 자체는 배열임. pools의 각 요소 pools[0], pools[1], pools[2]...가 리스트임.
         // 그래서 pools의 길이는 고정되어 있지만, 리스트인 pools[0]은 [총알1, 총알2, 총알3...] 이런식으로 길이가 유동적으로 변하는 것임
@@ -31,6 +33,7 @@ public class PoolManager : MonoBehaviour
         GameObject select = null;
 
         // foreach문은 컬렉션이 null일 경우엔 오류가 발생하지만, 비어있는 경우에는 실행을 하지 않기 때문에 오류가 발생하지 않는다.
+        // foreach문은 리스트의 0번부터 마지막까지 순차적으로 조건을 체크한다. 아래의 경우 조건이 맞으면 break.
         foreach (GameObject item in pools[index])
         {
             if (!item.activeSelf)
