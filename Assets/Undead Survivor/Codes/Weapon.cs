@@ -41,22 +41,15 @@ public class Weapon : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            LevelUp(1,1);
+            LevelUp(10,1);
         }
     }
 
     public void LevelUp(float damage, int count)
     {
-        switch(id)
-        {
-            case 0:
-                this.damage += damage;
-                this.count += count;
-                Batch();
-                break;
-            default:
-                break;
-        }
+        this.damage += damage;
+        this.count += count;
+        Batch();
     }
 
     public void Init()
@@ -68,7 +61,7 @@ public class Weapon : MonoBehaviour
                 Batch();
                 break;
             default:
-                speed = 0.3f;
+                speed = 0.5f;
                 break;
         }
     }
@@ -102,7 +95,7 @@ public class Weapon : MonoBehaviour
                     bullet.Translate(bullet.up * 1.5f, Space.World);
                     // bullet은 GameObject형 변수가 아니라 컴포넌트인 Transform임. 그럼에도 불구하고 다른 컴포넌트에 아래처럼 접근할 수 있음.
                     // 즉, GetComponent<t>()는 다른 컴포넌트에서도 접근할 수 있음.
-                    bullet.GetComponent<Bullet>().Init(damage, -1); // -1 is Infinity Per.
+                    bullet.GetComponent<Bullet>().Init(damage, -1, Vector3.zero); // -1 is Infinity Per.
                 }
                 break;
             default:
@@ -114,7 +107,13 @@ public class Weapon : MonoBehaviour
     {
         if (!player.scanner.nearestTarget)
             return;
+
+        Vector3 targetPos = player.scanner.nearestTarget.position;
+        Vector3 dir = (targetPos - transform.position).normalized;
+
         Transform bullet = GameManager.instance.pool.Get(prefabId).transform;
         bullet.position = transform.position;
+        bullet.rotation = Quaternion.FromToRotation(Vector3.up, dir);
+        bullet.GetComponent<Bullet>().Init(damage, count, dir);
     }
 }
