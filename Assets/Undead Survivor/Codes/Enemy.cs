@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour
     bool isLive;
 
     Rigidbody2D rigid;
+    Collider2D coll;
     Animator anim;
     SpriteRenderer spriter;
     // 코루틴 객체
@@ -22,6 +23,7 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
+        coll = GetComponent<Collider2D>();
         anim = GetComponent<Animator>();
         spriter = GetComponent<SpriteRenderer>();
         // 컴포넌트는 아니지만 한번만 초기화하면 되기 때문에 Awake에서 함
@@ -30,7 +32,7 @@ public class Enemy : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!isLive)
+        if (!isLive || anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
             return;
         // 시간, 속도, 힘, 충돌 등을 반영하는 물리적인 이동에는 위치를 rigid.position으로 받아야 한다. transform.position은 좌표 그 자체로 이동한다.
         Vector2 dirVec = target.position - rigid.position;
@@ -51,6 +53,10 @@ public class Enemy : MonoBehaviour
     {
         target = GameManager.instance.player.GetComponent<Rigidbody2D>();
         isLive = true;
+        rigid.simulated = true;
+        coll.enabled = true;
+        spriter.sortingOrder = 2;
+        anim.SetBool("Dead", false);
         health = maxHealth;
     }
 
@@ -64,7 +70,7 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(!collision.CompareTag("Bullet"))
+        if(!collision.CompareTag("Bullet") || !isLive)
             return;
         health -= collision.GetComponent<Bullet>().damage;
         // 코루틴의 실행. 다른 메서드처럼 메서드명을 바로 쓰지 않고 StartCoroutine으로 실행한다.
@@ -77,7 +83,13 @@ public class Enemy : MonoBehaviour
         else
         {
             // dead
-            Dead();
+            isLive = false;
+            rigid.simulated = false;
+            coll.enabled = false;
+            spriter.sortingOrder = 1;
+            anim.SetBool("Dead", true);
+            GameManager.instance.kill++;
+            GameManager.instance.GetExp();
         }
     }
     // 코루틴 메서드는 IEnumerator로 선언한다.
