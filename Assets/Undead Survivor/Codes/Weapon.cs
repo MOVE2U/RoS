@@ -45,6 +45,9 @@ public class Weapon : MonoBehaviour
         {
             Batch();
         }
+        // 형제의 스크립트를 가져와서 복잡한 로직을 짜야할 때는 부모.GetComponentsInChildren와 foreach를 이용
+        // 형제의 스크립트에서 메서드만 실행시키면 될 때는 BroadcastMessage를 이용
+        player.BroadcastMessage("ApplyGear",SendMessageOptions.DontRequireReceiver);
     }
 
     public void Init(ItemData data)
@@ -78,6 +81,7 @@ public class Weapon : MonoBehaviour
                 speed = 0.5f;
                 break;
         }
+        player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
     }
 
     void Batch()
