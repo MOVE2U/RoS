@@ -13,12 +13,7 @@ public class Weapon : MonoBehaviour
 
     private void Awake()
     {
-        player = GetComponentInParent<Player>();
-    }
-
-    private void Start()
-    {
-        Init();
+        player = GameManager.instance.player;
     }
 
     // Update is called once per frame
@@ -39,21 +34,40 @@ public class Weapon : MonoBehaviour
                 }
                 break;
         }
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            LevelUp(10,1);
-        }
     }
 
     public void LevelUp(float damage, int count)
     {
-        this.damage += damage;
+        this.damage = damage;
         this.count += count;
-        Batch();
+
+        if(id == 0)
+        {
+            Batch();
+        }
     }
 
-    public void Init()
+    public void Init(ItemData data)
     {
+        // 기본 설정
+        name = "Weapon " + data.itemId;
+        transform.parent = player.transform;
+        transform.localPosition = Vector3.zero;
+
+        // 데이터 설정
+        id = data.itemId;
+        damage = data.baseDamage;
+        count = data.baseCount;
+
+        for(int index = 0; index < GameManager.instance.pool.prefabs.Length; index++)
+        {
+            if (data.projectile == GameManager.instance.pool.prefabs[index])
+            {
+                prefabId = index;
+                break;
+            }
+        }
+
         switch (id)
         {
             case 0:

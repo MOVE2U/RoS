@@ -29,9 +29,27 @@ public class Item : MonoBehaviour
         {
             case ItemData.ItemType.Melee:
             case ItemData.ItemType.Range:
+                // Item은 무기를 생성할지 말지를 결정
+                // Weapon은 무기가 생성된 후 어떻게 동작하는지를 관리
+                if(level==0)
+                {
+                    GameObject newWeapon = new GameObject();
+                    newWeapon.AddComponent<Weapon>();
+                    weapon = newWeapon.GetComponent<Weapon>();
+                    weapon.Init(data);
+                }
+                else
+                {
+                    float nextDamage = data.baseDamage;
+                    int nextCount = 0;
+
+                    nextDamage += data.baseDamage * data.damages[level];
+                    nextCount += data.counts[level];
+
+                    weapon.LevelUp(nextDamage, nextCount);
+                }
                 break;
             case ItemData.ItemType.Glove:
-                break;
             case ItemData.ItemType.Shoe:
                 break;
             case ItemData.ItemType.Heal:
