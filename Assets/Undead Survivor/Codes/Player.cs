@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
     public Vector2 inputVec;
     public float speed;
     public Scanner scanner;
+    public Hand[] hands;
 
     Rigidbody2D rigid;
     SpriteRenderer spriter;
@@ -19,6 +20,8 @@ public class Player : MonoBehaviour
         spriter = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         scanner = GetComponent<Scanner>();
+        // 비활성화된 오브젝트도 검색하려면 true를 인자로 넣는다.
+        hands = GetComponentsInChildren<Hand>(true);
     }
 
     void FixedUpdate()
