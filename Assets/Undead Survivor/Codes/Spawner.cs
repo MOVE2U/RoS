@@ -16,6 +16,9 @@ public class Spawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!GameManager.instance.isLive)
+            return;
+
         timer += Time.deltaTime;
         // 유니티에서 spawnData의 개수를 정해놨을꺼임. 이게 내가 정의한 레벨의 개수임. 그런데 시간은 계속 흐르니까 맥스를 정해놓기 위해 내가 정의한 레벨의 개수를 안넘게 하는 장치
         // 배열은 0부터 시작하니까 배열의 인덱스 개수는 길이 -1임.

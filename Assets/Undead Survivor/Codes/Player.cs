@@ -23,9 +23,11 @@ public class Player : MonoBehaviour
         // 비활성화된 오브젝트도 검색하려면 true를 인자로 넣는다.
         hands = GetComponentsInChildren<Hand>(true);
     }
-
     void FixedUpdate()
     {
+        if (!GameManager.instance.isLive)
+            return;
+
         Vector2 nextVec = inputVec.normalized * speed * Time.fixedDeltaTime;
         //1. 힘을 준다.
         //rigid.AddForce (inputVec);
@@ -44,6 +46,9 @@ public class Player : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (!GameManager.instance.isLive)
+            return;
+
         anim.SetFloat("Speed", inputVec.magnitude);
 
         if(inputVec.x != 0)

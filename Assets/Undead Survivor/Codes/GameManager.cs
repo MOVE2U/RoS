@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -6,6 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     [Header("Game Control")]
+    public bool isLive;
     public float gameTime;
     public float maxGameTime = 2*10f;
     [Header("Player Info")]
@@ -22,7 +24,7 @@ public class GameManager : MonoBehaviour
     // 이 방식은 Awake 호출 전에 Unity에서 수행함.
     public PoolManager pool;
     public Player player;
-
+    public LevelUp uiLevelUp;
     void Awake()
     {
         instance = this;
@@ -30,9 +32,15 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         health = maxHealth;
+
+        // 임시
+        uiLevelUp.Select(0);
     }
     void Update()
     {
+        if (!isLive)
+            return;
+
         gameTime += Time.deltaTime;
 
         if(gameTime>maxGameTime)
@@ -49,7 +57,22 @@ public class GameManager : MonoBehaviour
         {
             level++;
             exp = 0;
+            uiLevelUp.Show();
         }
+    }
+    public void Stop()
+    {
+        // isLive -> 게임 로직(예: 경험치, UI 갱신 등)을 멈춤
+        // Time.timeScale -> 시간 관련 연산, 물리 엔진, 애니메이션을 정지
 
+        // Time.timeScale을 0으로 하면 Time.deltaTime, Time.fixedDeltaTime 등이 0이 되어 시간 기반 연산이 0이 된다.
+        // 근데 이게 Update를 막지는 못함. 시간과 관련이 없는 다른 함수들은 실행될 수 있다.
+        isLive = false;
+        Time.timeScale = 0;
+    }
+    public void Resume()
+    {
+        isLive = true;
+        Time.timeScale = 1;
     }
 }
