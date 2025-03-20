@@ -14,6 +14,7 @@ public class LevelUp : MonoBehaviour
     }
     public void Show()
     {
+        Next();
         rect.localScale = Vector3.one;
         GameManager.instance.Stop();
     }
@@ -51,7 +52,7 @@ public class LevelUp : MonoBehaviour
             // 3. 만렙 아이템은 소비 아이템으로 대체
             if (ranItem.level == ranItem.data.damages.Length)
             {
-                items[Random.Range(4, 7)].gameObject.SetActive(true);
+                items[4].gameObject.SetActive(true);
             }
             else
             {
