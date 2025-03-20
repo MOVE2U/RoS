@@ -27,7 +27,8 @@ public class GameManager : MonoBehaviour
     public PoolManager pool;
     public Player player;
     public LevelUp uiLevelUp;
-    public GameObject uiResult;
+    public Result uiResult;
+    public GameObject enemyCleaner;
     void Awake()
     {
         instance = this;
@@ -36,7 +37,7 @@ public class GameManager : MonoBehaviour
     {
         health = maxHealth;
         uiLevelUp.Select(0); // 임시
-        isLive = true;
+        Resume();
     }
     public void GameOver()
     {
@@ -46,7 +47,21 @@ public class GameManager : MonoBehaviour
     {
         isLive = false;
         yield return new WaitForSeconds(0.5f);
-        uiResult.SetActive(true);
+        uiResult.gameObject.SetActive(true);
+        uiResult.Lose();
+        Stop();
+    }
+    public void GameVictory()
+    {
+        StartCoroutine(GameVictoryRoutine());
+    }
+    IEnumerator GameVictoryRoutine()
+    {
+        isLive = false;
+        enemyCleaner.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        uiResult.gameObject.SetActive(true);
+        uiResult.Win();
         Stop();
     }
     public void GameRetry()
@@ -63,11 +78,15 @@ public class GameManager : MonoBehaviour
         if(gameTime>maxGameTime)
         {
             gameTime=maxGameTime;
+            GameVictory();
         }
     }
 
     public void GetExp()
     {
+        if (!isLive)
+            return;
+
         exp++;
 
         if(exp== nextExp[Mathf.Min(level,nextExp.Length-1)])
