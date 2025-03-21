@@ -1,3 +1,4 @@
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,6 +8,7 @@ public class Player : MonoBehaviour
     public float speed;
     public Scanner scanner;
     public Hand[] hands;
+    public RuntimeAnimatorController[] animCon;
 
     Rigidbody2D rigid;
     SpriteRenderer spriter;
@@ -22,6 +24,11 @@ public class Player : MonoBehaviour
         scanner = GetComponent<Scanner>();
         // 비활성화된 오브젝트도 검색하려면 true를 인자로 넣는다.
         hands = GetComponentsInChildren<Hand>(true);
+    }
+    private void OnEnable()
+    {
+        speed *= Character.Speed;
+        anim.runtimeAnimatorController = animCon[GameManager.instance.playerId];
     }
     void FixedUpdate()
     {
