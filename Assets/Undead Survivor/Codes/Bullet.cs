@@ -26,15 +26,22 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.CompareTag("Enemy") || per == -1)
+        if (!collision.CompareTag("Enemy") || per == -100)
             return;
 
         per--;
         // 최초 per == -1인건 return을 했지만, 코드는 순차적으로 실행되기 때문에 per --를 한 이후에 다시 확인한 if문에서는 per == -1이 있을 수 있다.
-        if (per==-1)
+        if (per < 0)
         {
             rigid.linearVelocity = Vector2.zero;
             gameObject.SetActive(false);
         }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (!collision.CompareTag("Area") || per == -100)
+            return;
+
+        gameObject.SetActive(false);
     }
 }

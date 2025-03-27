@@ -121,7 +121,7 @@ public class Weapon : MonoBehaviour
                     bullet.Translate(bullet.up * 1.5f, Space.World);
                     // bullet은 GameObject형 변수가 아니라 컴포넌트인 Transform임. 그럼에도 불구하고 다른 컴포넌트에 아래처럼 접근할 수 있음.
                     // 즉, GetComponent<t>()는 다른 컴포넌트에서도 접근할 수 있음.
-                    bullet.GetComponent<Bullet>().Init(damage, -1, Vector3.zero); // -1 is Infinity Per.
+                    bullet.GetComponent<Bullet>().Init(damage, -100, Vector3.zero); // -100 is Infinity Per.
                 }
                 break;
             default:

@@ -4,6 +4,7 @@ public class Spawner : MonoBehaviour
 {
     public Transform[] spawnPoint;
     public SpawnData[] spawnData;
+    public float levelTime;
 
     int level;
     float timer;
@@ -12,6 +13,7 @@ public class Spawner : MonoBehaviour
     {
         // 현재 오브젝트와 그 자식들의 Transform 컴포넌트를 가져온다.
         spawnPoint= GetComponentsInChildren<Transform>();
+        levelTime = GameManager.instance.maxGameTime / spawnData.Length;
     }
     // Update is called once per frame
     void Update()
@@ -22,7 +24,7 @@ public class Spawner : MonoBehaviour
         timer += Time.deltaTime;
         // 유니티에서 spawnData의 개수를 정해놨을꺼임. 이게 내가 정의한 레벨의 개수임. 그런데 시간은 계속 흐르니까 맥스를 정해놓기 위해 내가 정의한 레벨의 개수를 안넘게 하는 장치
         // 배열은 0부터 시작하니까 배열의 인덱스 개수는 길이 -1임.
-        level = Mathf.Min(Mathf.FloorToInt(GameManager.instance.gameTime / 10f),spawnData.Length-1);
+        level = Mathf.Min(Mathf.FloorToInt(GameManager.instance.gameTime / levelTime),spawnData.Length-1);
 
         if (timer > spawnData[level].spawnTime)
         {
