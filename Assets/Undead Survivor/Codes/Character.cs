@@ -9,6 +9,9 @@ public class Character : MonoBehaviour
     {
         get
         {
+            if(GameManager.instance == null)
+                return 1f;
+
             return GameManager.instance.playerId == 0 ? 1.1f : 1f;
         }
     }
@@ -16,6 +19,9 @@ public class Character : MonoBehaviour
     {
         get
         {
+            if (GameManager.instance == null)
+                return 1f;
+
             return GameManager.instance.playerId == 1 ? 1.1f : 1f;
         }
     }
@@ -23,6 +29,9 @@ public class Character : MonoBehaviour
     {
         get
         {
+            if (GameManager.instance == null)
+                return 1f;
+
             return GameManager.instance.playerId == 1 ? 0.9f : 1f;
         }
     }
@@ -30,6 +39,9 @@ public class Character : MonoBehaviour
     {
         get
         {
+            if (GameManager.instance == null)
+                return 1f;
+
             return GameManager.instance.playerId == 2 ? 1.2f : 1f;
         }
     }
@@ -37,6 +49,9 @@ public class Character : MonoBehaviour
     {
         get
         {
+            if (GameManager.instance == null)
+                return 1;
+
             return GameManager.instance.playerId == 3 ? 1 : 0;
         }
     }
