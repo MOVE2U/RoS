@@ -12,7 +12,10 @@ public class Spawner : MonoBehaviour
     void Awake()
     {
         // 현재 오브젝트와 그 자식들의 Transform 컴포넌트를 가져온다.
-        spawnPoint= GetComponentsInChildren<Transform>();
+        spawnPoint = GetComponentsInChildren<Transform>();
+    }
+    private void Start()
+    {
         levelTime = GameManager.instance.maxGameTime / spawnData.Length;
     }
     // Update is called once per frame
