@@ -11,11 +11,11 @@ public class GameManager : MonoBehaviour
     [Header("Game Control")]
     public bool isLive;
     public float gameTime;
-    public float maxGameTime = 2*10f;
+    public float maxGameTime;
     [Header("Player Info")]
     public int playerId;
     public float health;
-    public float maxHealth = 100;
+    public float maxHealth;
     public int level;
     public int kill;
     public int exp;
@@ -41,11 +41,13 @@ public class GameManager : MonoBehaviour
         health = maxHealth;
 
         player.gameObject.SetActive(true);
-        uiLevelUp.Select(playerId);
+        // uiLevelUp.Select(playerId);
         Resume();
 
         AudioManager.instance.PlayBgm(true);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
+
+        TurnManager.instance.PlayerTurn();
     }
     public void GameOver()
     {
@@ -88,12 +90,6 @@ public class GameManager : MonoBehaviour
             return;
 
         gameTime += Time.deltaTime;
-
-        if(gameTime>maxGameTime)
-        {
-            gameTime=maxGameTime;
-            GameVictory();
-        }
     }
 
     public void GetExp()
@@ -107,7 +103,8 @@ public class GameManager : MonoBehaviour
         {
             level++;
             exp = 0;
-            uiLevelUp.Show();
+            // UI 띄우는거 잠깐 막기
+            // uiLevelUp.Show();
         }
     }
     public void Stop()

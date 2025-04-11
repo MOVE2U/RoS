@@ -71,7 +71,7 @@ public class AchieveManager : MonoBehaviour
                 isAchieve = GameManager.instance.kill >= 10;
                 break;
             case Achieve.unlockBean:
-                isAchieve = GameManager.instance.gameTime == GameManager.instance.maxGameTime;
+                isAchieve = GameManager.instance.gameTime >= 60f;
                 break;
         }
 

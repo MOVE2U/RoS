@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -5,7 +6,12 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     public Vector2 inputVec;
+    public Vector2 moveDir;
+    public float moveTime;
+    public float grid;
     public float speed;
+    public bool isMoving;
+
     public Scanner scanner;
     public Hand[] hands;
     public RuntimeAnimatorController[] animCon;
@@ -24,6 +30,17 @@ public class Player : MonoBehaviour
         scanner = GetComponent<Scanner>();
         // 비활성화된 오브젝트도 검색하려면 true를 인자로 넣는다.
         hands = GetComponentsInChildren<Hand>(true);
+        isMoving = false;
+        moveDir = Vector2.zero;
+    }
+    private void Update()
+    {
+        if (!GameManager.instance.isLive)
+            return;
+        if (!isMoving && moveDir != Vector2.zero && TurnManager.instance.isPlayerTurn)
+        {   
+            StartCoroutine(MoveRoutine(moveDir));
+        }
     }
     private void OnEnable()
     {
@@ -33,38 +50,53 @@ public class Player : MonoBehaviour
         speed *= Character.Speed;
         anim.runtimeAnimatorController = animCon[GameManager.instance.playerId];
     }
-    void FixedUpdate()
-    {
-        if (!GameManager.instance.isLive)
-            return;
-
-        Vector2 nextVec = inputVec.normalized * speed * Time.fixedDeltaTime;
-        //1. 힘을 준다.
-        //rigid.AddForce (inputVec);
-
-        //2. 속도 제어
-        //rigid.velocity = inputVec;
-
-        //3. 위치 변경
-        rigid.MovePosition(rigid.position + nextVec);
-    }
-
     void OnMove(InputValue value)
     {
         inputVec = value.Get<Vector2>();
-    }
 
+        if(inputVec.x != 0 && Mathf.Abs(inputVec.x) >= Mathf.Abs(inputVec.y))
+        {
+            moveDir = new Vector2(Mathf.Sign(inputVec.x), 0);
+        }
+        else if (Mathf.Abs(inputVec.x) < Mathf.Abs(inputVec.y))
+        {
+            moveDir = new Vector2(0, Mathf.Sign(inputVec.y));
+        }
+        else
+        {
+            moveDir = Vector2.zero;
+        }
+    }
+    IEnumerator MoveRoutine(Vector2 dir)
+    {
+        isMoving = true;
+
+        if (dir.x != 0)
+        {
+            spriter.flipX = dir.x < 0;
+        }
+
+        Vector3 startPos = transform.position;
+        Vector3 endPos = startPos + (Vector3)dir * grid;
+        float elapsedTime = 0;
+
+        while (elapsedTime < moveTime)
+        {
+            transform.position = Vector3.Lerp(startPos, endPos, elapsedTime / moveTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = endPos;
+        TurnManager.instance.playerTurnCount--;
+        isMoving = false;
+    }
     private void LateUpdate()
     {
         if (!GameManager.instance.isLive)
             return;
 
         anim.SetFloat("Speed", inputVec.magnitude);
-
-        if(inputVec.x != 0)
-        {
-            spriter.flipX = inputVec.x < 0;
-        }
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
