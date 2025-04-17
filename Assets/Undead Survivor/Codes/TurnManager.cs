@@ -4,10 +4,12 @@ public class TurnManager : MonoBehaviour
 {
     public static TurnManager instance;
 
+    public Spawner spawner;
+
     public bool isPlayerTurn;
     public bool isEnemyTurn;
     public int playerTurnCount;
-    public float enemyTurnCount;
+    public float maxTurnTime;
     private void Awake()
     {
         instance = this;
@@ -18,17 +20,26 @@ public class TurnManager : MonoBehaviour
         {
             EnemyTurn();
         }
+        if (isEnemyTurn)
+        {
+            maxTurnTime -= Time.deltaTime;
+            if (maxTurnTime <= 0)
+            {
+                PlayerTurn();
+            }
+        }
     }
     public void PlayerTurn()
     {
         isPlayerTurn = true;
         isEnemyTurn = false;
         playerTurnCount = 10;
+        spawner.RandomSpawn(GameManager.instance.player.transform.position, 10);
     }
     public void EnemyTurn()
     {
         isPlayerTurn = false;
         isEnemyTurn = true;
-        enemyTurnCount = 10;
+        maxTurnTime = 10;
     }
 }

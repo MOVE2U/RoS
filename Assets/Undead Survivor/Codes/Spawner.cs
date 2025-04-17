@@ -1,51 +1,51 @@
+using NUnit.Framework;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Spawner : MonoBehaviour
 {
-    public Transform[] spawnPoint;
     public SpawnData[] spawnData;
-    public float levelTime;
 
-    int level;
-    float timer;
-    
-    void Awake()
-    {
-        // 현재 오브젝트와 그 자식들의 Transform 컴포넌트를 가져온다.
-        spawnPoint = GetComponentsInChildren<Transform>();
-    }
-    private void Start()
-    {
-        levelTime = GameManager.instance.maxGameTime / spawnData.Length;
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        if (!GameManager.instance.isLive)
-            return;
+    List<Vector3> spawnPoint = new List<Vector3>();
 
-        timer += Time.deltaTime;
-        // 인스펙터에서 spawnData의 개수를 정해놨을꺼임. 이게 내가 정의한 레벨의 개수임. 그런데 시간은 계속 흐르니까 맥스를 정해놓기 위해 내가 정의한 레벨의 개수를 안넘게 하는 장치
-        // 배열은 0부터 시작하니까 배열의 인덱스 개수는 길이 -1임.
-        level = Mathf.Min(Mathf.FloorToInt(GameManager.instance.gameTime / levelTime),spawnData.Length-1);
+    public void GetSpawnPoints(Vector3 playerPos, int count)
+    {
+        spawnPoint.Clear();
+        List<Vector3> emptyPoint = new List<Vector3>();
 
-        if (timer > spawnData[level].spawnTime)
+        for(int x = -11; x <= 11; x++)
         {
-            timer = 0;
-            Spawn();
+            for (int y = -6; y <= 6; y++)
+            {
+                Vector3 point = new Vector3(playerPos.x + x, playerPos.y + y, 0);
+                if(!GridManager.instance.IsObject(point))
+                {
+                    emptyPoint.Add(point);
+                }
+            }
         }
 
-        void Spawn()
+        for(int i = 0; i < Mathf.Min(count,emptyPoint.Count); i++)
         {
-            // public PoolManager pool;과 같이 선언하고, Awake에서 pool = GetComponent<PoolManager>();과 같이 초기화해서 pool.Get(0);으로도 사용할 수 있다. 근데 싱글톤을 사용하는게 더 효율적이다.
-            // MonoBehaviour를 상속받은 Class는 모두 컴포넌트이기 때문에 GetComponent<PoolManager>처럼 쓸 수 있다.
+            int index = Random.Range(0, emptyPoint.Count);
+            spawnPoint.Add(emptyPoint[index]);
+            emptyPoint.RemoveAt(index);
+        }
+    }
+    public void MonsterSpawn()
+    {
+        foreach(Vector3 point in spawnPoint)
+        {
             GameObject enemy = GameManager.instance.pool.Get(0);
-
-            // GetComponentsInChildren은 현재 오브젝트도 가져오기 때문에 0은 현재 오브젝트가 된다. 자식만 가져오기 위해 1부터 시작한것
-            enemy.transform.position = spawnPoint[Random.Range(1, spawnPoint.Length)].position;
-            enemy.GetComponent<Enemy>().Init(spawnData[level]);
+            enemy.transform.position = point;
+            GridManager.instance.Register(enemy.transform.position, enemy);
+            enemy.GetComponent<Enemy>().Init(spawnData[1]);
         }
-
+    }
+    public void RandomSpawn(Vector3 playerPos, int count)
+    {
+        GetSpawnPoints(playerPos, count);
+        MonsterSpawn();
     }
 }
 

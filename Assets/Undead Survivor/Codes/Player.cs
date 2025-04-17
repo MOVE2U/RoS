@@ -3,28 +3,23 @@ using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : Unit
 {
-    public Vector2 inputVec;
-    public Vector2 moveDir;
-    public float moveTime;
-    public float grid;
-    public float speed;
-    public bool isMoving;
+    public RuntimeAnimatorController[] animCon;
+    Animator anim;
 
     public Scanner scanner;
+    public GridManager gridManager;
     public Hand[] hands;
-    public RuntimeAnimatorController[] animCon;
 
-    Rigidbody2D rigid;
-    SpriteRenderer spriter;
-    Animator anim;
+    public float speed;
+    public Vector2 inputVec;
+    public Vector2 moveDir;
 
     // 유니티는 게임 오브젝트를 씬에 로드하면서 메모리 생성을 함
     // 오브젝트가 생성된 후 가장 먼저 호출되는 메서드가 Awake. 이 시점에 오브젝트와 연결된 모든 컴포넌트들이 초기화되어 있음.
     void Awake()
     {
-        rigid = GetComponent<Rigidbody2D>();
         spriter = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         scanner = GetComponent<Scanner>();
@@ -38,8 +33,13 @@ public class Player : MonoBehaviour
         if (!GameManager.instance.isLive)
             return;
         if (!isMoving && moveDir != Vector2.zero && TurnManager.instance.isPlayerTurn)
-        {   
-            StartCoroutine(MoveRoutine(moveDir));
+        {
+            Vector3 nextPos = transform.position + (Vector3)moveDir * grid;
+            if (!GridManager.instance.IsObject(nextPos))
+            {
+                StartCoroutine(MoveRoutine(moveDir));
+                TurnManager.instance.playerTurnCount--;
+            }            
         }
     }
     private void OnEnable()
@@ -67,30 +67,6 @@ public class Player : MonoBehaviour
             moveDir = Vector2.zero;
         }
     }
-    IEnumerator MoveRoutine(Vector2 dir)
-    {
-        isMoving = true;
-
-        if (dir.x != 0)
-        {
-            spriter.flipX = dir.x < 0;
-        }
-
-        Vector3 startPos = transform.position;
-        Vector3 endPos = startPos + (Vector3)dir * grid;
-        float elapsedTime = 0;
-
-        while (elapsedTime < moveTime)
-        {
-            transform.position = Vector3.Lerp(startPos, endPos, elapsedTime / moveTime);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.position = endPos;
-        TurnManager.instance.playerTurnCount--;
-        isMoving = false;
-    }
     private void LateUpdate()
     {
         if (!GameManager.instance.isLive)
@@ -98,20 +74,20 @@ public class Player : MonoBehaviour
 
         anim.SetFloat("Speed", inputVec.magnitude);
     }
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (!GameManager.instance.isLive)
-            return;
+    //private void OnCollisionStay2D(Collision2D collision)
+    //{
+    //    if (!GameManager.instance.isLive)
+    //        return;
 
-        GameManager.instance.health -= 10 * Time.deltaTime;
-        if(GameManager.instance.health <= 0)
-        {
-            for(int index = 2; index < transform.childCount; index++)
-            {
-                transform.GetChild(index).gameObject.SetActive(false);
-            }
-            anim.SetTrigger("Dead");
-            GameManager.instance.GameOver();
-        }
-    }
+    //    GameManager.instance.health -= 10 * Time.deltaTime;
+    //    if(GameManager.instance.health <= 0)
+    //    {
+    //        for(int index = 2; index < transform.childCount; index++)
+    //        {
+    //            transform.GetChild(index).gameObject.SetActive(false);
+    //        }
+    //        anim.SetTrigger("Dead");
+    //        GameManager.instance.GameOver();
+    //    }
+    //}
 }

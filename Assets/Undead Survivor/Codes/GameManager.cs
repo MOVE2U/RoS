@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
         health = maxHealth;
 
         player.gameObject.SetActive(true);
+        GridManager.instance.Register(player.transform.position, player.gameObject);
         // uiLevelUp.Select(playerId);
         Resume();
 
