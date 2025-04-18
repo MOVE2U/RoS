@@ -38,7 +38,7 @@ public class Player : Unit
             if (!GridManager.instance.IsObject(nextPos))
             {
                 StartCoroutine(MoveRoutine(moveDir));
-                TurnManager.instance.playerTurnCount--;
+                TurnManager.instance.playerMoveCount--;
             }            
         }
     }

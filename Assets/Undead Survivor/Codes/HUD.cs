@@ -29,11 +29,11 @@ public class HUD : MonoBehaviour
             case InfoType.Turn:
                 if (TurnManager.instance.isPlayerTurn)
                 {
-                    myText.text = string.Format("플레이어 턴!");
+                    myText.text = string.Format("플레이어 {0:F0}턴!", TurnManager.instance.playerTurnCount);
                 }
                 else if (TurnManager.instance.isEnemyTurn)
                 {
-                    myText.text = string.Format("몬스터 턴!");
+                    myText.text = string.Format("몬스터 {0:F0}턴!", TurnManager.instance.enemyTurnCount);
                 }
                 break;
             case InfoType.Kill:
@@ -42,11 +42,11 @@ public class HUD : MonoBehaviour
             case InfoType.Count:
                 if (TurnManager.instance.isPlayerTurn)
                 {
-                    myText.text = string.Format("남은 이동: {0:F0}", TurnManager.instance.playerTurnCount);
+                    myText.text = string.Format("남은 이동: {0:F0}", TurnManager.instance.playerMoveCount);
                 }
                 else if (TurnManager.instance.isEnemyTurn)
                 {
-                    float gameTime = TurnManager.instance.maxTurnTime;
+                    float gameTime = TurnManager.instance.enemyMoveCount;
                     int min = Mathf.FloorToInt(gameTime / 60);
                     int sec = Mathf.FloorToInt(gameTime % 60);
                     myText.text = string.Format("남은 시간: {0:D2}", sec);

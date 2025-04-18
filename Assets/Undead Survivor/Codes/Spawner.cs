@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Spawner : MonoBehaviour
 {
     public SpawnData[] spawnData;
+    public int[] spawnCount = { 10, 20, 30, 40, 50 };
 
     List<Vector3> spawnPoint = new List<Vector3>();
 
@@ -39,7 +40,7 @@ public class Spawner : MonoBehaviour
             GameObject enemy = GameManager.instance.pool.Get(0);
             enemy.transform.position = point;
             GridManager.instance.Register(enemy.transform.position, enemy);
-            enemy.GetComponent<Enemy>().Init(spawnData[1]);
+            enemy.GetComponent<Enemy>().Init(spawnData[Random.Range(0,spawnData.Length)]);
         }
     }
     public void RandomSpawn(Vector3 playerPos, int count)
@@ -52,7 +53,6 @@ public class Spawner : MonoBehaviour
 [System.Serializable]
 public class SpawnData
 {
-    public float spawnTime;
     public int spriteType;
     // Enemy에서는 health를 float으로 선언했는데, float형 변수에 int형 변수를 넣어도 문제 없이 자동 변환이 일어난다.
     // 초기값을 float으로 선언하면 부동소수점 오차가 발생할 수 있으니, 초기값은 int로 선언하는 것이 장점이 있다.
