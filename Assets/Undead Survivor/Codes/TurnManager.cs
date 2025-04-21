@@ -36,8 +36,11 @@ public class TurnManager : MonoBehaviour
         isPlayerTurn = true;
         isEnemyTurn = false;
         playerMoveCount = 10;
-        spawner.RandomSpawn(GameManager.instance.player.transform.position, 10);
         playerTurnCount++;
+
+        Vector3 playerPos = GameManager.instance.player.transform.position;
+        int count = spawner.spawnCount[Mathf.Min(enemyTurnCount, spawner.spawnCount.Length - 1)];
+        spawner.RandomSpawn(playerPos, count);
     }
     public void EnemyTurn()
     {

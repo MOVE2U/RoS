@@ -12,9 +12,7 @@ public class Player : Unit
     public GridManager gridManager;
     public Hand[] hands;
 
-    public float speed;
     public Vector2 inputVec;
-    public Vector2 moveDir;
 
     // 유니티는 게임 오브젝트를 씬에 로드하면서 메모리 생성을 함
     // 오브젝트가 생성된 후 가장 먼저 호출되는 메서드가 Awake. 이 시점에 오브젝트와 연결된 모든 컴포넌트들이 초기화되어 있음.
@@ -27,6 +25,7 @@ public class Player : Unit
         hands = GetComponentsInChildren<Hand>(true);
         isMoving = false;
         moveDir = Vector2.zero;
+        wait = 0;
     }
     private void Update()
     {
@@ -47,7 +46,6 @@ public class Player : Unit
         if(GameManager.instance == null)
             return;
 
-        speed *= Character.Speed;
         anim.runtimeAnimatorController = animCon[GameManager.instance.playerId];
     }
     void OnMove(InputValue value)

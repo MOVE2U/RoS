@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public float maxHealth;
     public int level;
     public int kill;
+    public int spawnCountTotal;
     public int exp;
     // 동적으로 객체나 컴포넌트를 초기화할 때는 Awake나 Start에서 하지만, 기본 데이터 타입은 필드에서 가능하다.
     public int[] nextExp = { 3, 5, 10, 100, 150, 210, 280, 360, 450, 600 };

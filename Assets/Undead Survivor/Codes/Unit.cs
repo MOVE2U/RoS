@@ -6,6 +6,8 @@ public class Unit : MonoBehaviour
     public bool isMoving;
     public float grid;
     public float moveTime;
+    public float wait;
+    public Vector2 moveDir;
 
     public SpriteRenderer spriter;
     public IEnumerator MoveRoutine(Vector2 dir)
@@ -30,6 +32,7 @@ public class Unit : MonoBehaviour
         }
 
         transform.position = endPos;
+        yield return new WaitForSeconds(wait);
         isMoving = false;
     }
 

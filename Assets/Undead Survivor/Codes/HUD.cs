@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType { EXP, Level, Turn, Kill, Count, Health }
+    public enum InfoType { EXP, Level, Turn, Kill, Enemy, Count, Health }
     public InfoType type;
 
     Text myText;
@@ -37,7 +37,10 @@ public class HUD : MonoBehaviour
                 }
                 break;
             case InfoType.Kill:
-                myText.text = string.Format("{0:F0}", GameManager.instance.kill);
+                myText.text = string.Format("Kill: {0:F0}", GameManager.instance.kill);
+                break;
+            case InfoType.Enemy:
+                myText.text = string.Format("Enemy: {0:F0}", GameManager.instance.spawnCountTotal - GameManager.instance.kill);
                 break;
             case InfoType.Count:
                 if (TurnManager.instance.isPlayerTurn)
