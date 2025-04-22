@@ -7,18 +7,25 @@ public class Spawner : MonoBehaviour
     public SpawnData[] spawnData;
     public int[] spawnCount = { 10, 20, 30, 40, 50 };
 
-    List<Vector3> spawnPoint = new List<Vector3>();
+    List<Vector2Int> spawnPoint = new List<Vector2Int>();
 
-    public void GetSpawnPoints(Vector3 playerPos, int count)
+    public void RandomSpawn(Vector2Int playerGirdPos, int count)
+    {
+        GetSpawnPoints(playerGirdPos, count);
+        MonsterSpawn();
+    }
+
+    public void GetSpawnPoints(Vector2Int playerGirdPos, int count)
     {
         spawnPoint.Clear();
-        List<Vector3> emptyPoint = new List<Vector3>();
+
+        List<Vector2Int> emptyPoint = new List<Vector2Int>();
 
         for(int x = -11; x <= 11; x++)
         {
             for (int y = -6; y <= 6; y++)
             {
-                Vector3 point = new Vector3(playerPos.x + x, playerPos.y + y, 0);
+                Vector2Int point = new Vector2Int(playerGirdPos.x + x, playerGirdPos.y + y);
                 if(!GridManager.instance.IsObject(point))
                 {
                     emptyPoint.Add(point);
@@ -33,22 +40,20 @@ public class Spawner : MonoBehaviour
             emptyPoint.RemoveAt(index);
         }
     }
+
     public void MonsterSpawn()
     {
-        foreach(Vector3 point in spawnPoint)
+        foreach(Vector2Int point in spawnPoint)
         {
             GameObject enemy = GameManager.instance.pool.Get(0);
-            enemy.transform.position = point;
-            GridManager.instance.Register(enemy.transform.position, enemy);
+            enemy.transform.position = new Vector3(point.x, point.y, 0);
+            GridManager.instance.Register(point, enemy);
+
             enemy.GetComponent<Enemy>().Init(spawnData[TurnManager.instance.enemyTurnCount % 2]);
             GameManager.instance.spawnCountTotal++;
         }
     }
-    public void RandomSpawn(Vector3 playerPos, int count)
-    {
-        GetSpawnPoints(playerPos, count);
-        MonsterSpawn();
-    }
+
 }
 
 [System.Serializable]

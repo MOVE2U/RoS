@@ -42,7 +42,9 @@ public class GameManager : MonoBehaviour
         health = maxHealth;
 
         player.gameObject.SetActive(true);
-        GridManager.instance.Register(player.transform.position, player.gameObject);
+        Vector2Int playerGridPos = GridManager.instance.WorldToGrid(player.transform.position);
+        player.transform.position = GridManager.instance.GridToWorld(playerGridPos); // 보정
+        GridManager.instance.Register(playerGridPos, player.gameObject); // 등록
         // uiLevelUp.Select(playerId);
         Resume();
 

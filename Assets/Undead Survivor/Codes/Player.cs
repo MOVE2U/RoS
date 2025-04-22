@@ -24,17 +24,19 @@ public class Player : Unit
         // 비활성화된 오브젝트도 검색하려면 true를 인자로 넣는다.
         hands = GetComponentsInChildren<Hand>(true);
         isMoving = false;
-        moveDir = Vector2.zero;
+        moveDir = Vector2Int.zero;
         wait = 0;
     }
     private void Update()
     {
         if (!GameManager.instance.isLive)
             return;
-        if (!isMoving && moveDir != Vector2.zero && TurnManager.instance.isPlayerTurn)
+
+        if (!isMoving && moveDir != Vector2Int.zero && TurnManager.instance.isPlayerTurn)
         {
-            Vector3 nextPos = transform.position + (Vector3)moveDir * grid;
-            if (!GridManager.instance.IsObject(nextPos))
+            Vector2Int playerGridPos = GridManager.instance.WorldToGrid(transform.position)
+            Vector2Int nextGridPos = playerGridPos + moveDir * grid;
+            if (!GridManager.instance.IsObject(nextGridPos))
             {
                 StartCoroutine(MoveRoutine(moveDir));
                 TurnManager.instance.playerMoveCount--;
@@ -54,15 +56,15 @@ public class Player : Unit
 
         if(inputVec.x != 0 && Mathf.Abs(inputVec.x) >= Mathf.Abs(inputVec.y))
         {
-            moveDir = new Vector2(Mathf.Sign(inputVec.x), 0);
+            moveDir = new Vector2Int((int)Mathf.Sign(inputVec.x), 0);
         }
         else if (Mathf.Abs(inputVec.x) < Mathf.Abs(inputVec.y))
         {
-            moveDir = new Vector2(0, Mathf.Sign(inputVec.y));
+            moveDir = new Vector2Int(0, (int)Mathf.Sign(inputVec.y));
         }
         else
         {
-            moveDir = Vector2.zero;
+            moveDir = Vector2Int.zero;
         }
     }
     private void LateUpdate()

@@ -4,13 +4,13 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     public bool isMoving;
-    public float grid;
+    public int grid;
     public float moveTime;
     public float wait;
-    public Vector2 moveDir;
+    public Vector2Int moveDir;
 
     public SpriteRenderer spriter;
-    public IEnumerator MoveRoutine(Vector2 dir)
+    public IEnumerator MoveRoutine(Vector2Int dir)
     {
         isMoving = true;
 
@@ -20,8 +20,12 @@ public class Unit : MonoBehaviour
         }
 
         Vector3 startPos = transform.position;
-        Vector3 endPos = startPos + (Vector3)dir * grid;
-        GridManager.instance.Change(startPos, endPos, gameObject);
+        Vector2Int startGridPos = GridManager.instance.WorldToGrid(startPos);
+
+        Vector3 dirWorld = new Vector3(dir.x, dir.y, 0);
+        Vector3 endPos = startPos + dirWorld * grid;
+        Vector2Int endGridPos = startGridPos + dir * grid;
+
         float elapsedTime = 0;
 
         while (elapsedTime < moveTime)
@@ -31,7 +35,9 @@ public class Unit : MonoBehaviour
             yield return null;
         }
 
-        transform.position = endPos;
+        transform.position = GridManager.instance.GridToWorld(endGridPos);
+        GridManager.instance.Change(startGridPos, endGridPos, gameObject);
+
         yield return new WaitForSeconds(wait);
         isMoving = false;
     }

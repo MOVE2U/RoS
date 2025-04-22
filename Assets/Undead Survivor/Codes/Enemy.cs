@@ -24,7 +24,7 @@ public class Enemy : Unit
         anim = GetComponent<Animator>();
         spriter = GetComponent<SpriteRenderer>();
         isMoving = false;
-        moveDir = Vector2.zero;
+        moveDir = Vector2Int.zero;
         grid = 1;
         moveTime = 0.3f;
     }

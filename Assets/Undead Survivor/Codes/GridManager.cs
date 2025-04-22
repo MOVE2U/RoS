@@ -10,42 +10,39 @@ public class GridManager : MonoBehaviour
     {
         instance = this;
     }
+
     // 오브젝트가 있는지 확인
-    public bool IsObject(Vector3 pos)
+    public bool IsObject(Vector2Int gridPos)
     {
-        Vector2Int gridPos = WorldToGrid(pos);
         return tileObject.ContainsKey(gridPos);
     }
 
     // 오브젝트 등록
-    public void Register(Vector3 pos, GameObject obj)
+    public void Register(Vector2Int gridPos, GameObject obj)
     {
-        Vector2Int gridPos = WorldToGrid(pos);
         tileObject[gridPos] = obj;
     }
 
     // 오브젝트 제거
-    public void Unregister(Vector3 pos)
+    public void Unregister(Vector2Int gridPos)
     {
-        Vector2Int gridPos = WorldToGrid(pos);
-        if (IsObject(pos))
+        if (IsObject(gridPos))
         {
             tileObject.Remove(gridPos);
         }
     }
 
     // 오브젝트 변경(제거하고 등록)
-    public void Change(Vector3 from, Vector3 to, GameObject obj)
+    public void Change(Vector2Int from, Vector2Int to, GameObject obj)
     {
         Unregister(from);
         Register(to, obj);
     }
 
     // 오브젝트 확인
-    public GameObject GetObject(Vector3 pos)
+    public GameObject GetObject(Vector2Int gridPos)
     {
-        Vector2Int gridPos = WorldToGrid(pos);
-        if (IsObject(pos))
+        if (IsObject(gridPos))
         {
             tileObject.TryGetValue(gridPos, out var obj);
             return obj;
