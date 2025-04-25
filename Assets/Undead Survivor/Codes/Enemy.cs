@@ -6,21 +6,17 @@ public class Enemy : Unit
     public float health;
     public float maxHealth;
     public RuntimeAnimatorController[] animCon;
-    public Vector2 targetPos;
+    public Vector2Int targetGridPos;
 
     bool isLive;
     bool isArrived;
 
-    Rigidbody2D rigid;
-    Collider2D coll;
     Animator anim;
 
     // Awake에서는 컴포넌트 할당. 컴포넌트 할당은 '레퍼런스 초기화'로, 초기화의 범주에 속한다.
     // Start에서는 변수의 초기화.
     void Awake()
     {
-        rigid = GetComponent<Rigidbody2D>();
-        coll = GetComponent<Collider2D>();
         anim = GetComponent<Animator>();
         spriter = GetComponent<SpriteRenderer>();
         isMoving = false;
@@ -33,12 +29,14 @@ public class Enemy : Unit
         if (!GameManager.instance.isLive)
             return;
 
+        GetTargetPos();
         GetMoveDir();
 
-        if (!isMoving && moveDir != Vector2.zero && TurnManager.instance.isEnemyTurn)
+        if (!isMoving && moveDir != Vector2Int.zero && TurnManager.instance.isEnemyTurn)
         {
-            Vector3 nextPos = transform.position + (Vector3)moveDir * grid;
-            if (!GridManager.instance.IsObject(nextPos))
+            Vector2Int enemyGridPos = GridManager.instance.WorldToGrid(transform.position);
+            Vector2Int nextGridPos = enemyGridPos + moveDir * grid;
+            if (!GridManager.instance.IsObject(nextGridPos))
             {
                 StartCoroutine(MoveRoutine(moveDir));
             }
@@ -46,61 +44,62 @@ public class Enemy : Unit
     }
     public void GetMoveDir()
     {
-        GetTargetPos();
-
-        Vector2 dirVec = targetPos - (Vector2)transform.position;
+        Vector2Int enemyGridPos = GridManager.instance.WorldToGrid(transform.position);
+        Vector2 dirVec = targetGridPos - enemyGridPos;
 
         if (dirVec.x == 0)
         {
-            moveDir = new Vector2(0, Mathf.Sign(dirVec.y));
+            moveDir = new Vector2Int(0, (int)Mathf.Sign(dirVec.y));
         }
         else if (dirVec.y == 0)
         {
-            moveDir = new Vector2(Mathf.Sign(dirVec.x), 0);
+            moveDir = new Vector2Int((int)Mathf.Sign(dirVec.x), 0);
         }
         else
         {
             if (Random.value < 0.5f)
             {
-                moveDir = new Vector2(Mathf.Sign(dirVec.x), 0);
+                moveDir = new Vector2Int((int)Mathf.Sign(dirVec.x), 0);
             }
             else
             {
-                moveDir = new Vector2(0, Mathf.Sign(dirVec.y));
+                moveDir = new Vector2Int(0, (int)Mathf.Sign(dirVec.y));
             }
         }
     }
     public void GetTargetPos()
     {
         Vector3 playerPos = GameManager.instance.player.transform.position;
+        Vector2Int playerGirdPos = GridManager.instance.WorldToGrid(playerPos);
+        Vector2Int enemyGridPos = GridManager.instance.WorldToGrid(transform.position);
 
-        Vector3[] candidates = new Vector3[]
+        Vector2Int[] candidates = new Vector2Int[]
         {
-            playerPos + Vector3.up,
-            playerPos + Vector3.down,
-            playerPos + Vector3.left,
-            playerPos + Vector3.right
+            playerGirdPos + Vector2Int.up,
+            playerGirdPos + Vector2Int.down,
+            playerGirdPos + Vector2Int.left,
+            playerGirdPos + Vector2Int.right
         };
 
         float minDistance = float.MaxValue;
-        Vector3 nearestPos = transform.position;
+        Vector2Int nearestGirdPos = playerGirdPos;
 
-        foreach(Vector3 candidate in candidates)
+        foreach(Vector2Int candidate in candidates)
         {
-            if(transform.position ==  candidate)
+            if(enemyGridPos ==  candidate)
             {
                 isArrived = true;
-                nearestPos = candidate;
+                nearestGirdPos = candidate;
                 break;
             }
-            float distance = Vector3.Distance(candidate, transform.position);
+            float distance = Vector2Int.Distance(candidate, enemyGridPos);
             if(distance < minDistance)
             {
                 minDistance = distance;
-                nearestPos = candidate;
+                nearestGirdPos = candidate;
             }
         }
-        targetPos = nearestPos;
+        targetGridPos = nearestGirdPos;
     }
 
     //void FixedUpdate()
@@ -131,8 +130,6 @@ public class Enemy : Unit
     void OnEnable()
     {
         isLive = true;
-        rigid.simulated = true;
-        coll.enabled = true;
         spriter.sortingOrder = 2;
         anim.SetBool("Dead", false);
         health = maxHealth;
