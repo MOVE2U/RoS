@@ -35,13 +35,12 @@ public class Player : Unit
         if (!isMoving && moveDir != Vector2Int.zero && TurnManager.instance.isPlayerTurn)
         {
             Vector2Int playerGridPos = GridManager.instance.WorldToGrid(transform.position);
-            Vector2Int nextGridPos = playerGridPos + moveDir * grid;
-            if (!GridManager.instance.IsObject(nextGridPos))
-            {
-                StartCoroutine(MoveRoutine(moveDir));
-                TurnManager.instance.playerMoveCount--;
-            }            
+            TryMove(playerGridPos, moveDir);
         }
+    }
+    protected override void AfterMove()
+    {
+        TurnManager.instance.playerMoveCount--;
     }
     private void OnEnable()
     {

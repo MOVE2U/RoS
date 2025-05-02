@@ -47,7 +47,7 @@ public class TurnManager : MonoBehaviour
     {
         isPlayerTurn = false;
         isEnemyTurn = true;
-        enemyMoveCount = 10;
+        enemyMoveCount = 60;
         enemyTurnCount++;
     }
 }

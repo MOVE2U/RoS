@@ -10,7 +10,20 @@ public class Unit : MonoBehaviour
     public Vector2Int moveDir;
 
     public SpriteRenderer spriter;
-    public IEnumerator MoveRoutine(Vector2Int dir)
+    protected virtual void AfterMove()
+    {
+    }
+    protected bool TryMove(Vector2Int curGridPos, Vector2Int moveDir)
+    {
+        Vector2Int nextGridPos = curGridPos + moveDir * grid;
+        if (!GridManager.instance.IsObject(nextGridPos))
+        {
+            StartCoroutine(MoveRoutine(moveDir));
+            return true;
+        }
+        return false;
+    }
+    protected IEnumerator MoveRoutine(Vector2Int dir)
     {
         isMoving = true;
 
@@ -26,6 +39,8 @@ public class Unit : MonoBehaviour
         Vector3 endPos = startPos + dirWorld * grid;
         Vector2Int endGridPos = startGridPos + dir * grid;
 
+        GridManager.instance.Change(startGridPos, endGridPos, gameObject);
+
         float elapsedTime = 0;
 
         while (elapsedTime < moveTime)
@@ -36,10 +51,11 @@ public class Unit : MonoBehaviour
         }
 
         transform.position = GridManager.instance.GridToWorld(endGridPos);
-        GridManager.instance.Change(startGridPos, endGridPos, gameObject);
-
         yield return new WaitForSeconds(wait);
+
         isMoving = false;
+
+        AfterMove();
     }
 
 

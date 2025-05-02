@@ -1,5 +1,6 @@
-using System.Collections;
 using UnityEngine;
+using System;
+using System.Collections;
 
 public class Enemy : Unit
 {
@@ -7,7 +8,11 @@ public class Enemy : Unit
     public float maxHealth;
     public RuntimeAnimatorController[] animCon;
     public Vector2Int targetGridPos;
-
+    public Vector2Int dirVec;
+    
+    Vector3 playerPos;
+    Vector2Int playerGridPos;
+    Vector2Int enemyGridPos;
     bool isLive;
     bool isArrived;
 
@@ -19,78 +24,69 @@ public class Enemy : Unit
     {
         anim = GetComponent<Animator>();
         spriter = GetComponent<SpriteRenderer>();
-        isMoving = false;
-        moveDir = Vector2Int.zero;
         grid = 1;
         moveTime = 0.3f;
     }
     private void Update()
     {
-        if (!GameManager.instance.isLive)
+        if (!GameManager.instance.isLive || !TurnManager.instance.isEnemyTurn || isMoving)
             return;
 
-        GetTargetPos();
-        GetMoveDir();
+        playerPos = GameManager.instance.player.transform.position;
+        playerGridPos = GridManager.instance.WorldToGrid(playerPos);
+        enemyGridPos = GridManager.instance.WorldToGrid(transform.position);
 
-        if (!isMoving && moveDir != Vector2Int.zero && TurnManager.instance.isEnemyTurn)
+        GetTargetGridPos();
+
+        if (!isArrived )
         {
-            Vector2Int enemyGridPos = GridManager.instance.WorldToGrid(transform.position);
-            Vector2Int nextGridPos = enemyGridPos + moveDir * grid;
-            if (!GridManager.instance.IsObject(nextGridPos))
+            GetMoveDir();
+
+            if (moveDir != Vector2Int.zero)
             {
-                StartCoroutine(MoveRoutine(moveDir));
+                if(!TryMove(enemyGridPos, moveDir))
+                {
+                    Vector2Int moveDirCW = new Vector2Int(moveDir.y, -moveDir.x);
+                    Vector2Int moveDirCCW = new Vector2Int(-moveDir.y, moveDir.x);
+
+                    if (UnityEngine.Random.value < 0.5f)
+                    {
+                        TryMove(enemyGridPos, moveDirCW);
+                    }
+                    else
+                    {
+                        TryMove(enemyGridPos, moveDirCCW);
+                    }
+                }                
             }
         }
     }
-    public void GetMoveDir()
+    void GetTargetGridPos()
     {
-        Vector2Int enemyGridPos = GridManager.instance.WorldToGrid(transform.position);
-        Vector2 dirVec = targetGridPos - enemyGridPos;
-
-        if (dirVec.x == 0)
-        {
-            moveDir = new Vector2Int(0, (int)Mathf.Sign(dirVec.y));
-        }
-        else if (dirVec.y == 0)
-        {
-            moveDir = new Vector2Int((int)Mathf.Sign(dirVec.x), 0);
-        }
-        else
-        {
-            if (Random.value < 0.5f)
-            {
-                moveDir = new Vector2Int((int)Mathf.Sign(dirVec.x), 0);
-            }
-            else
-            {
-                moveDir = new Vector2Int(0, (int)Mathf.Sign(dirVec.y));
-            }
-        }
-    }
-    public void GetTargetPos()
-    {
-        Vector3 playerPos = GameManager.instance.player.transform.position;
-        Vector2Int playerGirdPos = GridManager.instance.WorldToGrid(playerPos);
-        Vector2Int enemyGridPos = GridManager.instance.WorldToGrid(transform.position);
+        targetGridPos = Vector2Int.zero;
+        isArrived = false;
 
         Vector2Int[] candidates = new Vector2Int[]
         {
-            playerGirdPos + Vector2Int.up,
-            playerGirdPos + Vector2Int.down,
-            playerGirdPos + Vector2Int.left,
-            playerGirdPos + Vector2Int.right
+            playerGridPos + Vector2Int.up,
+            playerGridPos + Vector2Int.down,
+            playerGridPos + Vector2Int.left,
+            playerGridPos + Vector2Int.right,
         };
 
         float minDistance = float.MaxValue;
-        Vector2Int nearestGirdPos = playerGirdPos;
+        Vector2Int nearestGirdPos = playerGridPos;
 
         foreach(Vector2Int candidate in candidates)
         {
             if(enemyGridPos ==  candidate)
             {
                 isArrived = true;
-                nearestGirdPos = candidate;
                 break;
+            }
+            if(GridManager.instance.IsObject(candidate))
+            {
+                continue;
             }
             float distance = Vector2Int.Distance(candidate, enemyGridPos);
             if(distance < minDistance)
@@ -100,6 +96,22 @@ public class Enemy : Unit
             }
         }
         targetGridPos = nearestGirdPos;
+    }
+    void GetMoveDir()
+    {
+        moveDir = Vector2Int.zero;
+
+        dirVec = targetGridPos - enemyGridPos;
+
+        if (UnityEngine.Random.value < 0.5f)
+        {
+            moveDir = new Vector2Int(Math.Sign(dirVec.x), 0);
+        }
+        else
+        {
+            moveDir = new Vector2Int(0, Math.Sign(dirVec.y));
+        }
+
     }
 
     //void FixedUpdate()
