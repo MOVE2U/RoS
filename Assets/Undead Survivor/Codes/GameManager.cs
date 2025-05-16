@@ -51,7 +51,8 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.PlayBgm(true);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
 
-        TurnManager.instance.PlayerTurn();
+        TurnManager.instance.isEnemyTurn = false;
+        StartCoroutine(TurnManager.instance.PlayerTurn(0f));
     }
     public void GameOver()
     {

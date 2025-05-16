@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class TurnManager : MonoBehaviour
@@ -10,7 +12,7 @@ public class TurnManager : MonoBehaviour
     public bool isEnemyTurn;
     public int playerTurnCount;
     public int enemyTurnCount;
-    public int playerMoveCount;
+    public float playerMoveCount;
     public float enemyMoveCount;
     private void Awake()
     {
@@ -18,23 +20,34 @@ public class TurnManager : MonoBehaviour
     }
     private void Update()
     {
-        if (isPlayerTurn && playerMoveCount <= 0)
+        if (isPlayerTurn)
         {
-            EnemyTurn();
+            playerMoveCount = Mathf.Max(0, playerMoveCount - Time.deltaTime);
+            if (playerMoveCount <= 0)
+            {
+                isPlayerTurn = false;
+
+                StartCoroutine(EnemyTurn(1f));
+            }
         }
-        if (isEnemyTurn)
+        else if (isEnemyTurn)
         {
-            enemyMoveCount -= Time.deltaTime;
+            enemyMoveCount = Mathf.Max(0, enemyMoveCount - Time.deltaTime);
             if (enemyMoveCount <= 0)
             {
-                PlayerTurn();
+                isEnemyTurn = false;
+
+                StartCoroutine(PlayerTurn(1f));
             }
         }
     }
-    public void PlayerTurn()
+    public IEnumerator PlayerTurn(float time)
     {
+        // 추후 턴전환 연출에 사용
+        yield return new WaitForSeconds(time);
+
         isPlayerTurn = true;
-        isEnemyTurn = false;
+
         playerMoveCount = 10;
         playerTurnCount++;
 
@@ -43,11 +56,14 @@ public class TurnManager : MonoBehaviour
         int count = spawner.spawnCount[Mathf.Min(enemyTurnCount, spawner.spawnCount.Length - 1)];
         spawner.RandomSpawn(playerGridPos, count);
     }
-    public void EnemyTurn()
+    public IEnumerator EnemyTurn(float time)
     {
-        isPlayerTurn = false;
+        // 추후 턴전환 연출에 사용
+        yield return new WaitForSeconds(time);
+
         isEnemyTurn = true;
-        enemyMoveCount = 60;
+
+        enemyMoveCount = 10;
         enemyTurnCount++;
     }
 }

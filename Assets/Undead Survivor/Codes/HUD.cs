@@ -27,13 +27,17 @@ public class HUD : MonoBehaviour
                 myText.text = string.Format("Lv.{0:F0}", GameManager.instance.level);
                 break;
             case InfoType.Turn:
-                if (TurnManager.instance.isPlayerTurn)
+                if (TurnManager.instance.isPlayerTurn && !TurnManager.instance.isEnemyTurn)
                 {
                     myText.text = string.Format("플레이어 {0:F0}턴!", TurnManager.instance.playerTurnCount);
                 }
-                else if (TurnManager.instance.isEnemyTurn)
+                else if (TurnManager.instance.isEnemyTurn && !TurnManager.instance.isPlayerTurn)
                 {
                     myText.text = string.Format("몬스터 {0:F0}턴!", TurnManager.instance.enemyTurnCount);
+                }
+                else
+                {
+                    myText.text = string.Format("턴 전환중..");
                 }
                 break;
             case InfoType.Kill:
@@ -45,14 +49,18 @@ public class HUD : MonoBehaviour
             case InfoType.Count:
                 if (TurnManager.instance.isPlayerTurn)
                 {
-                    myText.text = string.Format("남은 이동: {0:F0}", TurnManager.instance.playerMoveCount);
+                    //myText.text = string.Format("남은 이동: {0:F0}", TurnManager.instance.playerMoveCount);
+                    float gameTime = TurnManager.instance.playerMoveCount;
+                    int min = Mathf.FloorToInt(gameTime / 60);
+                    float sec = gameTime % 60;
+                    myText.text = string.Format("남은 시간: {0:00.00}", sec);
                 }
                 else if (TurnManager.instance.isEnemyTurn)
                 {
                     float gameTime = TurnManager.instance.enemyMoveCount;
                     int min = Mathf.FloorToInt(gameTime / 60);
-                    int sec = Mathf.FloorToInt(gameTime % 60);
-                    myText.text = string.Format("남은 시간: {0:D2}", sec);
+                    float sec = gameTime % 60;
+                    myText.text = string.Format("남은 시간: {0:00.00}", sec);
                 }
                 break;
             case InfoType.Health:

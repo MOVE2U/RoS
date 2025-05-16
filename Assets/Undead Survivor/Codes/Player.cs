@@ -38,10 +38,10 @@ public class Player : Unit
             TryMove(playerGridPos, moveDir);
         }
     }
-    protected override void AfterMove()
-    {
-        TurnManager.instance.playerMoveCount--;
-    }
+    //protected override void AfterMove()
+    //{
+    //    TurnManager.instance.playerMoveCount--;
+    //}
     private void OnEnable()
     {
         if(GameManager.instance == null)
