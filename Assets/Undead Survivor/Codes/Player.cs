@@ -13,6 +13,8 @@ public class Player : Unit
     public Hand[] hands;
 
     public Vector2 inputVec;
+    public Vector2Int lastMoveDir;
+    public Vector2Int lastStopDir;
 
     // 유니티는 게임 오브젝트를 씬에 로드하면서 메모리 생성을 함
     // 오브젝트가 생성된 후 가장 먼저 호출되는 메서드가 Awake. 이 시점에 오브젝트와 연결된 모든 컴포넌트들이 초기화되어 있음.
@@ -25,6 +27,8 @@ public class Player : Unit
         hands = GetComponentsInChildren<Hand>(true);
         isMoving = false;
         moveDir = Vector2Int.zero;
+        lastMoveDir = Vector2Int.right;
+        lastStopDir = Vector2Int.right;
         wait = 0;
     }
     private void Update()
@@ -36,7 +40,10 @@ public class Player : Unit
         {
             Vector2Int playerGridPos = GridManager.instance.WorldToGrid(transform.position);
             TryMove(playerGridPos, moveDir);
+            transform.right = new Vector3(lastMoveDir.x, lastMoveDir.y, 0f);
         }
+
+
     }
     //protected override void AfterMove()
     //{
@@ -56,14 +63,21 @@ public class Player : Unit
         if(inputVec.x != 0 && Mathf.Abs(inputVec.x) >= Mathf.Abs(inputVec.y))
         {
             moveDir = new Vector2Int((int)Mathf.Sign(inputVec.x), 0);
+            lastMoveDir = moveDir;
         }
         else if (Mathf.Abs(inputVec.x) < Mathf.Abs(inputVec.y))
         {
             moveDir = new Vector2Int(0, (int)Mathf.Sign(inputVec.y));
+            lastMoveDir = moveDir;
         }
         else
         {
             moveDir = Vector2Int.zero;
+        }
+
+        if(moveDir != Vector2Int.zero && TurnManager.instance.isPlayerTurn)
+        {
+            lastStopDir = moveDir;
         }
     }
     private void LateUpdate()

@@ -7,6 +7,8 @@ public class Unit : MonoBehaviour
     public int grid;
     public float moveTime;
     public float wait;
+    public Vector3 moveStartPos;
+    public Vector3 moveEndPos;
     public Vector2Int moveDir;
 
     public SpriteRenderer spriter;
@@ -27,16 +29,13 @@ public class Unit : MonoBehaviour
     {
         isMoving = true;
 
-        if (dir.x != 0)
-        {
-            spriter.flipX = dir.x < 0;
-        }
-
         Vector3 startPos = transform.position;
+        moveStartPos = startPos;
         Vector2Int startGridPos = GridManager.instance.WorldToGrid(startPos);
 
         Vector3 dirWorld = new Vector3(dir.x, dir.y, 0);
         Vector3 endPos = startPos + dirWorld * grid;
+        moveEndPos = endPos;
         Vector2Int endGridPos = startGridPos + dir * grid;
 
         GridManager.instance.Change(startGridPos, endGridPos, gameObject);

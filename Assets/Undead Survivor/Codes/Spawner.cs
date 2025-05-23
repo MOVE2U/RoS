@@ -21,9 +21,9 @@ public class Spawner : MonoBehaviour
 
         List<Vector2Int> emptyPoint = new List<Vector2Int>();
 
-        for(int x = -11; x <= 11; x++)
+        for(int x = -15; x <= 15; x++)
         {
-            for (int y = -6; y <= 6; y++)
+            for (int y = -9; y <= 9; y++)
             {
                 Vector2Int point = new Vector2Int(playerGirdPos.x + x, playerGirdPos.y + y);
                 if(!GridManager.instance.IsObject(point))

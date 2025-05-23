@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class Enemy : Unit
 {
@@ -9,11 +10,12 @@ public class Enemy : Unit
     public RuntimeAnimatorController[] animCon;
     public Vector2Int targetGridPos;
     public Vector2Int dirVec;
-    
+    public bool isLive;
+    public bool isLookAt;
+
     Vector3 playerPos;
     Vector2Int playerGridPos;
     Vector2Int enemyGridPos;
-    bool isLive;
     bool isArrived;
 
     Animator anim;
@@ -29,18 +31,21 @@ public class Enemy : Unit
     }
     private void Update()
     {
-        if (!GameManager.instance.isLive || !TurnManager.instance.isEnemyTurn || isMoving)
-            return;
-
         playerPos = GameManager.instance.player.transform.position;
         playerGridPos = GridManager.instance.WorldToGrid(playerPos);
         enemyGridPos = GridManager.instance.WorldToGrid(transform.position);
+
+        if (!GameManager.instance.isLive || !TurnManager.instance.isEnemyTurn || isMoving)
+            return;
 
         GetTargetGridPos();
 
         if (!isArrived )
         {
+            isLookAt = false;
             GetMoveDir();
+
+            transform.right = new Vector3(moveDir.x, moveDir.y, 0f);
 
             if (moveDir != Vector2Int.zero)
             {
@@ -58,6 +63,20 @@ public class Enemy : Unit
                         TryMove(enemyGridPos, moveDirCCW);
                     }
                 }                
+            }
+        }
+        else
+        {
+            Vector2Int dir = playerGridPos - enemyGridPos;
+
+            if (transform.right == new Vector3(dir.x, dir.y, 0f))
+            {
+                isLookAt = true;
+            }
+            else
+            {
+                transform.right = new Vector3(dir.x, dir.y, 0f);
+                isLookAt = true;
             }
         }
     }
@@ -114,6 +133,54 @@ public class Enemy : Unit
 
     }
 
+    void OnEnable()
+    {
+        isLive = true;
+        spriter.sortingOrder = 2;
+        anim.SetBool("Dead", false);
+        health = maxHealth;
+    }
+
+    public void Init(SpawnData data)
+    {
+        anim.runtimeAnimatorController = animCon[data.spriteType];
+        wait = data.wait;
+        health = data.health;
+        maxHealth = data.health;
+    }
+    public void Attacked(float damage)
+    {
+        if (!isLive)
+            return;
+
+        health -= damage;
+
+        if(health > 0)
+        {
+            anim.SetTrigger("Hit");
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
+        }
+        else
+        {
+            // dead
+            isLive = false;
+            GridManager.instance.Unregister(enemyGridPos);
+            Dead();
+            // spriter.sortingOrder = 1;
+            // anim.SetBool("Dead", true);
+            GameManager.instance.kill++;
+            GameManager.instance.GetExp();
+
+            if (GameManager.instance.isLive)
+            {
+                AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);
+            }
+        }
+    }
+    void Dead()
+    {
+        gameObject.SetActive(false);
+    }
     //void FixedUpdate()
     //{
     //    if (!GameManager.instance.isLive)
@@ -138,23 +205,6 @@ public class Enemy : Unit
     //        return;
     //    spriter.flipX = rigid.position.x > target.position.x;  
     //}
-
-    void OnEnable()
-    {
-        isLive = true;
-        spriter.sortingOrder = 2;
-        anim.SetBool("Dead", false);
-        health = maxHealth;
-    }
-
-    public void Init(SpawnData data)
-    {
-        anim.runtimeAnimatorController = animCon[data.spriteType];
-        wait = data.wait;
-        health = data.health;
-        maxHealth = data.health;
-    }
-
     //private void OnTriggerEnter2D(Collider2D collision)
     //{
     //    if(!collision.CompareTag("Bullet") || !isLive)
