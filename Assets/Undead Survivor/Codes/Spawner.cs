@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Spawner : MonoBehaviour
 {
     public SpawnData[] spawnData;
-    public int[] spawnCount = { 10, 20, 30, 40, 50 };
+    public int[] spawnCount = { 30, 35, 40, 45, 50 };
 
     List<Vector2Int> spawnPoint = new List<Vector2Int>();
 

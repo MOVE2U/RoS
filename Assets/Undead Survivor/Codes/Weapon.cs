@@ -18,10 +18,14 @@ public class Weapon : MonoBehaviour
     {
         player = GameManager.instance.player;
     }
+    private void Start()
+    {
+        Attack();
+    }
 
     void Update()
     {
-        if (!GameManager.instance.isLive)
+        if (!GameManager.instance.isLive || TurnManager.instance.isTurnChanging)
             return;
 
         timer += Time.deltaTime;
@@ -64,7 +68,7 @@ public class Weapon : MonoBehaviour
     void Attack()
     {
         List<Vector2Int> tiles = GetAttackTiles();
-        Debug.Log("공격 타일 목록: " + string.Join(", ", tiles));
+        // Debug.Log("공격 타일 목록: " + string.Join(", ", tiles));
 
         foreach (var tile in tiles)
         {
@@ -84,31 +88,41 @@ public class Weapon : MonoBehaviour
         if(!player.isMoving)
         {
             Vector2Int playerGridPos = GridManager.instance.WorldToGrid(player.transform.position);
-            Vector2Int targetGrisPos = playerGridPos + player.lastStopDir * player.grid;
-            tiles.Add(targetGrisPos);
+            for(int i = 1; i <= count; i++)
+            {
+                Vector2Int targetGrisPos = playerGridPos + player.lastStopDir * i * player.grid;
+                tiles.Add(targetGrisPos);
+            }
         }
         else
         {
             Vector2Int startGridPos = GridManager.instance.WorldToGrid(player.moveStartPos);
-            Vector2Int targetGrisPos1 = startGridPos + player.lastMoveDir * player.grid;
-            tiles.Add(targetGrisPos1);
-
             Vector2Int endGridPos = GridManager.instance.WorldToGrid(player.moveEndPos);
-            Vector2Int targetGrisPos2 = endGridPos + player.lastMoveDir * player.grid;
-            tiles.Add(targetGrisPos2);
+
+            for (int i = 1; i <= count; i++)
+            {
+                Vector2Int targetGrisPos1 = startGridPos + player.lastMoveDir * i * player.grid;
+                tiles.Add(targetGrisPos1);
+
+
+                Vector2Int targetGrisPos2 = endGridPos + player.lastMoveDir * i * player.grid;
+                tiles.Add(targetGrisPos2);
+            }
+            
         }
-            return tiles;
+
+        return tiles;
     }
     IEnumerator ShowEffect()
     {
         var effects = new List<GameObject>();
 
         // 1) 먼저 count 만큼 전부 스폰해서 리스트에 담기
-        for (int i = 0; i < count; i++)
+        for (int i = 1; i <= count; i++)
         {
             Transform effect = GameManager.instance.pool.Get(prefabId).transform;
             effect.parent = transform;
-            effect.localPosition = new Vector3(1 * (1 + i), 0, 0);
+            effect.localPosition = new Vector3(1 * i, 0, 0);
             effects.Add(effect.gameObject);
         }
 

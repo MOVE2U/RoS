@@ -12,11 +12,11 @@ public class Unit : MonoBehaviour
     public Vector2Int moveDir;
 
     public SpriteRenderer spriter;
-    protected virtual void AfterMove()
-    {
-    }
+
     protected bool TryMove(Vector2Int curGridPos, Vector2Int moveDir)
     {
+        transform.right = new Vector3(moveDir.x, moveDir.y, 0f);
+
         Vector2Int nextGridPos = curGridPos + moveDir * grid;
         if (!GridManager.instance.IsObject(nextGridPos))
         {
@@ -53,9 +53,5 @@ public class Unit : MonoBehaviour
         yield return new WaitForSeconds(wait);
 
         isMoving = false;
-
-        AfterMove();
     }
-
-
 }

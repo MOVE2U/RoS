@@ -1,3 +1,4 @@
+using System;
 using Unity.VisualScripting;
 using UnityEditor.Search;
 using UnityEngine;
@@ -38,30 +39,34 @@ public class LevelUp : MonoBehaviour
         {
             item.gameObject.SetActive(false);
         }
-        // 2. 그 중에서 랜덤 3개 아이템 활성화
-        int[] ran = new int[3];
-        while (true)
-        {
-            ran[0] = Random.Range(0, items.Length);
-            ran[1] = Random.Range(0, items.Length);
-            ran[2] = Random.Range(0, items.Length);
 
-            if (ran[0] != ran[1] && ran[0] != ran[2] && ran[1] != ran[2])
-                break;
-        }
-        for (int index = 0; index < ran.Length; index++)
-        {
-            Item ranItem = items[ran[index]];
+        Item ranItem = items[0];
+        ranItem.gameObject.SetActive(true);
 
-            // 3. 만렙 아이템은 소비 아이템으로 대체
-            if (ranItem.level == ranItem.data.damages.Length)
-            {
-                items[4].gameObject.SetActive(true);
-            }
-            else
-            {
-                ranItem.gameObject.SetActive(true);
-            }
-        }
+        //// 2. 그 중에서 랜덤 3개 아이템 활성화
+        //int[] ran = new int[3];
+        //while (true)
+        //{
+        //    ran[0] = Random.Range(0, items.Length);
+        //    ran[1] = Random.Range(0, items.Length);
+        //    ran[2] = Random.Range(0, items.Length);
+
+        //    if (ran[0] != ran[1] && ran[0] != ran[2] && ran[1] != ran[2])
+        //        break;
+        //}
+        //for (int index = 0; index < ran.Length; index++)
+        //{
+        //    Item ranItem = items[ran[index]];
+
+        //    // 3. 만렙 아이템은 소비 아이템으로 대체
+        //    if (ranItem.level == ranItem.data.damages.Length)
+        //    {
+        //        items[4].gameObject.SetActive(true);
+        //    }
+        //    else
+        //    {
+        //        ranItem.gameObject.SetActive(true);
+        //    }
+        //}
     }
 }

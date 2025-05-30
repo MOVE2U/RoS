@@ -10,6 +10,7 @@ public class Player : Unit
 
     public Scanner scanner;
     public GridManager gridManager;
+    public HUD hud;
     public Hand[] hands;
 
     public Vector2 inputVec;
@@ -39,16 +40,14 @@ public class Player : Unit
         if (!isMoving && moveDir != Vector2Int.zero && TurnManager.instance.isPlayerTurn)
         {
             Vector2Int playerGridPos = GridManager.instance.WorldToGrid(transform.position);
-            TryMove(playerGridPos, moveDir);
-            transform.right = new Vector3(lastMoveDir.x, lastMoveDir.y, 0f);
+            
+            if(TryMove(playerGridPos, moveDir))
+            {
+                TurnManager.instance.playerMoveCount++;
+                hud.UsePlayerTurn(TurnManager.instance.playerMoveCount);
+            }
         }
-
-
     }
-    //protected override void AfterMove()
-    //{
-    //    TurnManager.instance.playerMoveCount--;
-    //}
     private void OnEnable()
     {
         if(GameManager.instance == null)

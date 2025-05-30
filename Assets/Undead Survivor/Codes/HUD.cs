@@ -1,18 +1,25 @@
+using System.Xml;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType { EXP, Level, Turn, Kill, Enemy, Count, Health }
+    public enum InfoType { EXP, Level, Turn, Kill, Enemy, Health, TurnChanging, TurnCount }
     public InfoType type;
 
     Text myText;
     Slider mySlider;
 
+    Text[] myTexts;
+    Image[] myImages;
+
     private void Awake()
     {
         myText = GetComponent<Text>();
         mySlider = GetComponent<Slider>();
+
+        myTexts = GetComponentsInChildren<Text>();
+        myImages = GetComponentsInChildren<Image>();
     }
     private void LateUpdate()
     {
@@ -29,15 +36,17 @@ public class HUD : MonoBehaviour
             case InfoType.Turn:
                 if (TurnManager.instance.isPlayerTurn && !TurnManager.instance.isEnemyTurn)
                 {
+                    myText.enabled = true;
                     myText.text = string.Format("플레이어 {0:F0}턴!", TurnManager.instance.playerTurnCount);
                 }
                 else if (TurnManager.instance.isEnemyTurn && !TurnManager.instance.isPlayerTurn)
                 {
+                    myText.enabled = true;
                     myText.text = string.Format("몬스터 {0:F0}턴!", TurnManager.instance.enemyTurnCount);
                 }
                 else
                 {
-                    myText.text = string.Format("턴 전환중..");
+                    myText.enabled = false;
                 }
                 break;
             case InfoType.Kill:
@@ -46,28 +55,46 @@ public class HUD : MonoBehaviour
             case InfoType.Enemy:
                 myText.text = string.Format("Enemy: {0:F0}", GameManager.instance.spawnCountTotal - GameManager.instance.kill);
                 break;
-            case InfoType.Count:
-                if (TurnManager.instance.isPlayerTurn)
-                {
-                    //myText.text = string.Format("남은 이동: {0:F0}", TurnManager.instance.playerMoveCount);
-                    float gameTime = TurnManager.instance.playerMoveCount;
-                    int min = Mathf.FloorToInt(gameTime / 60);
-                    float sec = gameTime % 60;
-                    myText.text = string.Format("남은 시간: {0:00.00}", sec);
-                }
-                else if (TurnManager.instance.isEnemyTurn)
-                {
-                    float gameTime = TurnManager.instance.enemyMoveCount;
-                    int min = Mathf.FloorToInt(gameTime / 60);
-                    float sec = gameTime % 60;
-                    myText.text = string.Format("남은 시간: {0:00.00}", sec);
-                }
-                break;
             case InfoType.Health:
                 float curHealth = GameManager.instance.health;
                 float maxHealth = GameManager.instance.maxHealth;
                 mySlider.value = curHealth / maxHealth;
                 break;
+            case InfoType.TurnChanging:
+                if (!TurnManager.instance.isPlayerTurn && !TurnManager.instance.isEnemyTurn)
+                {
+                    myText.enabled = true;
+                }
+                else
+                {
+                    myText.enabled = false;
+                }
+                break;
+            case InfoType.TurnCount:
+
+                break;
+        }
+    }
+    public void UsePlayerTurn(int index)
+    {
+        if (ColorUtility.TryParseHtmlString("#C1C1C1", out Color textColor))
+        {
+            myTexts[index - 1].color = textColor;
+        }
+        if (ColorUtility.TryParseHtmlString("#989898", out Color imageColor))
+        {
+            myImages[index - 1].color = imageColor;
+        }
+    }
+    public void UseEnemyTurn(int index)
+    {
+        if (ColorUtility.TryParseHtmlString("#E05AD8", out Color textColor))
+        {
+            myTexts[index-1].color = textColor;
+        }
+        if (ColorUtility.TryParseHtmlString("#EEACD6", out Color imageColor))
+        {
+            myImages[index-1].color = imageColor;
         }
     }
 }

@@ -29,13 +29,13 @@ public class Enemy : Unit
         grid = 1;
         moveTime = 0.3f;
     }
-    private void Update()
+    public void Move()
     {
         playerPos = GameManager.instance.player.transform.position;
         playerGridPos = GridManager.instance.WorldToGrid(playerPos);
         enemyGridPos = GridManager.instance.WorldToGrid(transform.position);
 
-        if (!GameManager.instance.isLive || !TurnManager.instance.isEnemyTurn || isMoving)
+        if (!GameManager.instance.isLive || isMoving)
             return;
 
         GetTargetGridPos();
@@ -135,10 +135,15 @@ public class Enemy : Unit
 
     void OnEnable()
     {
+        TurnManager.instance.AddEnemy(this);
         isLive = true;
         spriter.sortingOrder = 2;
         anim.SetBool("Dead", false);
         health = maxHealth;
+    }
+    private void OnDisable()
+    {
+        TurnManager.instance.RemoveEnemy(this);
     }
 
     public void Init(SpawnData data)
