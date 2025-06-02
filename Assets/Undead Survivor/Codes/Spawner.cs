@@ -47,6 +47,8 @@ public class Spawner : MonoBehaviour
         {
             GameObject enemy = GameManager.instance.pool.Get(0);
             enemy.transform.position = new Vector3(point.x, point.y, 0);
+            enemy.TryGetComponent<Enemy>(out var e);
+            e.enemyGridPos = point;
             GridManager.instance.Register(point, enemy);
 
             enemy.GetComponent<Enemy>().Init(spawnData[TurnManager.instance.enemyTurnCount % 2]);

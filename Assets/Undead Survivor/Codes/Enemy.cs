@@ -15,7 +15,7 @@ public class Enemy : Unit
 
     Vector3 playerPos;
     Vector2Int playerGridPos;
-    Vector2Int enemyGridPos;
+    public Vector2Int enemyGridPos;
     bool isArrived;
 
     Animator anim;
@@ -28,6 +28,8 @@ public class Enemy : Unit
         spriter = GetComponent<SpriteRenderer>();
         grid = 1;
         moveTime = 0.3f;
+
+        enemyGridPos = GridManager.instance.WorldToGrid(transform.position);
     }
     public void Move()
     {
@@ -169,6 +171,7 @@ public class Enemy : Unit
         {
             // dead
             isLive = false;
+            Debug.Log(enemyGridPos);
             GridManager.instance.Unregister(enemyGridPos);
             Dead();
             // spriter.sortingOrder = 1;
