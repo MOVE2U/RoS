@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class TurnManager : MonoBehaviour
 {
@@ -13,7 +15,6 @@ public class TurnManager : MonoBehaviour
     public bool isPlayerTurn;
     public bool isEnemyTurn;
     public bool isTurnChanging;
-    public bool isEnemyMoving;
     public int playerTurnCount;
     public int enemyTurnCount;
     public int playerMoveCount = 0;
@@ -77,8 +78,12 @@ public class TurnManager : MonoBehaviour
             enemyMoveCount++;
             hud.UseEnemyTurn(enemyMoveCount);
 
+            float[] ws = { 0.1f, 1f };
+            float w = ws[UnityEngine.Random.Range(0, ws.Length)];
+
             foreach (Enemy e in enemies)
             {
+                e.wait = w;
                 e.Move();
             }
             yield return new WaitUntil(() => enemies.TrueForAll(x => !x.isMoving));

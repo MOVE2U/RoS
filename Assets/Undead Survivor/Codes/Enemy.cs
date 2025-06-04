@@ -31,12 +31,14 @@ public class Enemy : Unit
 
         enemyGridPos = GridManager.instance.WorldToGrid(transform.position);
     }
-    public void Move()
+    private void Update()
     {
         playerPos = GameManager.instance.player.transform.position;
         playerGridPos = GridManager.instance.WorldToGrid(playerPos);
         enemyGridPos = GridManager.instance.WorldToGrid(transform.position);
-
+    }
+    public void Move()
+    {
         if (!GameManager.instance.isLive || isMoving)
             return;
 
@@ -139,6 +141,7 @@ public class Enemy : Unit
     {
         TurnManager.instance.AddEnemy(this);
         isLive = true;
+        isMoving = false;
         spriter.sortingOrder = 2;
         anim.SetBool("Dead", false);
         health = maxHealth;
@@ -151,7 +154,6 @@ public class Enemy : Unit
     public void Init(SpawnData data)
     {
         anim.runtimeAnimatorController = animCon[data.spriteType];
-        wait = data.wait;
         health = data.health;
         maxHealth = data.health;
     }
