@@ -1,24 +1,29 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.Rendering;
+
+public enum TurnState
+{
+    None,
+    PlayerTurn,
+    EnemyTurn,
+    Transition
+}
 
 public class TurnManager : MonoBehaviour
 {
     public static TurnManager instance;
 
+    [Header("Turn-related value")]
+    [SerializeField] private float transitionTime = 1.5f;
+    [SerializeField] private int maxMoveCount = 10;
+
+    private TurnState curState = TurnState.None;
+
     public Spawner spawner;
     public HUD hud;
 
-    public bool isPlayerTurn;
-    public bool isEnemyTurn;
-    public bool isTurnChanging;
-    public int playerTurnCount;
-    public int enemyTurnCount;
-    public int playerMoveCount = 0;
-    public int enemyMoveCount = 0;
+    public int turnCount = 0;
 
     private List<Enemy> enemies = new List<Enemy>();
     private void Awake()
@@ -48,20 +53,16 @@ public class TurnManager : MonoBehaviour
             }
         }
     }
-    public IEnumerator PlayerTurn(float time)
+    private IEnumerator StartPlayerTurn()
     {
         // 추후 턴전환 연출에 사용
-        yield return new WaitForSeconds(time);
+        curState = TurnState.Transition;        
+        yield return new WaitForSeconds(transitionTime);
 
-        isPlayerTurn = true;
-        isTurnChanging = false;
+        curState = TurnState.PlayerTurn;
+        turnCount++;
 
-        playerTurnCount++;
-
-        Vector3 playerPos = GameManager.instance.player.transform.position;
-        Vector2Int playerGridPos = GridManager.instance.WorldToGrid(playerPos);
-        int count = spawner.spawnCount[Mathf.Min(enemyTurnCount, spawner.spawnCount.Length - 1)];
-        spawner.RandomSpawn(playerGridPos, count);
+        spawner.RandomSpawn(turnCount);
     }
     public IEnumerator EnemyTurn(float time)
     {

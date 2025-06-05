@@ -4,18 +4,22 @@ using System.Collections.Generic;
 
 public class Spawner : MonoBehaviour
 {
+    [Header("Spawn Data")]
+    [SerializeField] private int[] spawnCounts = { 30, 35, 40, 45, 50 };
+
+    private List<Vector2Int> spawnPoint = new List<Vector2Int>();
+
     public SpawnData[] spawnData;
-    public int[] spawnCount = { 30, 35, 40, 45, 50 };
 
-    List<Vector2Int> spawnPoint = new List<Vector2Int>();
-
-    public void RandomSpawn(Vector2Int playerGirdPos, int count)
+    public void RandomSpawn(int index)
     {
-        GetSpawnPoints(playerGirdPos, count);
+        int count = spawnCounts[Mathf.Min(index - 1, spawnCounts.Length - 1)];
+
+        GetSpawnPoints(count);
         MonsterSpawn();
     }
 
-    public void GetSpawnPoints(Vector2Int playerGirdPos, int count)
+    public void GetSpawnPoints(int count)
     {
         spawnPoint.Clear();
 
@@ -25,7 +29,10 @@ public class Spawner : MonoBehaviour
         {
             for (int y = -9; y <= 9; y++)
             {
-                Vector2Int point = new Vector2Int(playerGirdPos.x + x, playerGirdPos.y + y);
+                Vector3 playerPos = GameManager.instance.player.transform.position;
+                Vector2Int playerGridPos = GridManager.instance.WorldToGrid(playerPos);
+
+                Vector2Int point = new Vector2Int(playerGridPos.x + x, playerGridPos.y + y);
                 if(!GridManager.instance.IsObject(point))
                 {
                     emptyPoint.Add(point);
