@@ -34,15 +34,15 @@ public class HUD : MonoBehaviour
                 myText.text = string.Format("Lv.{0:F0}", GameManager.instance.level);
                 break;
             case InfoType.Turn:
-                if (TurnManager.instance.isPlayerTurn && !TurnManager.instance.isEnemyTurn)
+                if (TurnManager.instance.CurState == TurnState.PlayerTurn)
                 {
                     myText.enabled = true;
-                    myText.text = string.Format("플레이어 {0:F0}턴!", TurnManager.instance.playerTurnCount);
+                    myText.text = string.Format("플레이어 {0:F0}턴!", TurnManager.instance.TurnCount);
                 }
-                else if (TurnManager.instance.isEnemyTurn && !TurnManager.instance.isPlayerTurn)
+                else if (TurnManager.instance.CurState == TurnState.EnemyTurn)
                 {
                     myText.enabled = true;
-                    myText.text = string.Format("몬스터 {0:F0}턴!", TurnManager.instance.enemyTurnCount);
+                    myText.text = string.Format("몬스터 {0:F0}턴!", TurnManager.instance.TurnCount);
                 }
                 else
                 {
@@ -61,7 +61,7 @@ public class HUD : MonoBehaviour
                 mySlider.value = curHealth / maxHealth;
                 break;
             case InfoType.TurnChanging:
-                if (!TurnManager.instance.isPlayerTurn && !TurnManager.instance.isEnemyTurn)
+                if (TurnManager.instance.CurState == TurnState.Transition)
                 {
                     myText.enabled = true;
                 }

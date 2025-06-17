@@ -18,14 +18,10 @@ public class Weapon : MonoBehaviour
     {
         player = GameManager.instance.player;
     }
-    private void Start()
-    {
-        Attack();
-    }
 
     void Update()
     {
-        if (!GameManager.instance.isLive || TurnManager.instance.isTurnChanging)
+        if (!GameManager.instance.isLive || TurnManager.instance.CurState == TurnState.Transition)
             return;
 
         timer += Time.deltaTime;

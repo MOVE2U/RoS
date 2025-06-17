@@ -58,7 +58,7 @@ public class Spawner : MonoBehaviour
             e.enemyGridPos = point;
             GridManager.instance.Register(point, enemy);
 
-            enemy.GetComponent<Enemy>().Init(spawnData[TurnManager.instance.enemyTurnCount % 2]);
+            enemy.GetComponent<Enemy>().Init(spawnData[TurnManager.instance.TurnCount % 2]);
             GameManager.instance.spawnCountTotal++;
         }
     }

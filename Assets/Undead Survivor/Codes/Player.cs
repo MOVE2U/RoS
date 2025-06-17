@@ -37,14 +37,13 @@ public class Player : Unit
         if (!GameManager.instance.isLive)
             return;
 
-        if (!isMoving && moveDir != Vector2Int.zero && TurnManager.instance.isPlayerTurn)
+        if (!isMoving && moveDir != Vector2Int.zero && TurnManager.instance.CurState == TurnState.PlayerTurn)
         {
             Vector2Int playerGridPos = GridManager.instance.WorldToGrid(transform.position);
             
             if(TryMove(playerGridPos, moveDir))
             {
-                TurnManager.instance.playerMoveCount++;
-                hud.UsePlayerTurn(TurnManager.instance.playerMoveCount);
+                TurnManager.instance.MoveCountInc();
             }
         }
     }
@@ -74,7 +73,7 @@ public class Player : Unit
             moveDir = Vector2Int.zero;
         }
 
-        if(moveDir != Vector2Int.zero && TurnManager.instance.isPlayerTurn)
+        if(moveDir != Vector2Int.zero && TurnManager.instance.CurState == TurnState.PlayerTurn)
         {
             lastStopDir = moveDir;
         }

@@ -17,67 +17,87 @@ public class TurnManager : MonoBehaviour
     [Header("Turn-related value")]
     [SerializeField] private float transitionTime = 1.5f;
     [SerializeField] private int maxMoveCount = 10;
+    [SerializeField] private TurnState curState = TurnState.None;
+    [SerializeField] private int turnCount = 0;
+    [SerializeField] private int moveCount = 0;
 
-    private TurnState curState = TurnState.None;
+    private List<Enemy> enemies = new List<Enemy>();
+
+    public TurnState CurState => curState;
+    public int TurnCount => turnCount;
+    public int MoveCount => moveCount;
 
     public Spawner spawner;
     public HUD hud;
-
-    public int turnCount = 0;
-
-    private List<Enemy> enemies = new List<Enemy>();
+    
     private void Awake()
     {
         instance = this;
     }
+
     private void Update()
     {
-        if (isPlayerTurn)
+        switch (curState)
         {
-            if (playerMoveCount >= 10)
-            {
-                isPlayerTurn = false;
-                isTurnChanging = true;
-                enemyMoveCount = 0;
-                StartCoroutine(EnemyTurn(1.5f));
-            }
-        }
-        else if (isEnemyTurn)
-        {
-            if (enemyMoveCount >= 10)
-            {
-                isEnemyTurn = false;
-                isTurnChanging = true;
-                playerMoveCount = 0;
-                StartCoroutine(PlayerTurn(1.5f));
-            }
+            case TurnState.PlayerTurn:
+                if (moveCount >= maxMoveCount)
+                {
+                    StartCoroutine(StartEnemyTurn());
+                }
+                break;
+            case TurnState.EnemyTurn:
+                if (moveCount >= maxMoveCount)
+                {
+                    StartCoroutine(StartPlayerTurn());
+                }
+                break;
         }
     }
-    private IEnumerator StartPlayerTurn()
+
+    public void MoveCountInc()
+    {
+        moveCount++;
+
+        switch(curState)
+        {
+            case TurnState.PlayerTurn:
+                hud.UsePlayerTurn(moveCount);
+                break;
+            case TurnState.EnemyTurn:
+                hud.UseEnemyTurn(moveCount);
+                break;
+        }
+    }
+
+    public IEnumerator StartPlayerTurn()
     {
         // 추후 턴전환 연출에 사용
-        curState = TurnState.Transition;        
+        curState = TurnState.Transition;
+        Debug.Log(curState);
         yield return new WaitForSeconds(transitionTime);
 
         curState = TurnState.PlayerTurn;
+        Debug.Log(curState);
+        moveCount = 0;
         turnCount++;
 
         spawner.RandomSpawn(turnCount);
     }
-    public IEnumerator EnemyTurn(float time)
+
+    public IEnumerator StartEnemyTurn()
     {
         // 추후 턴전환 연출에 사용
-        yield return new WaitForSeconds(time);
+        curState = TurnState.Transition;
+        Debug.Log(curState);
+        yield return new WaitForSeconds(transitionTime);
 
-        isEnemyTurn = true;
-        isTurnChanging = false;
-
-        enemyTurnCount++;
+        curState = TurnState.EnemyTurn;
+        Debug.Log(curState);
+        moveCount = 0;
 
         for (int i = 1; i <= 10; i++)
         {
-            enemyMoveCount++;
-            hud.UseEnemyTurn(enemyMoveCount);
+            MoveCountInc();
 
             float[] ws = { 0.1f, 1f };
             float w = ws[UnityEngine.Random.Range(0, ws.Length)];
@@ -90,6 +110,7 @@ public class TurnManager : MonoBehaviour
             yield return new WaitUntil(() => enemies.TrueForAll(x => !x.isMoving));
         }
     }
+
     public void AddEnemy(Enemy e)
     {
         if(!enemies.Contains(e))
@@ -97,6 +118,7 @@ public class TurnManager : MonoBehaviour
             enemies.Add(e);
         }
     }
+
     public void RemoveEnemy(Enemy e)
     {
         enemies.Remove(e);

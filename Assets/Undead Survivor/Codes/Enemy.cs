@@ -190,6 +190,7 @@ public class Enemy : Unit
     void Dead()
     {
         gameObject.SetActive(false);
+        GridManager.instance.Unregister(enemyGridPos);
     }
     //void FixedUpdate()
     //{
