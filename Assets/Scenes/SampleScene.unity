@@ -22286,14 +22286,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04379b050ef12594bb5052c85dee351e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnCounts: 1e00000023000000280000002d00000032000000
   spawnData:
   - spriteType: 0
     health: 10
-    wait: 1
   - spriteType: 0
     health: 10
-    wait: 1
-  spawnCount: 0a000000140000001e0000002800000032000000
 --- !u!1 &978645197
 GameObject:
   m_ObjectHideFlags: 0
@@ -76707,16 +76705,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cfa02079396dde44aee0e3a7c59b520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionTime: 1.5
+  maxMoveCount: 10
+  curState: 0
+  turnCount: 0
+  moveCount: 0
   spawner: {fileID: 953252929}
   hud: {fileID: 1992673517}
-  isPlayerTurn: 0
-  isEnemyTurn: 0
-  isTurnChanging: 0
-  isEnemyMoving: 0
-  playerTurnCount: 0
-  enemyTurnCount: 0
-  playerMoveCount: 0
-  enemyMoveCount: 0
 --- !u!1 &1847138201
 GameObject:
   m_ObjectHideFlags: 0
@@ -77268,7 +77263,7 @@ GameObject:
   - component: {fileID: 1992673516}
   - component: {fileID: 1992673517}
   m_Layer: 5
-  m_Name: TurnCount
+  m_Name: MoveCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

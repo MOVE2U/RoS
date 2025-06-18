@@ -149,6 +149,7 @@ public class Enemy : Unit
     private void OnDisable()
     {
         TurnManager.instance.RemoveEnemy(this);
+        GridManager.instance.Unregister(enemyGridPos);
     }
 
     public void Init(SpawnData data)
@@ -190,7 +191,6 @@ public class Enemy : Unit
     void Dead()
     {
         gameObject.SetActive(false);
-        GridManager.instance.Unregister(enemyGridPos);
     }
     //void FixedUpdate()
     //{

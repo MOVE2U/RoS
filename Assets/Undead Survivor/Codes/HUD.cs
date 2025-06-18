@@ -1,10 +1,11 @@
+using System;
 using System.Xml;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType { EXP, Level, Turn, Kill, Enemy, Health, TurnChanging, TurnCount }
+    public enum InfoType { EXP, Level, Turn, Kill, Enemy, Health, TurnChanging, MoveCount }
     public InfoType type;
 
     Text myText;
@@ -21,6 +22,18 @@ public class HUD : MonoBehaviour
         myTexts = GetComponentsInChildren<Text>();
         myImages = GetComponentsInChildren<Image>();
     }
+
+    private void Start()
+    {
+        if (type != InfoType.MoveCount)
+            return;
+
+        for (int i = 1; i <= myTexts.Length; i++)
+        {
+            SetTurnColors(i, "#C1C1C1", "#989898");
+        }
+    }
+
     private void LateUpdate()
     {
         switch(type)
@@ -70,31 +83,38 @@ public class HUD : MonoBehaviour
                     myText.enabled = false;
                 }
                 break;
-            case InfoType.TurnCount:
+        }
+    }
 
+    public void UpdateMoveCountUI(TurnState turnState, int moveCount)
+    {
+        if (type != InfoType.MoveCount)
+            return;
+
+        switch (turnState)
+        {
+            case TurnState.PlayerTurn:
+                SetTurnColors(moveCount, "#E05AD8", "#EEACD6");
+                break;
+            case TurnState.EnemyTurn:
+                int reverseMoveCount = myTexts.Length - moveCount + 1;
+                SetTurnColors(reverseMoveCount, "#C1C1C1", "#989898");
                 break;
         }
     }
-    public void UsePlayerTurn(int index)
+
+    private void SetTurnColors(int index, string textColorHex, string imageColorHex)
     {
-        if (ColorUtility.TryParseHtmlString("#C1C1C1", out Color textColor))
+        if (type != InfoType.MoveCount)
+            return;
+
+        if (ColorUtility.TryParseHtmlString(textColorHex, out Color textColor))
         {
             myTexts[index - 1].color = textColor;
         }
-        if (ColorUtility.TryParseHtmlString("#989898", out Color imageColor))
+        if (ColorUtility.TryParseHtmlString(imageColorHex, out Color imageColor))
         {
             myImages[index - 1].color = imageColor;
-        }
-    }
-    public void UseEnemyTurn(int index)
-    {
-        if (ColorUtility.TryParseHtmlString("#E05AD8", out Color textColor))
-        {
-            myTexts[index-1].color = textColor;
-        }
-        if (ColorUtility.TryParseHtmlString("#EEACD6", out Color imageColor))
-        {
-            myImages[index-1].color = imageColor;
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 클래스 외부에 선언된 enum은 전역적으로 사용 가능
 public enum TurnState
 {
     None,
@@ -14,21 +15,24 @@ public class TurnManager : MonoBehaviour
 {
     public static TurnManager instance;
 
-    [Header("Turn-related value")]
+    [Header("turn related Value")]
     [SerializeField] private float transitionTime = 1.5f;
     [SerializeField] private int maxMoveCount = 10;
+
+    [Header("for state check")]
     [SerializeField] private TurnState curState = TurnState.None;
     [SerializeField] private int turnCount = 0;
     [SerializeField] private int moveCount = 0;
+
+    [Header("external ref")]
+    [SerializeField] private Spawner spawner;
+    [SerializeField] private HUD hud;
 
     private List<Enemy> enemies = new List<Enemy>();
 
     public TurnState CurState => curState;
     public int TurnCount => turnCount;
     public int MoveCount => moveCount;
-
-    public Spawner spawner;
-    public HUD hud;
     
     private void Awake()
     {
@@ -54,30 +58,16 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    public void MoveCountInc()
-    {
-        moveCount++;
-
-        switch(curState)
-        {
-            case TurnState.PlayerTurn:
-                hud.UsePlayerTurn(moveCount);
-                break;
-            case TurnState.EnemyTurn:
-                hud.UseEnemyTurn(moveCount);
-                break;
-        }
-    }
-
     public IEnumerator StartPlayerTurn()
     {
         // 추후 턴전환 연출에 사용
-        curState = TurnState.Transition;
-        Debug.Log(curState);
-        yield return new WaitForSeconds(transitionTime);
+        if(turnCount != 0)
+        {
+            curState = TurnState.Transition;
+            yield return new WaitForSeconds(transitionTime);
+        }        
 
         curState = TurnState.PlayerTurn;
-        Debug.Log(curState);
         moveCount = 0;
         turnCount++;
 
@@ -88,14 +78,12 @@ public class TurnManager : MonoBehaviour
     {
         // 추후 턴전환 연출에 사용
         curState = TurnState.Transition;
-        Debug.Log(curState);
         yield return new WaitForSeconds(transitionTime);
 
         curState = TurnState.EnemyTurn;
-        Debug.Log(curState);
         moveCount = 0;
 
-        for (int i = 1; i <= 10; i++)
+        for (int i = 1; i <= maxMoveCount; i++)
         {
             MoveCountInc();
 
@@ -109,6 +97,12 @@ public class TurnManager : MonoBehaviour
             }
             yield return new WaitUntil(() => enemies.TrueForAll(x => !x.isMoving));
         }
+    }
+
+    public void MoveCountInc()
+    {
+        moveCount++;
+        hud.UpdateMoveCountUI(curState, moveCount);
     }
 
     public void AddEnemy(Enemy e)

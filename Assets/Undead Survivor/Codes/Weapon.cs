@@ -21,7 +21,7 @@ public class Weapon : MonoBehaviour
 
     void Update()
     {
-        if (!GameManager.instance.isLive || TurnManager.instance.CurState == TurnState.Transition)
+        if (!GameManager.instance.isLive || TurnManager.instance.CurState == TurnState.Transition || TurnManager.instance.CurState == TurnState.PlayerTurn)
             return;
 
         timer += Time.deltaTime;
