@@ -15,11 +15,11 @@ public class TurnManager : MonoBehaviour
 {
     public static TurnManager instance;
 
-    [Header("turn related Value")]
+    [Header("value")]
     [SerializeField] private float transitionTime = 1.5f;
     [SerializeField] private int maxMoveCount = 10;
 
-    [Header("for state check")]
+    [Header("for check")]
     [SerializeField] private TurnState curState = TurnState.None;
     [SerializeField] private int turnCount = 0;
     [SerializeField] private int moveCount = 0;
@@ -74,7 +74,7 @@ public class TurnManager : MonoBehaviour
         spawner.RandomSpawn(turnCount);
     }
 
-    public IEnumerator StartEnemyTurn()
+    private IEnumerator StartEnemyTurn()
     {
         // 추후 턴전환 연출에 사용
         curState = TurnState.Transition;

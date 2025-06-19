@@ -3,23 +3,44 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    public bool isMoving;
-    public int grid;
-    public float moveTime;
-    public float wait;
-    public Vector3 moveStartPos;
-    public Vector3 moveEndPos;
-    public Vector2Int moveDir;
+    [Header("value")]
+    [SerializeField] protected int grid = 1;
 
-    public SpriteRenderer spriter;
+    [Header("for check")]
+    [SerializeField] protected bool isMoving;
+    [SerializeField] protected float moveTime;
+    [SerializeField] protected float wait;
+    [SerializeField] protected Vector2Int moveDir;
+    [SerializeField] protected Vector2Int gridPosition;
 
-    protected bool TryMove(Vector2Int curGridPos, Vector2Int moveDir)
+    [Header("sprites")]
+    [SerializeField] private Sprite spriteRight;
+    [SerializeField] private Sprite spriteLeft;
+    [SerializeField] private Sprite spriteDown;
+    [SerializeField] private Sprite spriteUp;
+
+    private SpriteRenderer spriteRenderer;
+
+    private void Awake()
     {
-        transform.right = new Vector3(moveDir.x, moveDir.y, 0f);
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
-        Vector2Int nextGridPos = curGridPos + moveDir * grid;
-        if (!GridManager.instance.IsObject(nextGridPos))
+        gridPosition = GridManager.instance.WorldToGrid(transform.position);
+    }
+
+    protected bool TryMove(Vector2Int inputDir)
+    {
+        if (isMoving)
+            return false;
+
+        // 이동에 성공을 안하더라도 움직이는 중이 아니라면 스프라이트 방향은 바꿔준다.
+        SetSprite(inputDir);
+
+        Vector2Int nextGridPosition = gridPosition + inputDir * grid;
+        if (!GridManager.instance.IsObject(nextGridPosition))
         {
+            // 이동한다면 이동 방향을 moveDir에 캡쳐
+            moveDir = inputDir;
             StartCoroutine(MoveRoutine(moveDir));
             return true;
         }
@@ -29,29 +50,48 @@ public class Unit : MonoBehaviour
     {
         isMoving = true;
 
-        Vector3 startPos = transform.position;
-        moveStartPos = startPos;
-        Vector2Int startGridPos = GridManager.instance.WorldToGrid(startPos);
+        // 논리 좌표 업데이트
+        Vector2Int startGridPos = gridPosition;
+        gridPosition += dir * grid;
 
-        Vector3 dirWorld = new Vector3(dir.x, dir.y, 0);
-        Vector3 endPos = startPos + dirWorld * grid;
-        moveEndPos = endPos;
-        Vector2Int endGridPos = startGridPos + dir * grid;
+        // GridManager에 좌표 변경 알림
+        GridManager.instance.Change(startGridPos, gridPosition, gameObject);
 
-        GridManager.instance.Change(startGridPos, endGridPos, gameObject);
+        // 이동 애니메이션을 위한 월드 좌표 계산
+        Vector3 startPos = GridManager.instance.GridToWorld(startGridPos);
+        Vector3 endPos = GridManager.instance.GridToWorld(gridPosition);
 
+        // 이동 애니메이션
         float elapsedTime = 0;
-
         while (elapsedTime < moveTime)
         {
             transform.position = Vector3.Lerp(startPos, endPos, elapsedTime / moveTime);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-
-        transform.position = GridManager.instance.GridToWorld(endGridPos);
+        transform.position = endPos;
         yield return new WaitForSeconds(wait);
 
         isMoving = false;
+    }
+
+    private void SetSprite(Vector2Int dir)
+    {
+        if (dir == Vector2Int.right)
+        {
+            spriteRenderer.sprite = spriteRight;
+        }
+        else if (dir == Vector2Int.left)
+        {
+            spriteRenderer.sprite = spriteLeft;
+        }
+        else if (dir == Vector2Int.up)
+        {
+            spriteRenderer.sprite = spriteUp;
+        }
+        else if (dir == Vector2Int.down)
+        {
+            spriteRenderer.sprite = spriteDown;
+        }
     }
 }

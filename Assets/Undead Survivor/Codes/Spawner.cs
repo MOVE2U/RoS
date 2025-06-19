@@ -65,6 +65,7 @@ public class Spawner : MonoBehaviour
 
 }
 
+// 데이터를 그룹화해서 부모 클래스의 인스펙터에서 데이터를 관리하는 방식. 간단한 데이터에 사용
 [System.Serializable]
 public class SpawnData
 {

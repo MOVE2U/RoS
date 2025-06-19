@@ -54,10 +54,6 @@ public class Weapon : MonoBehaviour
             }
         }
 
-        // 이미 초기화된 player의 hands 배열을 가져오는 것 뿐이므로 별도 초기화가 필요하지 않다.
-        Hand hand = player.hands[(int)data.itemType];
-        hand.spriter.sprite = data.hand;
-        // hand.gameObject.SetActive(true);
 
         player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
     }
