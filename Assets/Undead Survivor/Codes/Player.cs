@@ -3,9 +3,6 @@ using UnityEngine.InputSystem;
 
 public class Player : Unit
 {
-    [Header("for check")]
-    [SerializeField] private Vector2Int inputDir;
-
     [Header("external ref")]
     [SerializeField] private GridManager gridManager;
 
@@ -14,13 +11,10 @@ public class Player : Unit
     private void Awake()
     {
         // Unit 공통 변수 초기화
-        isMoving = false;
         moveTime = 0.3f;
         wait = 0.1f;
-
-        // Player 전용 변수 초기화
-        inputDir = Vector2Int.zero;
     }
+
     private void Update()
     {
         if (TurnManager.instance.CurState == TurnState.PlayerTurn
