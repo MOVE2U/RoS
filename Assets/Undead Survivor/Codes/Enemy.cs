@@ -50,7 +50,7 @@ public class Enemy : Unit
         }
         else
         {
-            Vector2Int dir = player.GridPos - gridPos;
+            Vector2Int dir = player.gridPos - this.gridPos;
             SetSprite(dir);
         }
     }
@@ -62,10 +62,10 @@ public class Enemy : Unit
 
         Vector2Int[] candidates = new Vector2Int[]
         {
-            player.GridPos + Vector2Int.right,
-            player.GridPos + Vector2Int.left,
-            player.GridPos + Vector2Int.down,
-            player.GridPos + Vector2Int.up,
+            player.gridPos + Vector2Int.right,
+            player.gridPos + Vector2Int.left,
+            player.gridPos + Vector2Int.down,
+            player.gridPos + Vector2Int.up,
         };
 
         float minDistance = float.MaxValue;

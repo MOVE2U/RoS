@@ -4,12 +4,11 @@ using System.Collections.Generic;
 
 public class Spawner : MonoBehaviour
 {
-    [Header("Spawn Data")]
+    [Header("spawn data")]
+    [SerializeField] private SpawnData[] spawnData;
     [SerializeField] private int[] spawnCounts = { 30, 35, 40, 45, 50 };
-
+    
     private List<Vector2Int> spawnPoint = new List<Vector2Int>();
-
-    public SpawnData[] spawnData;
 
     public void RandomSpawn(int index)
     {
@@ -19,7 +18,7 @@ public class Spawner : MonoBehaviour
         MonsterSpawn();
     }
 
-    public void GetSpawnPoints(int count)
+    private void GetSpawnPoints(int count)
     {
         spawnPoint.Clear();
 
@@ -48,21 +47,25 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    public void MonsterSpawn()
+    private void MonsterSpawn()
     {
         foreach(Vector2Int point in spawnPoint)
         {
             GameObject enemy = GameManager.instance.pool.Get(0);
-            enemy.transform.position = new Vector3(point.x, point.y, 0);
+            
+            // 논리 좌표 업데이트
             enemy.TryGetComponent<Enemy>(out var e);
-            e.enemyGridPos = point;
+            e.gridPos = point;
             GridManager.instance.Register(point, enemy);
 
+            // 월드 좌표 업데이트
+            enemy.transform.position = new Vector3(e.gridPos.x, e.gridPos.y, 0);
+
+            // 스폰될때 Init하나, enable할 때 해당 내용을 적으나 같지 않나? 질문하자
             enemy.GetComponent<Enemy>().Init(spawnData[TurnManager.instance.TurnCount % 2]);
             GameManager.instance.spawnCountTotal++;
         }
     }
-
 }
 
 // 데이터를 그룹화해서 부모 클래스의 인스펙터에서 데이터를 관리하는 방식. 간단한 데이터에 사용

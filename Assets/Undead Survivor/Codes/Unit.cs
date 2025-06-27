@@ -12,7 +12,6 @@ public class Unit : MonoBehaviour
     [SerializeField] protected float wait;
     [SerializeField] protected Vector2Int inputDir;
     [SerializeField] protected Vector2Int moveDir;
-    [SerializeField] protected Vector2Int gridPos;
 
     [Header("sprites")]
     [SerializeField] private Sprite spriteRight;
@@ -22,7 +21,7 @@ public class Unit : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
 
-    public Vector2Int GridPos => gridPos;
+    public Vector2Int gridPos;
 
     private void Awake()
     {
