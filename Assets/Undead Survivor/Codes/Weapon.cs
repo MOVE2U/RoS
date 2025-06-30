@@ -77,7 +77,7 @@ public class Weapon : MonoBehaviour
     {
         List<Vector2Int> tiles = new List<Vector2Int>();
 
-        if(!player.isMoving)
+        if(!player.IsMoving)
         {
             Vector2Int playerGridPos = GridManager.instance.WorldToGrid(player.transform.position);
             for(int i = 1; i <= count; i++)

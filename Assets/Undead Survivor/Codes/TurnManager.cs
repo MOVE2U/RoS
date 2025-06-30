@@ -28,8 +28,6 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private Spawner spawner;
     [SerializeField] private HUD hud;
 
-    private List<Enemy> enemies = new List<Enemy>();
-
     public TurnState CurState => curState;
     public int TurnCount => turnCount;
     public int MoveCount => moveCount;
@@ -90,12 +88,12 @@ public class TurnManager : MonoBehaviour
             float[] ws = { 0.1f, 1f };
             float w = ws[UnityEngine.Random.Range(0, ws.Length)];
 
-            foreach (Enemy e in enemies)
+            foreach (Enemy e in spawner.activeEnemies)
             {
-                e.wait = w;
-                e.Move();
+                e.AutoMove(w);
             }
-            yield return new WaitUntil(() => enemies.TrueForAll(x => !x.isMoving));
+
+            yield return new WaitUntil(() => spawner.activeEnemies.TrueForAll(x => !x.IsMoving));
         }
     }
 
@@ -103,18 +101,5 @@ public class TurnManager : MonoBehaviour
     {
         moveCount++;
         hud.UpdateMoveCountUI(curState, moveCount);
-    }
-
-    public void AddEnemy(Enemy e)
-    {
-        if(!enemies.Contains(e))
-        {
-            enemies.Add(e);
-        }
-    }
-
-    public void RemoveEnemy(Enemy e)
-    {
-        enemies.Remove(e);
     }
 }

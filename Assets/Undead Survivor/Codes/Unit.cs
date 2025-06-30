@@ -23,6 +23,8 @@ public class Unit : MonoBehaviour
 
     public Vector2Int gridPos;
 
+    public bool IsMoving => isMoving;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();

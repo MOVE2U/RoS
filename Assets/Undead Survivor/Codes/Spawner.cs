@@ -9,6 +9,8 @@ public class Spawner : MonoBehaviour
     [SerializeField] private int[] spawnCounts = { 30, 35, 40, 45, 50 };
     
     private List<Vector2Int> spawnPoint = new List<Vector2Int>();
+    
+    public List<Enemy> activeEnemies = new List<Enemy>();
 
     public void RandomSpawn(int index)
     {
@@ -61,10 +63,24 @@ public class Spawner : MonoBehaviour
             // 월드 좌표 업데이트
             enemy.transform.position = new Vector3(e.gridPos.x, e.gridPos.y, 0);
 
-            // 스폰될때 Init하나, enable할 때 해당 내용을 적으나 같지 않나? 질문하자
+            // 초기화
             enemy.GetComponent<Enemy>().Init(spawnData[TurnManager.instance.TurnCount % 2]);
+
             GameManager.instance.spawnCountTotal++;
         }
+    }
+
+    public void AddEnemy(Enemy e)
+    {
+        if (!activeEnemies.Contains(e))
+        {
+            activeEnemies.Add(e);
+        }
+    }
+
+    public void RemoveEnemy(Enemy e)
+    {
+        activeEnemies.Remove(e);
     }
 }
 

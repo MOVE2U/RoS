@@ -11,6 +11,9 @@ public class Enemy : Unit
     [SerializeField] private Vector2Int targetGridPos;
     [SerializeField] private bool isArrived;
 
+    [Header("external ref")]
+    [SerializeField] private Spawner spawner;
+
     private Player player;
 
     private void Awake()
@@ -129,27 +132,37 @@ public class Enemy : Unit
         }
     }
 
+    public void AutoMove(float randomWait)
+    {
+        wait = randomWait;
+        EnemyMoveJudge();
+    }
+
+    // 초기화 - 외부에서 전달받은 데이터로 세팅하는 항목
     public void Init(SpawnData data)
     {
         health = data.health;
         maxHealth = data.health;
     }
 
+    // 초기화 - 활성화 될 때 공통
+    private void OnEnable()
+    {
+        spawner.AddEnemy(this);
+        isMoving = false;
+        health = maxHealth;
+    }
+
+    // 정리 - 죽었을 때만 호출되는 항목
     void Dead()
     {
         gameObject.SetActive(false);
     }
 
-    private void OnEnable()
-    {
-        TurnManager.instance.AddEnemy(this);
-        isMoving = false;
-        health = maxHealth;
-    }
-
+    // 정리 - 비활성화 될 때 공통
     private void OnDisable()
     {
-        TurnManager.instance.RemoveEnemy(this);
         GridManager.instance.Unregister(gridPos);
+        spawner.RemoveEnemy(this);
     }
 }
