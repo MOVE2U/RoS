@@ -23,7 +23,9 @@ public class Unit : MonoBehaviour
 
     public Vector2Int gridPos;
 
+    public int Grid => grid;
     public bool IsMoving => isMoving;
+    public Vector2Int InputDir => inputDir;
 
     private void Awake()
     {

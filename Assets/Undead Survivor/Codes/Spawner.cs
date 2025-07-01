@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Spawner : MonoBehaviour
 {
+    public static Spawner instance;
+
     [Header("spawn data")]
     [SerializeField] private SpawnData[] spawnData;
     [SerializeField] private int[] spawnCounts = { 30, 35, 40, 45, 50 };
@@ -11,6 +13,11 @@ public class Spawner : MonoBehaviour
     private List<Vector2Int> spawnPoint = new List<Vector2Int>();
     
     public List<Enemy> activeEnemies = new List<Enemy>();
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     public void RandomSpawn(int index)
     {
@@ -53,18 +60,18 @@ public class Spawner : MonoBehaviour
     {
         foreach(Vector2Int point in spawnPoint)
         {
-            GameObject enemy = GameManager.instance.pool.Get(0);
+            GameObject enemyObj = GameManager.instance.pool.Get(0);
             
             // 논리 좌표 업데이트
-            enemy.TryGetComponent<Enemy>(out var e);
-            e.gridPos = point;
-            GridManager.instance.Register(point, enemy);
+            enemyObj.TryGetComponent<Enemy>(out var enemy);
+            enemy.gridPos = point;
+            GridManager.instance.Register(point, enemyObj);
 
             // 월드 좌표 업데이트
-            enemy.transform.position = new Vector3(e.gridPos.x, e.gridPos.y, 0);
+            enemyObj.transform.position = new Vector3(enemy.gridPos.x, enemy.gridPos.y, 0);
 
             // 초기화
-            enemy.GetComponent<Enemy>().Init(spawnData[TurnManager.instance.TurnCount % 2]);
+            enemy.Init(spawnData[TurnManager.instance.TurnCount % 2]);
 
             GameManager.instance.spawnCountTotal++;
         }

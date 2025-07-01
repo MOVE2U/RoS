@@ -11,10 +11,8 @@ public class Enemy : Unit
     [SerializeField] private Vector2Int targetGridPos;
     [SerializeField] private bool isArrived;
 
-    [Header("external ref")]
-    [SerializeField] private Spawner spawner;
-
     private Player player;
+    private Spawner spawner;
 
     private void Awake()
     {
@@ -26,6 +24,7 @@ public class Enemy : Unit
     private void Start()
     {
         player = GameManager.instance.player;
+        spawner = Spawner.instance;
     }
 
     private void EnemyMoveJudge()

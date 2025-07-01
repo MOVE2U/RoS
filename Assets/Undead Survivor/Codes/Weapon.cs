@@ -11,27 +11,29 @@ public class Weapon : MonoBehaviour
     public int count;
     public float speed;
 
-    float timer;
-    Player player;
+    private float timer;
+    private Player player;
 
     private void Awake()
     {
         player = GameManager.instance.player;
     }
 
-    void Update()
+    private void Update()
     {
-        if (!GameManager.instance.isLive || TurnManager.instance.CurState == TurnState.Transition || TurnManager.instance.CurState == TurnState.PlayerTurn)
-            return;
-
-        timer += Time.deltaTime;
-
-        if (timer > speed)
+        if (TurnManager.instance.CurState == TurnState.EnemyTurn 
+            && GameManager.instance.isLive)
         {
-            timer = 0;
-            Attack();
+            timer += Time.deltaTime;
+
+            if (timer > speed)
+            {
+                timer = 0;
+                Attack();
+            }
         }
     }
+
     public void Init(ItemData data)
     {
         // 기본 설정
@@ -57,6 +59,7 @@ public class Weapon : MonoBehaviour
 
         player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
     }
+
     void Attack()
     {
         List<Vector2Int> tiles = GetAttackTiles();
@@ -73,38 +76,21 @@ public class Weapon : MonoBehaviour
 
         StartCoroutine(ShowEffect());
     }
+
     List<Vector2Int> GetAttackTiles()
     {
         List<Vector2Int> tiles = new List<Vector2Int>();
 
-        if(!player.IsMoving)
+        Vector2Int playerGridPos = GridManager.instance.WorldToGrid(player.transform.position);
+        for (int i = 1; i <= count; i++)
         {
-            Vector2Int playerGridPos = GridManager.instance.WorldToGrid(player.transform.position);
-            for(int i = 1; i <= count; i++)
-            {
-                Vector2Int targetGrisPos = playerGridPos + player.lastStopDir * i * player.grid;
-                tiles.Add(targetGrisPos);
-            }
-        }
-        else
-        {
-            Vector2Int startGridPos = GridManager.instance.WorldToGrid(player.moveStartPos);
-            Vector2Int endGridPos = GridManager.instance.WorldToGrid(player.moveEndPos);
-
-            for (int i = 1; i <= count; i++)
-            {
-                Vector2Int targetGrisPos1 = startGridPos + player.lastMoveDir * i * player.grid;
-                tiles.Add(targetGrisPos1);
-
-
-                Vector2Int targetGrisPos2 = endGridPos + player.lastMoveDir * i * player.grid;
-                tiles.Add(targetGrisPos2);
-            }
-            
+            Vector2Int targetGrisPos = player.gridPos + player.InputDir * i * player.Grid;
+            tiles.Add(targetGrisPos);
         }
 
         return tiles;
     }
+
     IEnumerator ShowEffect()
     {
         var effects = new List<GameObject>();

@@ -1009,26 +1009,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb366452fe7ba3458141204f7bfaeec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isMoving: 0
   grid: 1
+  isMoving: 0
   moveTime: 0.3
   wait: 0
-  moveStartPos: {x: 0, y: 0, z: 0}
-  moveEndPos: {x: 0, y: 0, z: 0}
+  inputDir: {x: 0, y: 0}
   moveDir: {x: 0, y: 0}
-  spriter: {fileID: 0}
-  animCon:
-  - {fileID: 9100000, guid: dfe3bb6338055854fbe6358fba77980c, type: 2}
-  - {fileID: 22100000, guid: 6390530b2f357c64d9a7733c69c6e4aa, type: 2}
-  - {fileID: 22100000, guid: 4dea7062a042e304490aee783c0afe5a, type: 2}
-  - {fileID: 22100000, guid: 41d3cc684e5e54747bc42b1c1e70a9d3, type: 2}
-  scanner: {fileID: 0}
+  spriteRight: {fileID: -6620443678240376230, guid: a951e849a47841f4693f266cf225a675, type: 3}
+  spriteLeft: {fileID: -5020799733626797212, guid: a951e849a47841f4693f266cf225a675, type: 3}
+  spriteDown: {fileID: 7079357672941150958, guid: a951e849a47841f4693f266cf225a675, type: 3}
+  spriteUp: {fileID: -8535345240785025421, guid: a951e849a47841f4693f266cf225a675, type: 3}
+  gridPos: {x: 0, y: 0}
   gridManager: {fileID: 444485295}
-  hud: {fileID: 1992673517}
-  hands: []
-  inputVec: {x: 0, y: 0}
-  lastMoveDir: {x: 0, y: 0}
-  lastStopDir: {x: 0, y: 0}
 --- !u!114 &156295050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22286,12 +22278,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04379b050ef12594bb5052c85dee351e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnCounts: 1e00000023000000280000002d00000032000000
   spawnData:
   - spriteType: 0
     health: 10
   - spriteType: 0
     health: 10
+  spawnCounts: 1e00000023000000280000002d00000032000000
+  activeEnemies: []
 --- !u!1 &978645197
 GameObject:
   m_ObjectHideFlags: 0
