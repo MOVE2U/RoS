@@ -19,7 +19,8 @@ public class Player : Unit
     {
         if (TurnManager.instance.CurState == TurnState.PlayerTurn
             && inputDir != Vector2Int.zero)
-        {            
+        {
+            Debug.Log("플레이어업데이트 통과");
             if(TryMove(inputDir))
             {
                 TurnManager.instance.MoveCountInc();

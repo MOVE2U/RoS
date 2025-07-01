@@ -147,6 +147,8 @@ public class Enemy : Unit
     // 초기화 - 활성화 될 때 공통
     private void OnEnable()
     {
+        if (spawner == null)
+            spawner = Spawner.instance;
         spawner.AddEnemy(this);
         isMoving = false;
         health = maxHealth;

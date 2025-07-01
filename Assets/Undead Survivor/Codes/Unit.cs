@@ -30,10 +30,17 @@ public class Unit : MonoBehaviour
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        Debug.Log($"spriteRenderer: {spriteRenderer}");
+
     }
 
     private void OnEnable()
     {
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
+        Debug.Log($"OnEnable spriteRenderer: {spriteRenderer}");
+
+        // 기타 활성화 시 초기화
         gridPos = GridManager.instance.WorldToGrid(transform.position);
         isMoving = false;
         inputDir = Vector2Int.zero;
@@ -41,21 +48,32 @@ public class Unit : MonoBehaviour
 
     protected bool TryMove(Vector2Int inputDir)
     {
+        Debug.Log("trymove 실행은 됐음");
+
         if (isMoving)
+        {
+            Debug.Log("움직이고 있어서 리턴");
             return false;
+        }
+
+        Debug.Log("움직이고 있지 않은 경우");
 
         // 이동에 성공을 안하더라도 움직이는 중이 아니라면 스프라이트 방향은 바꿔준다.
         SetSprite(inputDir);
-
+        Debug.Log("스프라이트 세팅 성공");
         Vector2Int nextGridPos = gridPos + inputDir * grid;
-        if (!GridManager.instance.IsObject(nextGridPos))
+        if (GridManager.instance.IsObject(nextGridPos))
         {
-            // 이동한다면 이동 방향을 moveDir에 캡쳐
-            moveDir = inputDir;
-            StartCoroutine(Move(moveDir));
-            return true;
+            Debug.Log("다음 좌표에 오브젝트가 있어서 리턴");
+            return false;
         }
-        return false;
+
+        Debug.Log("이동 성공한 경우");
+
+        // 이동한다면 이동 방향을 moveDir에 캡쳐
+        moveDir = inputDir;
+        StartCoroutine(Move(moveDir));
+        return true;
     }
 
     protected IEnumerator Move(Vector2Int dir)
@@ -101,7 +119,7 @@ public class Unit : MonoBehaviour
         {
             spriteRenderer.sprite = spriteUp;
         }
-        else if (dir == Vector2Int.down)
+        else
         {
             spriteRenderer.sprite = spriteDown;
         }
