@@ -27,18 +27,28 @@ public class Unit : MonoBehaviour
     public bool IsMoving => isMoving;
     public Vector2Int InputDir => inputDir;
 
+    public AnimationCurve ac;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        Debug.Log($"spriteRenderer: {spriteRenderer}");
 
+    }
+
+    private void Start()
+    {
+        if (spriteRenderer == null)
+        {
+            spriteRenderer = GetComponent<SpriteRenderer>();
+        }
     }
 
     private void OnEnable()
     {
         if (spriteRenderer == null)
+        {
             spriteRenderer = GetComponent<SpriteRenderer>();
-        Debug.Log($"OnEnable spriteRenderer: {spriteRenderer}");
+        }
 
         // 기타 활성화 시 초기화
         gridPos = GridManager.instance.WorldToGrid(transform.position);
@@ -48,27 +58,21 @@ public class Unit : MonoBehaviour
 
     protected bool TryMove(Vector2Int inputDir)
     {
-        Debug.Log("trymove 실행은 됐음");
 
         if (isMoving)
         {
-            Debug.Log("움직이고 있어서 리턴");
             return false;
         }
 
-        Debug.Log("움직이고 있지 않은 경우");
 
         // 이동에 성공을 안하더라도 움직이는 중이 아니라면 스프라이트 방향은 바꿔준다.
         SetSprite(inputDir);
-        Debug.Log("스프라이트 세팅 성공");
         Vector2Int nextGridPos = gridPos + inputDir * grid;
         if (GridManager.instance.IsObject(nextGridPos))
         {
-            Debug.Log("다음 좌표에 오브젝트가 있어서 리턴");
             return false;
         }
 
-        Debug.Log("이동 성공한 경우");
 
         // 이동한다면 이동 방향을 moveDir에 캡쳐
         moveDir = inputDir;
@@ -107,6 +111,11 @@ public class Unit : MonoBehaviour
 
     protected void SetSprite(Vector2Int dir)
     {
+        if (spriteRenderer == null)
+        {
+            spriteRenderer = GetComponent<SpriteRenderer>();
+        }
+
         if (dir == Vector2Int.right)
         {
             spriteRenderer.sprite = spriteRight;

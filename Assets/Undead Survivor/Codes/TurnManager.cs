@@ -92,11 +92,9 @@ public class TurnManager : MonoBehaviour
             {
                 if (e == null)
                 {
-                    Debug.LogError("spawner.activeEnemies에 null 참조가 포함되어 있습니다!");
                     continue;
                 }
 
-                Debug.Log($"Enemy: {e.name}, spriteRenderer: {e.GetComponent<SpriteRenderer>()}");
                 e.AutoMove(w);
             }
 
