@@ -48,7 +48,7 @@ public class Gear : MonoBehaviour
         Weapon[] weapons = GameManager.instance.player.GetComponentsInChildren<Weapon>();
         foreach (Weapon weapon in weapons)
         {
-            switch (weapon.id)
+            switch (weapon.Id)
             {
                 case 0:
                     float speed = 150 * Character.WeaponSpeed;

@@ -92,4 +92,33 @@ public class GridManager : MonoBehaviour
     {
         return new Vector3(pos.x, pos.y, 0);
     }
+    
+    private void OnDrawGizmos()
+    {
+        // tileObject 딕셔너리가 초기화되지 않았으면 아무것도 하지 않음 (안전장치)
+        if (tileObject == null)
+        {
+            return;
+        }
+   
+        // 기즈모의 색상을 빨간색으로 설정
+        Gizmos.color = Color.red;
+   
+        // tileObject 딕셔너리에 등록된 모든 항목에 대해 루프를 돕니다.
+        foreach (var tile in tileObject)
+        {
+            // tile.Key는 그리드 좌표 (Vector2Int)
+            // tile.Value는 등록된 게임 오브젝트 (GameObject)
+   
+            if (tile.Value != null) // 혹시 모를 null 값에 대비
+            {
+                // 그리드 좌표를 실제 월드 좌표로 변환
+                Vector3 worldPos = GridToWorld(tile.Key);
+   
+                // 해당 월드 좌표에 반투명한 큐브를 그립니다.
+                // 사이즈는 타일 크기에 맞게 조절하세요. (예: new Vector3(1, 1, 0.1f))
+                Gizmos.DrawCube(worldPos, Vector3.one* 0.8f);
+            }
+        }
+    }
 }

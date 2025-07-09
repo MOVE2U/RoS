@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Net;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
@@ -27,20 +28,9 @@ public class Unit : MonoBehaviour
     public bool IsMoving => isMoving;
     public Vector2Int InputDir => inputDir;
 
-    public AnimationCurve ac;
-
-    private void Awake()
+    protected void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-    }
-
-    private void Start()
-    {
-        if (spriteRenderer == null)
-        {
-            spriteRenderer = GetComponent<SpriteRenderer>();
-        }
     }
 
     private void OnEnable()
@@ -58,31 +48,39 @@ public class Unit : MonoBehaviour
 
     protected bool TryMove(Vector2Int inputDir)
     {
-
+        // 1. 이동 중이면 이동 안함
         if (isMoving)
         {
             return false;
         }
 
-
-        // 이동에 성공을 안하더라도 움직이는 중이 아니라면 스프라이트 방향은 바꿔준다.
+        // 2. 이동 성공 여부와 관계 없이 스프라이트 방향은 일단 바꿈
         SetSprite(inputDir);
+
+        // 3. 이동 방향에 뭐 있는지 검사하고 처리
         Vector2Int nextGridPos = gridPos + inputDir * grid;
-        if (GridManager.instance.IsObject(nextGridPos))
+        GameObject nextObject = GridManager.instance.GetObject(nextGridPos);
+        if(nextObject != null)
         {
-            return false;
+            return ObjectEncounter(nextObject, inputDir);
         }
 
-
-        // 이동한다면 이동 방향을 moveDir에 캡쳐
-        moveDir = inputDir;
-        StartCoroutine(Move(moveDir));
+        // 4. 이동 실행
+        StartCoroutine(ExecuteMove(inputDir));
         return true;
     }
 
-    protected IEnumerator Move(Vector2Int dir)
+    protected virtual bool ObjectEncounter(GameObject obj, Vector2Int dir)
+    {
+        return false;
+    }
+
+    protected IEnumerator ExecuteMove(Vector2Int dir)
     {
         isMoving = true;
+
+        // 이동 방향 캡쳐
+        moveDir = dir;
 
         // 논리 좌표 업데이트
         Vector2Int startGridPos = gridPos;
@@ -111,11 +109,6 @@ public class Unit : MonoBehaviour
 
     protected void SetSprite(Vector2Int dir)
     {
-        if (spriteRenderer == null)
-        {
-            spriteRenderer = GetComponent<SpriteRenderer>();
-        }
-
         if (dir == Vector2Int.right)
         {
             spriteRenderer.sprite = spriteRight;

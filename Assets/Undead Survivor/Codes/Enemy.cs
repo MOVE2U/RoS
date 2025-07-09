@@ -14,17 +14,46 @@ public class Enemy : Unit
     private Player player;
     private Spawner spawner;
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
+
         // Unit 공통 변수 초기화
         moveTime = 0.3f;
     }
 
-    // 싱글톤 참조는 start
-    private void Start()
+    // 초기화 - 활성화 될 때 공통
+    private void OnEnable()
     {
+        // 오브젝트 풀링은 OnEnable에서 초기화하기도 함. 싱글톤 참조는 비용이 적음
         player = GameManager.instance.player;
         spawner = Spawner.instance;
+
+        if (spawner == null)
+            spawner = Spawner.instance;
+        spawner.AddEnemy(this);
+        isMoving = false;
+        health = maxHealth;
+    }
+
+    // 초기화 - 외부에서 전달받은 데이터로 세팅하는 항목
+    public void Init(SpawnData data)
+    {
+        health = data.health;
+        maxHealth = data.health;
+    }
+
+    // 정리 - 비활성화 될 때 공통
+    private void OnDisable()
+    {
+        GridManager.instance.Unregister(gridPos);
+        spawner.RemoveEnemy(this);
+    }
+
+    // 정리 - 죽었을 때만 호출되는 항목
+    void Dead()
+    {
+        gameObject.SetActive(false);
     }
 
     private void EnemyMoveJudge()
@@ -137,33 +166,9 @@ public class Enemy : Unit
         EnemyMoveJudge();
     }
 
-    // 초기화 - 외부에서 전달받은 데이터로 세팅하는 항목
-    public void Init(SpawnData data)
+    // 내 스크립트 안에 있는 IEnumerator만 StartCoroutine로 직접 호출할 수 있다. 아래는 Player에서 Enemy의 StartCoroutine을 호출할 필요가 있어서 별도의 메서드를 만든 것.
+    public void PushedMove(Vector2Int dir)
     {
-        health = data.health;
-        maxHealth = data.health;
-    }
-
-    // 초기화 - 활성화 될 때 공통
-    private void OnEnable()
-    {
-        if (spawner == null)
-            spawner = Spawner.instance;
-        spawner.AddEnemy(this);
-        isMoving = false;
-        health = maxHealth;
-    }
-
-    // 정리 - 죽었을 때만 호출되는 항목
-    void Dead()
-    {
-        gameObject.SetActive(false);
-    }
-
-    // 정리 - 비활성화 될 때 공통
-    private void OnDisable()
-    {
-        GridManager.instance.Unregister(gridPos);
-        spawner.RemoveEnemy(this);
+        StartCoroutine(ExecuteMove(dir));
     }
 }
