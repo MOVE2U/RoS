@@ -87,7 +87,7 @@ public class Unit : MonoBehaviour
         gridPos += dir * grid;
 
         // GridManager에 좌표 변경 알림
-        GridManager.instance.ChangeOccupant(startGridPos, gridPos, gameObject);
+        GridManager.instance.MoveOccupant(startGridPos, gridPos, gameObject);
 
         // 이동 애니메이션을 위한 월드 좌표 계산
         Vector3 startPos = GridManager.instance.GridToWorld(startGridPos);

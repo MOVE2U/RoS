@@ -5,142 +5,27 @@ public class GridManager : MonoBehaviour
 {
     public static GridManager instance;
     private Dictionary<Vector2Int, GameObject> occupants = new Dictionary<Vector2Int, GameObject>();
-    private Dictionary<Vector2Int, List<GameObject>> triggerLists = new Dictionary<Vector2Int, List<GameObject>>();
+    private Dictionary<Vector2Int, List<GameObject>> triggers = new Dictionary<Vector2Int, List<GameObject>>();
 
     private void Awake()
     {
         instance = this;
     }
 
-    // 존재 여부(Vector2Int)
+    #region occupant
+    // 있음? 여부
     public bool IsOccupant(Vector2Int gridPos)
     {
         return occupants.ContainsKey(gridPos);
     }
 
-    // 존재 여부(Vector3)
     public bool IsOccupant(Vector3 worldPos)
     {
         Vector2Int gridPos = WorldToGrid(worldPos);
         return IsOccupant(gridPos);
     }
 
-    // 등록(Vector2Int)
-    public void RegisterOccupant(Vector2Int gridPos, GameObject obj)
-    {
-        occupants[gridPos] = obj;
-    }
-
-    // 등록(Vector3)
-    public void RegisterOccupant(Vector3 worldPos, GameObject obj)
-    {
-        Vector2Int gridPos = WorldToGrid(worldPos);
-        RegisterOccupant(gridPos, obj);
-    }
-
-    // 제거(Vector2Int)
-    public void UnregisterOccupant(Vector2Int gridPos)
-    {
-        if (occupants.ContainsKey(gridPos))
-            occupants.Remove(gridPos);
-    }
-
-    // 제거(Vector3)
-    public void UnregisterOccupant(Vector3 worldPos)
-    {
-        Vector2Int gridPos = WorldToGrid(worldPos);
-        UnregisterOccupant(gridPos);
-    }
-
-    // 이동(Vector2Int)
-    public void ChangeOccupant(Vector2Int from, Vector2Int to, GameObject obj)
-    {
-        UnregisterOccupant(from);
-        RegisterOccupant(to, obj);
-    }
-
-    // 이동(Vector3)
-    public void ChangeOccupant(Vector3 worldFrom, Vector3 worldTo, GameObject obj)
-    {
-        Vector2Int fromGrid = WorldToGrid(worldFrom);
-        Vector2Int toGrid = WorldToGrid(worldTo);
-        ChangeOccupant(fromGrid, toGrid, obj);
-    }
-
-    // 조회(Vector2Int)
-    public List<GameObject> GetTriggerList(Vector2Int gridPos)
-    {
-        if (triggerLists.TryGetValue(gridPos, out var obj))
-            return obj;
-        return null;
-    }
-
-    // 조회(Vector3)
-    public List<GameObject> GetTriggerList(Vector3 worldPos)
-    {
-        Vector2Int gridPos = WorldToGrid(worldPos);
-        return GetTriggerList(gridPos);
-    }
-
-    // 존재 여부(Vector2Int)
-    public bool IsTriggerList(Vector2Int gridPos)
-    {
-        return triggerLists.ContainsKey(gridPos);
-    }
-
-    // 존재 여부(Vector3)
-    public bool IsTriggerList(Vector3 worldPos)
-    {
-        Vector2Int gridPos = WorldToGrid(worldPos);
-        return IsTriggerList(gridPos);
-    }
-
-    // 등록(Vector2Int)
-    public void RegisterTriggerList(Vector2Int gridPos, GameObject obj)
-    {
-        if(IsTriggerList(gridPos))
-        {
-            List<GameObject> existingList = GetTriggerList(gridPos);
-            existingList.Add(obj);
-        }
-        else
-        {
-            triggerLists[gridPos] = new List<GameObject> { obj };
-        }
-    }
-
-    // 등록(Vector3)
-    public void RegisterTriggerList(Vector3 worldPos, GameObject obj)
-    {
-        Vector2Int gridPos = WorldToGrid(worldPos);
-        RegisterTriggerList(gridPos, obj);
-    }
-
-    // 제거(Vector2Int)
-    public void UnregisterTriggerList(Vector2Int gridPos)
-    {
-        if (triggerLists.ContainsKey(gridPos))
-        {
-            List<GameObject> existingList = GetTriggerList(gridPos);
-            if (existingList.Count > 1)
-            {
-                existingList.RemoveAt(0); // 첫 번째 요소 제거
-            }
-            else
-            {
-                triggerLists.Remove(gridPos);
-            }
-        }
-    }
-
-    // 제거(Vector3)
-    public void UnregisterTriggerList(Vector3 worldPos)
-    {
-        Vector2Int gridPos = WorldToGrid(worldPos);
-        UnregisterTriggerList(gridPos);
-    }
-
-    // 조회(Vector2Int)
+    // 있으면 줘
     public GameObject GetOccupant(Vector2Int gridPos)
     {
         if (occupants.TryGetValue(gridPos, out var obj))
@@ -148,12 +33,118 @@ public class GridManager : MonoBehaviour
         return null;
     }
 
-    // 조회(Vector3)
     public GameObject GetOccupant(Vector3 worldPos)
     {
         Vector2Int gridPos = WorldToGrid(worldPos);
         return GetOccupant(gridPos);
     }
+
+    // 등록
+    public void RegisterOccupant(Vector2Int gridPos, GameObject obj)
+    {
+        occupants[gridPos] = obj;
+    }
+
+    public void RegisterOccupant(Vector3 worldPos, GameObject obj)
+    {
+        Vector2Int gridPos = WorldToGrid(worldPos);
+        RegisterOccupant(gridPos, obj);
+    }
+
+    // 등록 해제
+    public void UnregisterOccupant(Vector2Int gridPos)
+    {
+        if (occupants.ContainsKey(gridPos))
+            occupants.Remove(gridPos);
+    }
+
+    public void UnregisterOccupant(Vector3 worldPos)
+    {
+        Vector2Int gridPos = WorldToGrid(worldPos);
+        UnregisterOccupant(gridPos);
+    }
+
+    // 이동
+    public void MoveOccupant(Vector2Int from, Vector2Int to, GameObject obj)
+    {
+        UnregisterOccupant(from);
+        RegisterOccupant(to, obj);
+    }
+
+    public void MoveOccupant(Vector3 worldFrom, Vector3 worldTo, GameObject obj)
+    {
+        Vector2Int fromGrid = WorldToGrid(worldFrom);
+        Vector2Int toGrid = WorldToGrid(worldTo);
+        MoveOccupant(fromGrid, toGrid, obj);
+    }
+    #endregion
+
+    #region trigger
+    // 있음? 여부
+    public bool HasTriggers(Vector2Int gridPos)
+    {
+        return triggers.ContainsKey(gridPos);
+    }
+
+    public bool HasTriggers(Vector3 worldPos)
+    {
+        Vector2Int gridPos = WorldToGrid(worldPos);
+        return HasTriggers(gridPos);
+    }
+
+    // 있으면 줘
+    public List<GameObject> GetTriggers(Vector2Int gridPos)
+    {
+        if (triggers.TryGetValue(gridPos, out var list))
+            return list;
+        return null;
+    }
+
+    public List<GameObject> GetTriggers(Vector3 worldPos)
+    {
+        Vector2Int gridPos = WorldToGrid(worldPos);
+        return GetTriggers(gridPos);
+    }
+
+    // 등록
+    public void RegisterTrigger(Vector2Int gridPos, GameObject obj)
+    {
+        if(triggers.TryGetValue(gridPos, out var existingList))
+        {
+            existingList.Add(obj);
+        }
+        else
+        {
+            triggers[gridPos] = new List<GameObject> { obj };
+        }
+    }
+
+    public void RegisterTrigger(Vector3 worldPos, GameObject obj)
+    {
+        Vector2Int gridPos = WorldToGrid(worldPos);
+        RegisterTrigger(gridPos, obj);
+    }
+
+    // 등록 해제
+    public void UnregisterTrigger(Vector2Int gridPos, GameObject obj)
+    {
+        if (triggers.TryGetValue(gridPos, out var existingList))
+        {
+            existingList.Remove(obj);
+
+            if (existingList.Count == 0)
+            {
+                triggers.Remove(gridPos);
+            }
+        }
+    }
+
+    public void UnregisterTrigger(Vector3 worldPos, GameObject obj)
+    {
+        Vector2Int gridPos = WorldToGrid(worldPos);
+        UnregisterTrigger(gridPos, obj);
+    }
+    #endregion
 
     // 그리드 좌표로 변환
     public Vector2Int WorldToGrid(Vector3 pos)
