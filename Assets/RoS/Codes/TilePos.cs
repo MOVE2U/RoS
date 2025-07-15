@@ -24,7 +24,7 @@ public class TilePos : MonoBehaviour
             GetTilePos();
             foreach (Vector2Int pos in tilePos)
             {
-                GridManager.instance.Register(pos, gameObject);
+                GridManager.instance.RegisterOccupant(pos, gameObject);
             }
         }
     }

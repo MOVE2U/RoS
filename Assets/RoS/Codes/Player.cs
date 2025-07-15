@@ -79,7 +79,7 @@ public class Player : Unit
         while(true)
         {
             Vector2Int nextGridPos = lastEnemy.gridPos + dir * grid;
-            GameObject nextObject = GridManager.instance.GetObject(nextGridPos);
+            GameObject nextObject = GridManager.instance.GetOccupant(nextGridPos);
 
             // case1: 다응 칸이 빈칸이면 Push 가능. 루프 탈출
             if (nextObject == null)

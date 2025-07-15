@@ -72,7 +72,7 @@ public class Weapon : MonoBehaviour
         // 2. 공격 타일에 있는 적에게 대미지 적용
         foreach (var attackTile in attackTiles)
         {
-            GameObject obj = GridManager.instance.GetObject(attackTile);
+            GameObject obj = GridManager.instance.GetOccupant(attackTile);
             if (obj != null && obj.TryGetComponent<Enemy>(out var enemy))
             {
                 enemy.Attacked(damage);

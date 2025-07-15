@@ -59,7 +59,7 @@ public class Unit : MonoBehaviour
 
         // 3. 이동 방향에 뭐 있는지 검사하고 처리
         Vector2Int nextGridPos = gridPos + inputDir * grid;
-        GameObject nextObject = GridManager.instance.GetObject(nextGridPos);
+        GameObject nextObject = GridManager.instance.GetOccupant(nextGridPos);
         if(nextObject != null)
         {
             return ObjectEncounter(nextObject, inputDir);
@@ -87,7 +87,7 @@ public class Unit : MonoBehaviour
         gridPos += dir * grid;
 
         // GridManager에 좌표 변경 알림
-        GridManager.instance.Change(startGridPos, gridPos, gameObject);
+        GridManager.instance.ChangeOccupant(startGridPos, gridPos, gameObject);
 
         // 이동 애니메이션을 위한 월드 좌표 계산
         Vector3 startPos = GridManager.instance.GridToWorld(startGridPos);

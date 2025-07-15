@@ -41,7 +41,7 @@ public class Spawner : MonoBehaviour
                 Vector2Int playerGridPos = GridManager.instance.WorldToGrid(playerPos);
 
                 Vector2Int point = new Vector2Int(playerGridPos.x + x, playerGridPos.y + y);
-                if(!GridManager.instance.IsObject(point))
+                if(!GridManager.instance.IsOccupant(point))
                 {
                     emptyPoint.Add(point);
                 }
@@ -65,7 +65,7 @@ public class Spawner : MonoBehaviour
             // 논리 좌표 업데이트
             enemyObj.TryGetComponent<Enemy>(out var enemy);
             enemy.gridPos = point;
-            GridManager.instance.Register(point, enemyObj);
+            GridManager.instance.RegisterOccupant(point, enemyObj);
 
             // 월드 좌표 업데이트
             enemyObj.transform.position = new Vector3(enemy.gridPos.x, enemy.gridPos.y, 0);

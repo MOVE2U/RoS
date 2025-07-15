@@ -46,7 +46,7 @@ public class Enemy : Unit
     // 정리 - 비활성화 될 때 공통
     private void OnDisable()
     {
-        GridManager.instance.Unregister(gridPos);
+        GridManager.instance.UnregisterOccupant(gridPos);
         spawner.RemoveEnemy(this);
     }
 
@@ -109,7 +109,7 @@ public class Enemy : Unit
                 break;
             }
 
-            if (GridManager.instance.IsObject(candidate))
+            if (GridManager.instance.IsOccupant(candidate))
             {
                 continue;
             }
@@ -148,7 +148,7 @@ public class Enemy : Unit
         }
         else
         {
-            GridManager.instance.Unregister(gridPos);
+            GridManager.instance.UnregisterOccupant(gridPos);
             Dead();
             GameManager.instance.kill++;
             GameManager.instance.GetExp();

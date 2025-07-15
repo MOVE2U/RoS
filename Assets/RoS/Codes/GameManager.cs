@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
         player.gameObject.SetActive(true);
         Vector2Int playerGridPos = GridManager.instance.WorldToGrid(player.transform.position);
         player.transform.position = GridManager.instance.GridToWorld(playerGridPos); // 보정
-        GridManager.instance.Register(playerGridPos, player.gameObject); // 등록
+        GridManager.instance.RegisterOccupant(playerGridPos, player.gameObject); // 등록
         uiLevelUp.Select(playerId);
         Resume();
 
