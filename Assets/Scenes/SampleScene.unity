@@ -3353,7 +3353,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 15.65
+  orthographic size: 6.75
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -22283,7 +22283,8 @@ MonoBehaviour:
     health: 10
   - spriteType: 0
     health: 10
-  spawnCounts: 1e00000023000000280000002d00000032000000
+  spawnCounts: 05000000140000001e0000002800000032000000
+  maxAttempts: 5
   activeEnemies: []
 --- !u!1 &978645197
 GameObject:

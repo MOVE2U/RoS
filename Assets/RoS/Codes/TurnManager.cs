@@ -69,7 +69,14 @@ public class TurnManager : MonoBehaviour
         moveCount = 0;
         turnCount++;
 
-        spawner.RandomSpawn(turnCount);
+        if(turnCount == 1)
+        {
+            spawner.RandomSpawn(turnCount, 5, 10);
+        }
+        else
+        {
+            spawner.RandomSpawn(turnCount);
+        }
     }
 
     private IEnumerator StartEnemyTurn()

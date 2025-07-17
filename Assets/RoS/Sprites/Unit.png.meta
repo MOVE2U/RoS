@@ -32,6 +32,12 @@ TextureImporter:
   - first:
       213: -2215089666433979693
     second: Unit_9
+  - first:
+      213: -8902183391431506127
+    second: Unit_10
+  - first:
+      213: 5832045943549946005
+    second: Unit_11
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -359,11 +365,55 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Unit_10
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 0
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 137c75c0f57157480800000000000000
+      internalID: -8902183391431506127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Unit_11
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 0
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5986d0bd2e69fe050800000000000000
+      internalID: 5832045943549946005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5ec016aeef992c54797150ac0f32400c
+    spriteID: a02aca2b7d7f99740a5f39bf22c0fc8f
     internalID: 0
     vertices: []
     indices: 
@@ -375,6 +425,8 @@ TextureImporter:
     nameFileIdTable:
       Unit_0: -6620443678240376230
       Unit_1: -5020799733626797212
+      Unit_10: -8902183391431506127
+      Unit_11: 5832045943549946005
       Unit_2: 7079357672941150958
       Unit_3: -8535345240785025421
       Unit_4: -9219256854923441943

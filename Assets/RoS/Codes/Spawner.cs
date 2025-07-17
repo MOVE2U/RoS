@@ -8,9 +8,10 @@ public class Spawner : MonoBehaviour
 
     [Header("spawn data")]
     [SerializeField] private SpawnData[] spawnData;
-    [SerializeField] private int[] spawnCounts = { 30, 35, 40, 45, 50 };
-    
-    private List<Vector2Int> spawnPoint = new List<Vector2Int>();
+    [SerializeField] private int[] spawnCounts = { 5, 20, 30, 40, 50 };
+    [SerializeField] private int maxAttempts = 5;
+
+    private List<Vector2Int> spawnPoints = new List<Vector2Int>();
     
     public List<Enemy> activeEnemies = new List<Enemy>();
 
@@ -19,46 +20,38 @@ public class Spawner : MonoBehaviour
         instance = this;
     }
 
-    public void RandomSpawn(int index)
+    public void RandomSpawn(int index, int minSpawnDistance = 14, int maxSpawnDistance = 18)
     {
         int count = spawnCounts[Mathf.Min(index - 1, spawnCounts.Length - 1)];
 
-        GetSpawnPoints(count);
+        GetSpawnPoints(count, minSpawnDistance, maxSpawnDistance);
         MonsterSpawn();
     }
 
-    private void GetSpawnPoints(int count)
+    private void GetSpawnPoints(int count, int minSpawnDistance, int maxSpawnDistance)
     {
-        spawnPoint.Clear();
+        spawnPoints.Clear();
 
-        List<Vector2Int> emptyPoint = new List<Vector2Int>();
-
-        for(int x = -15; x <= 15; x++)
+        for (int i = 0; i < count * maxAttempts; i++)
         {
-            for (int y = -9; y <= 9; y++)
+            // 1. 목표하는 개수에 도달했으면 탈출 (for문은 '시도'하는 것이기 때문에, 목표한 count의 5배로 시도한다)
+            if (spawnPoints.Count >= count) break;
+
+            // 2. 랜덤 위치 생성
+            float angle = Random.Range(0f, 360f);
+            Vector3 spawnPoint = GameManager.instance.player.transform.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * Random.Range(minSpawnDistance, maxSpawnDistance);
+
+            // 3. 해당 위치가 비어있고, spawnPoints에 없다면 추가
+            if (!GridManager.instance.IsOccupant(spawnPoint) && !spawnPoints.Contains(GridManager.instance.WorldToGrid(spawnPoint)))
             {
-                Vector3 playerPos = GameManager.instance.player.transform.position;
-                Vector2Int playerGridPos = GridManager.instance.WorldToGrid(playerPos);
-
-                Vector2Int point = new Vector2Int(playerGridPos.x + x, playerGridPos.y + y);
-                if(!GridManager.instance.IsOccupant(point))
-                {
-                    emptyPoint.Add(point);
-                }
+                spawnPoints.Add(GridManager.instance.WorldToGrid(spawnPoint));
             }
-        }
-
-        for(int i = 0; i < Mathf.Min(count,emptyPoint.Count); i++)
-        {
-            int index = Random.Range(0, emptyPoint.Count);
-            spawnPoint.Add(emptyPoint[index]);
-            emptyPoint.RemoveAt(index);
         }
     }
 
     private void MonsterSpawn()
     {
-        foreach(Vector2Int point in spawnPoint)
+        foreach(Vector2Int point in spawnPoints)
         {
             GameObject enemyObj = GameManager.instance.pool.Get(0);
             
