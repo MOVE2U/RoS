@@ -7,7 +7,7 @@ public class Weapon : MonoBehaviour
 {
     [Header("for check")]
     private int id;
-    private int prefabId;
+    private GameObject prefab;
     private float damage;
     private int count;
     public float speed; // 나중에 Gear에서 변경하는 메서드를 Weapon에서 만들고 private set으로 변경 필요
@@ -49,16 +49,7 @@ public class Weapon : MonoBehaviour
         damage = data.baseDamage * Character.Damage;
         count = data.baseCount + Character.Count;
         speed = 1f;
-
-        for (int index = 0; index < GameManager.instance.pool.prefabs.Length; index++)
-        {
-            if (data.projectile == GameManager.instance.pool.prefabs[index])
-            {
-                prefabId = index;
-                break;
-            }
-        }
-
+        prefab = data.projectile;
 
         player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
     }
@@ -106,7 +97,7 @@ public class Weapon : MonoBehaviour
         {
             Vector3 effectPos = GridManager.instance.GridToWorld(tile);
 
-            Transform effect = GameManager.instance.pool.Get(prefabId).transform;
+            Transform effect = GameManager.instance.pool.Get(prefab).transform;
             effect.position = effectPos;
             effects.Add(effect.gameObject);
         }

@@ -27,6 +27,14 @@ public class TurnManager : MonoBehaviour
     [Header("external ref")]
     [SerializeField] private Spawner spawner;
     [SerializeField] private HUD hud;
+    [SerializeField] private SpawnData monsterFirst;
+    [SerializeField] private SpawnData monsterGeneral;
+    [SerializeField] private SpawnData coinFirst;
+    [SerializeField] private List<Vector2Int> coinPoints;
+    [SerializeField] private SpawnData coinGeneral;
+    [SerializeField] private SpawnData choiceNPCFirst;
+    [SerializeField] private List<Vector2Int> choiceNPCPoints;
+    [SerializeField] private SpawnData choiceNPCGeneral;
 
     public TurnState CurState => curState;
     public int TurnCount => turnCount;
@@ -71,11 +79,15 @@ public class TurnManager : MonoBehaviour
 
         if(turnCount == 1)
         {
-            spawner.RandomSpawn(turnCount, 5, 10);
+            spawner.RandomSpawn(turnCount, monsterFirst);
+            spawner.FixedSpawn(coinPoints, coinFirst);
+            spawner.FixedSpawn(choiceNPCPoints, choiceNPCFirst);
         }
         else
         {
-            spawner.RandomSpawn(turnCount);
+            spawner.RandomSpawn(turnCount, monsterGeneral);
+            spawner.RandomSpawn(turnCount, coinGeneral);
+            spawner.RandomSpawn(turnCount, choiceNPCGeneral);
         }
     }
 

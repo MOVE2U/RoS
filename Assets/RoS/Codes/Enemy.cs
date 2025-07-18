@@ -1,7 +1,9 @@
 using UnityEngine;
 using System;
+using System.Drawing;
+using Unity.VisualScripting;
 
-public class Enemy : Unit
+public class Enemy : Unit, ISpawnable
 {
     [Header("value")]
     [SerializeField] private float health;
@@ -37,16 +39,23 @@ public class Enemy : Unit
     }
 
     // 초기화 - 외부에서 전달받은 데이터로 세팅하는 항목
-    public void Init(SpawnData data)
+    public void OnSpawn(SpawnData spawnData, Vector2Int pos)
     {
-        health = data.health;
-        maxHealth = data.health;
+        health = spawnData.health;
+        maxHealth = spawnData.health;
+
+        // 논리 좌표 업데이트
+        gridPos = pos;
+        GridManager.instance.RegisterOccupant(pos, this.gameObject);
+
+        // 월드 좌표 업데이트
+        transform.position = new Vector3(gridPos.x, gridPos.y, 0);
     }
 
     // 정리 - 비활성화 될 때 공통
     private void OnDisable()
     {
-        GridManager.instance.UnregisterOccupant(gridPos);
+        GridManager.instance.UnRegisterOccupant(gridPos);
         spawner.RemoveEnemy(this);
     }
 
@@ -148,10 +157,10 @@ public class Enemy : Unit
         }
         else
         {
-            GridManager.instance.UnregisterOccupant(gridPos);
+            GridManager.instance.UnRegisterOccupant(gridPos);
             Dead();
             GameManager.instance.kill++;
-            GameManager.instance.GetExp();
+            //GameManager.instance.GetExp();
 
             if (GameManager.instance.isLive)
             {

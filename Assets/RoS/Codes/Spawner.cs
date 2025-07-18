@@ -7,8 +7,6 @@ public class Spawner : MonoBehaviour
     public static Spawner instance;
 
     [Header("spawn data")]
-    [SerializeField] private SpawnData[] spawnData;
-    [SerializeField] private int[] spawnCounts = { 5, 20, 30, 40, 50 };
     [SerializeField] private int maxAttempts = 5;
 
     private List<Vector2Int> spawnPoints = new List<Vector2Int>();
@@ -20,12 +18,21 @@ public class Spawner : MonoBehaviour
         instance = this;
     }
 
-    public void RandomSpawn(int index, int minSpawnDistance = 14, int maxSpawnDistance = 18)
+    public void FixedSpawn(List<Vector2Int> fixedPoints, SpawnData spawnData)
     {
-        int count = spawnCounts[Mathf.Min(index - 1, spawnCounts.Length - 1)];
+        spawnPoints = new List<Vector2Int>(fixedPoints);
+        Spawn(spawnData);
+    }
+
+    public void RandomSpawn(int index, SpawnData spawnData)
+    {
+        int count = spawnData.spawnCounts[Mathf.Min(index - 1, spawnData.spawnCounts.Length - 1)];
+        int minSpawnDistance = spawnData.minSpawnDistance;
+        int maxSpawnDistance = spawnData.maxSpawnDistance;
+        GameObject prefab = spawnData.prefab;
 
         GetSpawnPoints(count, minSpawnDistance, maxSpawnDistance);
-        MonsterSpawn();
+        Spawn(spawnData);
     }
 
     private void GetSpawnPoints(int count, int minSpawnDistance, int maxSpawnDistance)
@@ -49,22 +56,18 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    private void MonsterSpawn()
+    private void Spawn(SpawnData spawnData)
     {
         foreach(Vector2Int point in spawnPoints)
         {
-            GameObject enemyObj = GameManager.instance.pool.Get(0);
-            
-            // 논리 좌표 업데이트
-            enemyObj.TryGetComponent<Enemy>(out var enemy);
-            enemy.gridPos = point;
-            GridManager.instance.RegisterOccupant(point, enemyObj);
-
-            // 월드 좌표 업데이트
-            enemyObj.transform.position = new Vector3(enemy.gridPos.x, enemy.gridPos.y, 0);
+            GameObject Object = GameManager.instance.pool.Get(spawnData.prefab);
 
             // 초기화
-            enemy.Init(spawnData[TurnManager.instance.TurnCount % 2]);
+            ISpawnable spawnable = Object.GetComponent<ISpawnable>();
+            if (spawnable != null)
+            {
+                spawnable.OnSpawn(spawnData, point);
+            }
 
             GameManager.instance.spawnCountTotal++;
         }
@@ -82,14 +85,4 @@ public class Spawner : MonoBehaviour
     {
         activeEnemies.Remove(e);
     }
-}
-
-// 데이터를 그룹화해서 부모 클래스의 인스펙터에서 데이터를 관리하는 방식. 간단한 데이터에 사용
-[System.Serializable]
-public class SpawnData
-{
-    public int spriteType;
-    // Enemy에서는 health를 float으로 선언했는데, float형 변수에 int형 변수를 넣어도 문제 없이 자동 변환이 일어난다.
-    // 초기값을 float으로 선언하면 부동소수점 오차가 발생할 수 있으니, 초기값은 int로 선언하는 것이 장점이 있다.
-    public int health;
 }

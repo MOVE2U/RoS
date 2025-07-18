@@ -111,4 +111,21 @@ public class Player : Unit
 
         return true;
     }
+
+    protected override void TriggerEncounter(Vector2Int gridPos)
+    {
+        // 이동 지점에 트리거 확인하고 처리
+        if (GridManager.instance.HasTriggers(gridPos))
+        {
+            List<GameObject> triggers = GridManager.instance.GetTriggers(gridPos);
+
+            foreach (GameObject trigger in new List<GameObject>(triggers))
+            {
+                if (trigger.TryGetComponent<Iinteractable>(out var iinteractable))
+                {
+                    iinteractable.OnInteract();
+                }
+            }
+        }
+    }
 }

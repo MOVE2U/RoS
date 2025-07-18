@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public float maxHealth;
     public int level;
     public int kill;
+    public int coin;
     public int spawnCountTotal;
     public int exp;
     // 동적으로 객체나 컴포넌트를 초기화할 때는 Awake나 Start에서 하지만, 기본 데이터 타입은 필드에서 가능하다.
@@ -96,20 +97,21 @@ public class GameManager : MonoBehaviour
         gameTime += Time.deltaTime;
     }
 
-    public void GetExp()
-    {
-        if (!isLive)
-            return;
+    //public void GetExp()
+    //{
+    //    if (!isLive)
+    //        return;
 
-        exp++;
+    //    exp++;
 
-        if(exp== nextExp[Mathf.Min(level,nextExp.Length-1)])
-        {
-            level++;
-            exp = 0;
-            uiLevelUp.Show();
-        }
-    }
+    //    if(exp== nextExp[Mathf.Min(level,nextExp.Length-1)])
+    //    {
+    //        level++;
+    //        exp = 0;
+    //        uiLevelUp.Show();
+    //    }
+    //}
+
     public void Stop()
     {
         // isLive -> 게임 로직(예: 경험치, UI 갱신 등)을 멈춤

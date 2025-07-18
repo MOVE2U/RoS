@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType { EXP, Level, Turn, Kill, Enemy, Health, TurnChanging, MoveCount }
+    public enum InfoType { EXP, Level, Turn, Kill, Coin, Health, TurnChanging, MoveCount }
     public InfoType type;
 
     Text myText;
@@ -63,10 +63,10 @@ public class HUD : MonoBehaviour
                 }
                 break;
             case InfoType.Kill:
-                myText.text = string.Format("Kill: {0:F0}", GameManager.instance.kill);
+                myText.text = string.Format("Soul: {0:F0}", GameManager.instance.kill);
                 break;
-            case InfoType.Enemy:
-                myText.text = string.Format("Enemy: {0:F0}", GameManager.instance.spawnCountTotal - GameManager.instance.kill);
+            case InfoType.Coin:
+                myText.text = string.Format("Coin: {0:F0}", GameManager.instance.coin);
                 break;
             case InfoType.Health:
                 float curHealth = GameManager.instance.health;

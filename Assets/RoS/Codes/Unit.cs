@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Net;
+using NUnit.Framework;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
@@ -67,6 +69,7 @@ public class Unit : MonoBehaviour
 
         // 4. 이동 실행
         StartCoroutine(ExecuteMove(inputDir));
+
         return true;
     }
 
@@ -102,9 +105,17 @@ public class Unit : MonoBehaviour
             yield return null;
         }
         transform.position = endPos;
+
+        TriggerEncounter(gridPos);
+
         yield return new WaitForSeconds(wait);
 
         isMoving = false;
+    }
+
+    protected virtual void TriggerEncounter(Vector2Int gridPos)
+    {
+
     }
 
     protected void SetSprite(Vector2Int dir)

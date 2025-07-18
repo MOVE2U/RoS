@@ -52,22 +52,22 @@ public class GridManager : MonoBehaviour
     }
 
     // 등록 해제
-    public void UnregisterOccupant(Vector2Int gridPos)
+    public void UnRegisterOccupant(Vector2Int gridPos)
     {
         if (occupants.ContainsKey(gridPos))
             occupants.Remove(gridPos);
     }
 
-    public void UnregisterOccupant(Vector3 worldPos)
+    public void UnRegisterOccupant(Vector3 worldPos)
     {
         Vector2Int gridPos = WorldToGrid(worldPos);
-        UnregisterOccupant(gridPos);
+        UnRegisterOccupant(gridPos);
     }
 
     // 이동
     public void MoveOccupant(Vector2Int from, Vector2Int to, GameObject obj)
     {
-        UnregisterOccupant(from);
+        UnRegisterOccupant(from);
         RegisterOccupant(to, obj);
     }
 
@@ -126,7 +126,7 @@ public class GridManager : MonoBehaviour
     }
 
     // 등록 해제
-    public void UnregisterTrigger(Vector2Int gridPos, GameObject obj)
+    public void UnRegisterTrigger(Vector2Int gridPos, GameObject obj)
     {
         if (triggers.TryGetValue(gridPos, out var existingList))
         {
@@ -139,10 +139,10 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void UnregisterTrigger(Vector3 worldPos, GameObject obj)
+    public void UnRegisterTrigger(Vector3 worldPos, GameObject obj)
     {
         Vector2Int gridPos = WorldToGrid(worldPos);
-        UnregisterTrigger(gridPos, obj);
+        UnRegisterTrigger(gridPos, obj);
     }
     #endregion
 
