@@ -48,7 +48,7 @@ public class Weapon : MonoBehaviour
         id = data.itemId;
         damage = data.baseDamage * Character.Damage;
         count = data.baseCount + Character.Count;
-        speed = 1f;
+        speed = 0.7f;
         prefab = data.projectile;
 
         player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);

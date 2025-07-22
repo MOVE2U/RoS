@@ -8,7 +8,8 @@ public enum TurnState
     None,
     PlayerTurn,
     EnemyTurn,
-    Transition
+    ToPlayerTurn,
+    ToEnemyTurn
 }
 
 public class TurnManager : MonoBehaviour
@@ -16,7 +17,7 @@ public class TurnManager : MonoBehaviour
     public static TurnManager instance;
 
     [Header("value")]
-    [SerializeField] private float transitionTime = 2.0f;
+    [SerializeField] private float transitionTime = 4.0f;
     [SerializeField] private int maxMoveCount = 10;
 
     [Header("for check")]
@@ -39,6 +40,7 @@ public class TurnManager : MonoBehaviour
     public TurnState CurState => curState;
     public int TurnCount => turnCount;
     public int MoveCount => moveCount;
+    public int MaxMoveCount => maxMoveCount;
     
     private void Awake()
     {
@@ -67,7 +69,7 @@ public class TurnManager : MonoBehaviour
     public IEnumerator StartPlayerTurn()
     {
         // 추후 턴전환 연출에 사용
-        curState = TurnState.Transition;
+        curState = TurnState.ToPlayerTurn;
         yield return new WaitForSeconds(transitionTime);
 
         curState = TurnState.PlayerTurn;
@@ -91,7 +93,7 @@ public class TurnManager : MonoBehaviour
     private IEnumerator StartEnemyTurn()
     {
         // 추후 턴전환 연출에 사용
-        curState = TurnState.Transition;
+        curState = TurnState.ToEnemyTurn;
         yield return new WaitForSeconds(transitionTime);
 
         curState = TurnState.EnemyTurn;
@@ -121,6 +123,5 @@ public class TurnManager : MonoBehaviour
     public void MoveCountInc()
     {
         moveCount++;
-        hud.UpdateMoveCountUI(curState, moveCount);
     }
 }

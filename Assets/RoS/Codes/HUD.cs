@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType { EXP, Level, Turn, Kill, Coin, Health, TurnChanging, MoveCount }
+    public enum InfoType { MoveCount, Level, Turn, Kill, Coin, Health, TurnChanging }
     public InfoType type;
 
     Text myText;
@@ -38,10 +38,19 @@ public class HUD : MonoBehaviour
     {
         switch(type)
         {
-            case InfoType.EXP:
-                float curExp = GameManager.instance.exp;
-                float maxExp = GameManager.instance.nextExp[Mathf.Min(GameManager.instance.level, GameManager.instance.nextExp.Length - 1)];
-                mySlider.value = curExp / maxExp;
+            case InfoType.MoveCount:
+                if (TurnManager.instance.CurState == TurnState.PlayerTurn)
+                {
+                    float curCount = TurnManager.instance.MoveCount;
+                    float maxCount = TurnManager.instance.MaxMoveCount;
+                    mySlider.value = curCount / maxCount;
+                }
+                if (TurnManager.instance.CurState == TurnState.EnemyTurn)
+                {
+                    float curCount = TurnManager.instance.MaxMoveCount - TurnManager.instance.MoveCount;
+                    float maxCount = TurnManager.instance.MaxMoveCount;
+                    mySlider.value = curCount / maxCount;
+                }
                 break;
             case InfoType.Level:
                 myText.text = string.Format("Lv.{0:F0}", GameManager.instance.level);
@@ -50,12 +59,12 @@ public class HUD : MonoBehaviour
                 if (TurnManager.instance.CurState == TurnState.PlayerTurn)
                 {
                     myText.enabled = true;
-                    myText.text = string.Format("플레이어 {0:F0}턴!", TurnManager.instance.TurnCount);
+                    myText.text = string.Format("..'그들'이 깬다");
                 }
                 else if (TurnManager.instance.CurState == TurnState.EnemyTurn)
                 {
                     myText.enabled = true;
-                    myText.text = string.Format("몬스터 {0:F0}턴!", TurnManager.instance.TurnCount);
+                    myText.text = string.Format("..'그들'이 잠든다");
                 }
                 else
                 {
@@ -74,31 +83,24 @@ public class HUD : MonoBehaviour
                 mySlider.value = curHealth / maxHealth;
                 break;
             case InfoType.TurnChanging:
-                if (TurnManager.instance.CurState == TurnState.Transition)
+                if (TurnManager.instance.CurState == TurnState.ToPlayerTurn)
                 {
-                    myText.enabled = true;
+                    myImages[0].enabled = true;
+                    myTexts[0].enabled = true;
+                    myTexts[1].enabled = false;
+                }
+                else if (TurnManager.instance.CurState == TurnState.ToEnemyTurn)
+                {
+                    myImages[0].enabled = true;
+                    myTexts[0].enabled = false;
+                    myTexts[1].enabled = true;
                 }
                 else
                 {
-                    myText.enabled = false;
+                    myImages[0].enabled = false;
+                    myTexts[0].enabled = false;
+                    myTexts[1].enabled = false;
                 }
-                break;
-        }
-    }
-
-    public void UpdateMoveCountUI(TurnState turnState, int moveCount)
-    {
-        if (type != InfoType.MoveCount)
-            return;
-
-        switch (turnState)
-        {
-            case TurnState.PlayerTurn:
-                SetTurnColors(moveCount, "#E05AD8", "#EEACD6");
-                break;
-            case TurnState.EnemyTurn:
-                int reverseMoveCount = myTexts.Length - moveCount + 1;
-                SetTurnColors(reverseMoveCount, "#C1C1C1", "#989898");
                 break;
         }
     }

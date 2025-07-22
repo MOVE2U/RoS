@@ -31,6 +31,11 @@ public class Player : Unit
                 TurnManager.instance.MoveCountInc();
             }
         }
+        else if (TurnManager.instance.CurState == TurnState.EnemyTurn
+            && inputDir != Vector2Int.zero)
+        {
+            SetSprite(inputDir);
+        }
     }
 
     private void OnMove(InputValue value)
