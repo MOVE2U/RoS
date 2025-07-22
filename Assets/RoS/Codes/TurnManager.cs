@@ -16,7 +16,7 @@ public class TurnManager : MonoBehaviour
     public static TurnManager instance;
 
     [Header("value")]
-    [SerializeField] private float transitionTime = 1.5f;
+    [SerializeField] private float transitionTime = 2.0f;
     [SerializeField] private int maxMoveCount = 10;
 
     [Header("for check")]
@@ -67,11 +67,8 @@ public class TurnManager : MonoBehaviour
     public IEnumerator StartPlayerTurn()
     {
         // 추후 턴전환 연출에 사용
-        if(turnCount != 0)
-        {
-            curState = TurnState.Transition;
-            yield return new WaitForSeconds(transitionTime);
-        }        
+        curState = TurnState.Transition;
+        yield return new WaitForSeconds(transitionTime);
 
         curState = TurnState.PlayerTurn;
         moveCount = 0;
