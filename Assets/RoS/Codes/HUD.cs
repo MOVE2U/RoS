@@ -1,5 +1,4 @@
-using System;
-using System.Xml;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,17 +8,21 @@ public class HUD : MonoBehaviour
     public InfoType type;
 
     Text myText;
+    TextMeshProUGUI myTextMeshPro;
     Slider mySlider;
 
     Text[] myTexts;
+    TextMeshProUGUI[] myTextsMeshPro;
     Image[] myImages;
 
     private void Awake()
     {
         myText = GetComponent<Text>();
+        myTextMeshPro = GetComponent<TextMeshProUGUI>();
         mySlider = GetComponent<Slider>();
 
         myTexts = GetComponentsInChildren<Text>();
+        myTextsMeshPro = GetComponentsInChildren<TextMeshProUGUI>();
         myImages = GetComponentsInChildren<Image>();
     }
 
@@ -86,20 +89,20 @@ public class HUD : MonoBehaviour
                 if (TurnManager.instance.CurState == TurnState.ToPlayerTurn)
                 {
                     myImages[0].enabled = true;
-                    myTexts[0].enabled = true;
-                    myTexts[1].enabled = false;
+                    myTextsMeshPro[0].enabled = true;
+                    myTextsMeshPro[1].enabled = false;
                 }
                 else if (TurnManager.instance.CurState == TurnState.ToEnemyTurn)
                 {
                     myImages[0].enabled = true;
-                    myTexts[0].enabled = false;
-                    myTexts[1].enabled = true;
+                    myTextsMeshPro[0].enabled = false;
+                    myTextsMeshPro[1].enabled = true;
                 }
                 else
                 {
                     myImages[0].enabled = false;
-                    myTexts[0].enabled = false;
-                    myTexts[1].enabled = false;
+                    myTextsMeshPro[0].enabled = false;
+                    myTextsMeshPro[1].enabled = false;
                 }
                 break;
         }

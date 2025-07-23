@@ -17,7 +17,7 @@ public class TurnManager : MonoBehaviour
     public static TurnManager instance;
 
     [Header("value")]
-    [SerializeField] private float transitionTime = 4.0f;
+    [SerializeField] private float transitionTime = 2.8f;
     [SerializeField] private int maxMoveCount = 10;
 
     [Header("for check")]
