@@ -45,8 +45,8 @@ public class Gear : MonoBehaviour
     }
     void RateUp()
     {
-        Weapon[] weapons = GameManager.instance.player.GetComponentsInChildren<Weapon>();
-        foreach (Weapon weapon in weapons)
+        BasicAttackController[] weapons = GameManager.instance.player.GetComponentsInChildren<BasicAttackController>();
+        foreach (BasicAttackController weapon in weapons)
         {
             switch (weapon.Id)
             {

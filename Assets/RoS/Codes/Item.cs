@@ -6,7 +6,7 @@ public class Item : MonoBehaviour
 {
     public ItemData data;
     public int level;
-    public Weapon weapon;
+    public BasicAttackController weapon;
     public Gear gear;
 
     Image icon;
@@ -56,8 +56,8 @@ public class Item : MonoBehaviour
                 if (level == 0)
                 {
                     GameObject newWeapon = new GameObject();
-                    newWeapon.AddComponent<Weapon>();
-                    weapon = newWeapon.GetComponent<Weapon>();
+                    newWeapon.AddComponent<BasicAttackController>();
+                    weapon = newWeapon.GetComponent<BasicAttackController>();
                     weapon.Init(data);
                 }
                 else

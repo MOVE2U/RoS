@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework;
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
+public class BasicAttackController : MonoBehaviour
 {
     [Header("for check")]
     private int id;
