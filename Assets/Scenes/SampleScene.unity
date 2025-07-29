@@ -1923,7 +1923,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uAE4C\uCE58: \uACE0\uB974\uB834!"
+  m_Text: "..\uB108\uAC00 \uADF8\uB9B0 \uAC83\uC774\n..\uD604\uC2E4\uC774 \uB420
+    \uAC83\uC774\uC57C"
 --- !u!222 &422906204
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2164,7 +2165,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 6, y: 3}
+  m_AnchoredPosition: {x: 6, y: -6.6000004}
   m_SizeDelta: {x: 18, y: 18}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &446361679
@@ -2299,7 +2300,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 471860212}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
@@ -2500,7 +2501,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 8.05
+  orthographic size: 7.55
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2710,7 +2711,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 6, y: 3}
+  m_AnchoredPosition: {x: 6, y: -6.6000004}
   m_SizeDelta: {x: 18, y: 18}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &578333943
@@ -72762,7 +72763,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 6, y: 3}
+  m_AnchoredPosition: {x: 6, y: -6.6000004}
   m_SizeDelta: {x: 18, y: 18}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1182473249
@@ -74265,7 +74266,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 6, y: 3}
+  m_AnchoredPosition: {x: 6, y: -6.6000004}
   m_SizeDelta: {x: 18, y: 18}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1577999798
@@ -76379,7 +76380,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "..<color=#D0A23E>\uAE4C\uCE58</color>\uB97C \uCC3E\uC544\uAC00\uB834\n..<color=#B9382C>'\uADF8\uB4E4'</color>\uC774
+  m_text: "..<color=#D0A23E>'\uB098'</color>\uB97C \uCC3E\uC544\uC624\uB834\n..<color=#B9382C>'\uADF8\uB4E4'</color>\uC774
     \uAE68\uC9C0 \uC54A\uAC8C \uC870\uC2EC\uD574"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6fc189d30d68c2f40b0efcec2eabaaee, type: 2}

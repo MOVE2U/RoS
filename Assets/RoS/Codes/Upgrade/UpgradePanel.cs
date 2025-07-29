@@ -1,18 +1,16 @@
-using System;
-using Unity.VisualScripting;
-using UnityEditor.Search;
 using UnityEngine;
 
-public class LevelUp : MonoBehaviour
+public class UpgradePanel : MonoBehaviour
 {
     RectTransform rect;
-    Item[] items;
+    UpgradeCard[] items;
 
     private void Awake()
     {
         rect = GetComponent<RectTransform>();
-        items = GetComponentsInChildren<Item>(true);
+        items = GetComponentsInChildren<UpgradeCard>(true);
     }
+
     public void Show()
     {
         Next();
@@ -21,6 +19,7 @@ public class LevelUp : MonoBehaviour
         AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
         AudioManager.instance.EffectBgm(true);
     }
+
     public void Hide()
     {
         rect.localScale = Vector3.zero;
@@ -28,19 +27,21 @@ public class LevelUp : MonoBehaviour
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
         AudioManager.instance.EffectBgm(false);
     }
+
     public void Select(int index)
     {
         items[index].OnClick();
     }
+
     void Next()
     {
         // 1. 모든 아이템 비활성화
-        foreach (Item item in items)
+        foreach (UpgradeCard item in items)
         {
             item.gameObject.SetActive(false);
         }
 
-        Item ranItem = items[0];
+        UpgradeCard ranItem = items[0];
         ranItem.gameObject.SetActive(true);
 
         //// 2. 그 중에서 랜덤 3개 아이템 활성화

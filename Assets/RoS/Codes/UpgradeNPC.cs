@@ -1,7 +1,7 @@
 using UnityEngine;
 using static UnityEditor.PlayerSettings;
 
-public class ChoiceNPC : MonoBehaviour, ISpawnable, Iinteractable
+public class UpgradeNPC : MonoBehaviour, ISpawnable, Iinteractable
 {
     Vector2Int gridPos;
 

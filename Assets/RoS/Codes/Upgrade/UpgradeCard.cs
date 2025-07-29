@@ -2,7 +2,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Item : MonoBehaviour
+public class UpgradeCard : MonoBehaviour
 {
     public ItemData data;
     public int level;

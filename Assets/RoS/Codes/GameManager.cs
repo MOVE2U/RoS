@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     // 이 방식은 Awake 호출 전에 Unity에서 수행함.
     public PoolManager pool;
     public Player player;
-    public LevelUp uiLevelUp;
+    public UpgradePanel uiLevelUp;
     public Result uiResult;
     public GameObject enemyCleaner;
     void Awake()
