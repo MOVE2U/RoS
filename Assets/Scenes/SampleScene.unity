@@ -682,6 +682,7 @@ Transform:
   - {fileID: 953252928}
   - {fileID: 1007754328}
   - {fileID: 97908564}
+  - {fileID: 1727238285}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &156295049
@@ -2501,7 +2502,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 7.65
+  orthographic size: 9.65
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -72998,7 +72999,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 71e80701306af6e40916ff807df65daa, type: 2}
   level: 0
-  weapon: {fileID: 0}
+  weapon: {fileID: 1727238286}
   gear: {fileID: 0}
 --- !u!1 &1243273912
 GameObject:
@@ -74889,6 +74890,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1722067570}
   m_CullTransparentMesh: 1
+--- !u!1 &1727238284
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1727238285}
+  - component: {fileID: 1727238286}
+  m_Layer: 0
+  m_Name: BasicAttackController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1727238285
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727238284}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 156295047}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1727238286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727238284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd008e066ef890443baa871f33473cf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
+  itemData: {fileID: 11400000, guid: 71e80701306af6e40916ff807df65daa, type: 2}
 --- !u!1 &1753777838
 GameObject:
   m_ObjectHideFlags: 0

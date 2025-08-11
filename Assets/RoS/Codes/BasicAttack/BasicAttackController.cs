@@ -11,14 +11,21 @@ public class BasicAttackController : MonoBehaviour
     private int count;
     public float speed; // 나중에 Gear에서 변경하는 메서드를 Weapon에서 만들고 private set으로 변경 필요
 
+    [Header("color")]
+
+
     private float timer;
     private Player player;
 
     public int Id => id;
 
+    public ItemData itemData;
+
+
     private void Awake()
     {
         player = GameManager.instance.player;
+        Init(itemData);
     }
 
     private void Update()
@@ -38,11 +45,6 @@ public class BasicAttackController : MonoBehaviour
 
     public void Init(ItemData data)
     {
-        // 기본 설정
-        name = "Weapon " + data.itemId;
-        transform.parent = player.transform;
-        transform.localPosition = Vector3.zero;
-
         // 데이터 설정
         id = data.itemId;
         damage = data.baseDamage * Character.Damage;
@@ -120,5 +122,10 @@ public class BasicAttackController : MonoBehaviour
         //// 형제의 스크립트를 가져와서 복잡한 로직을 짜야할 때는 부모.GetComponentsInChildren와 foreach를 이용
         //// 형제의 스크립트에서 메서드만 실행시키면 될 때는 BroadcastMessage를 이용
         //player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
+    }
+
+    public void ColorLevelUp(ColorData colorData)
+    {
+
     }
 }
