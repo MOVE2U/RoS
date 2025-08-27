@@ -7,7 +7,6 @@ public class UpgradeCard : MonoBehaviour
     public ItemData data;
     public int level;
     public BasicAttackController weapon;
-    public Gear gear;
 
     Image icon;
     Text textLevel;
@@ -62,25 +61,6 @@ public class UpgradeCard : MonoBehaviour
                 weapon.LevelUp(nextDamage, nextCount);
 
                 level++;
-                break;
-            case ItemData.ItemType.Glove:
-            case ItemData.ItemType.Shoe:
-                if (level == 0)
-                {
-                    GameObject newGear = new GameObject();
-                    newGear.AddComponent<Gear>();
-                    gear = newGear.GetComponent<Gear>();
-                    gear.Init(data);
-                }
-                else
-                {
-                    float nextRate = data.damages[level];
-                    gear.LevelUp(nextRate);
-                }
-                level++;
-                break;
-            case ItemData.ItemType.Heal:
-                GameManager.instance.health = GameManager.instance.maxHealth;
                 break;
         }
 

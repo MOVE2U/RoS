@@ -10,12 +10,11 @@ public class ColorData : UpgradeData
         Blue
     }
 
-    public float[] attackPowerMultipliers;
-    public float[] criticalRateMultipliers;
-    public float[] attackSpeedMultipliers;
+    public ColorType colorType;
+    public float[] value;
 
     public override void Apply(BasicAttackController basicAttackController)
     {
-        basicAttackController.ColorLevelUp(this);
+        basicAttackController.ApplyColor(this);
     }
 }

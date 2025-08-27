@@ -4,28 +4,26 @@ using UnityEngine;
 
 public class BasicAttackController : MonoBehaviour
 {
-    [Header("for check")]
-    private int id;
-    private GameObject prefab;
-    private float damage;
-    private int count;
-    public float speed; // 나중에 Gear에서 변경하는 메서드를 Weapon에서 만들고 private set으로 변경 필요
+    [Header("Base Stat")]
+    public float baseDamage = 10.0f;
+    public float baseAttackSpeed = 0.7f;
+    public int baseRange = 1;
+    public float finalDamage = baseDamage;
+    public GameObject effectPrefab;
 
-    [Header("color")]
-
+    [Header("Upgrade State")]
+    // 개발 및 확인 끝나고 나면 private로 바꿀 것
+    public Dictionary<ColorData.ColorType, int> colorState = new Dictionary<ColorData.ColorType, int>();
 
     private float timer;
     private Player player;
 
-    public int Id => id;
-
-    public ItemData itemData;
 
 
-    private void Awake()
+
+    private void Start()
     {
         player = GameManager.instance.player;
-        Init(itemData);
     }
 
     private void Update()
@@ -35,24 +33,12 @@ public class BasicAttackController : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            if (timer > speed)
+            if (timer > baseAttackSpeed)
             {
                 timer = 0;
                 Attack();
             }
         }
-    }
-
-    public void Init(ItemData data)
-    {
-        // 데이터 설정
-        id = data.itemId;
-        damage = data.baseDamage * Character.Damage;
-        count = data.baseCount + Character.Count;
-        speed = 0.7f;
-        prefab = data.projectile;
-
-        player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
     }
 
     void Attack()
@@ -67,7 +53,7 @@ public class BasicAttackController : MonoBehaviour
             GameObject obj = GridManager.instance.GetOccupant(attackTile);
             if (obj != null && obj.TryGetComponent<Enemy>(out var enemy))
             {
-                enemy.Attacked(damage);
+                enemy.Attacked(baseDamage);
             }
         }
 
@@ -80,7 +66,7 @@ public class BasicAttackController : MonoBehaviour
         List<Vector2Int> tiles = new List<Vector2Int>();
 
         Vector2Int playerGridPos = GridManager.instance.WorldToGrid(player.transform.position);
-        for (int i = 1; i <= count; i++)
+        for (int i = 1; i <= baseRange; i++)
         {
             Vector2Int targetGrisPos = player.gridPos + player.LastInputDir * i * player.Grid;
             tiles.Add(targetGrisPos);
@@ -98,7 +84,7 @@ public class BasicAttackController : MonoBehaviour
         {
             Vector3 effectPos = GridManager.instance.GridToWorld(tile);
 
-            Transform effect = GameManager.instance.pool.Get(prefab).transform;
+            Transform effect = GameManager.instance.pool.Get(effectPrefab).transform;
             effect.position = effectPos;
             effects.Add(effect.gameObject);
         }
@@ -112,8 +98,8 @@ public class BasicAttackController : MonoBehaviour
 
     public void LevelUp(float damage, int count)
     {
-        this.damage = damage * Character.Damage;
-        this.count += count;
+        this.baseDamage = damage * Character.Damage;
+        this.baseRange += count;
 
         //if (id == 0)
         //{
@@ -124,8 +110,16 @@ public class BasicAttackController : MonoBehaviour
         //player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
     }
 
-    public void ColorLevelUp(ColorData colorData)
+    public void ApplyColor(ColorData colorData)
     {
+        if (!colorState.ContainsKey(colorData.colorType))
+        {
+            colorState.Add(colorData.colorType, 1);
+        }
+        else
+        {
+            colorState[colorData.colorType]++;
+        }
 
     }
 }

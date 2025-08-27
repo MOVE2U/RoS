@@ -2502,7 +2502,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 9.65
+  orthographic size: 6.75
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -20409,7 +20409,6 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 7b73142169bf00740b60d089bc71c543, type: 2}
   level: 0
   weapon: {fileID: 0}
-  gear: {fileID: 0}
 --- !u!114 &748822693
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73000,7 +72999,6 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 71e80701306af6e40916ff807df65daa, type: 2}
   level: 0
   weapon: {fileID: 1727238286}
-  gear: {fileID: 0}
 --- !u!1 &1243273912
 GameObject:
   m_ObjectHideFlags: 0
@@ -74783,7 +74781,6 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 454a13e888d11bc478fa5bd816595490, type: 2}
   level: 0
   weapon: {fileID: 0}
-  gear: {fileID: 0}
 --- !u!114 &1722067573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74934,8 +74931,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd008e066ef890443baa871f33473cf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
-  itemData: {fileID: 11400000, guid: 71e80701306af6e40916ff807df65daa, type: 2}
+  baseDamage: 10
+  baseAttackSpeed: 0.7
+  baseRange: 1
+  effectPrefab: {fileID: 5120238629735467631, guid: c74aeb92d0420644090b4e5fec9da306, type: 3}
 --- !u!1 &1753777838
 GameObject:
   m_ObjectHideFlags: 0
@@ -75069,7 +75068,6 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 2dc754f17c8da5747ab406fd9d047ca7, type: 2}
   level: 0
   weapon: {fileID: 0}
-  gear: {fileID: 0}
 --- !u!114 &1791479583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75771,7 +75769,6 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: b4d60b204ce44ec4499783e3a2c9257c, type: 2}
   level: 0
   weapon: {fileID: 0}
-  gear: {fileID: 0}
 --- !u!114 &1919679544
 MonoBehaviour:
   m_ObjectHideFlags: 0
