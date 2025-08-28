@@ -5,21 +5,35 @@ using UnityEngine;
 public class BasicAttackController : MonoBehaviour
 {
     [Header("Base Stat")]
-    public float baseDamage = 10.0f;
+    public float baseAttackPower = 10.0f;
     public float baseAttackSpeed = 0.7f;
+    public float baseCritRate = 0.1f;
+    public float baseCritMultiplier = 1.5f;
     public int baseRange = 1;
-    public float finalDamage = baseDamage;
-    public GameObject effectPrefab;
+
+    [Header("Final Stat")]
+    public float finalAttackPower;
+    public float finalAttackSpeed;
+    public float finalCritRate;
+    public float finalCritMultiplier;
 
     [Header("Upgrade State")]
     // 개발 및 확인 끝나고 나면 private로 바꿀 것
     public Dictionary<ColorData.ColorType, int> colorState = new Dictionary<ColorData.ColorType, int>();
 
+    [Header("Ref")]
+    public GameObject effectPrefab;
+
     private float timer;
     private Player player;
 
-
-
+    private void Awake()
+    {
+        finalAttackPower = baseAttackPower;
+        finalAttackSpeed = baseAttackSpeed;
+        finalCritRate = baseCritRate;
+        finalCritMultiplier = baseCritMultiplier;
+    }
 
     private void Start()
     {
@@ -33,7 +47,7 @@ public class BasicAttackController : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            if (timer > baseAttackSpeed)
+            if (timer > finalAttackSpeed)
             {
                 timer = 0;
                 Attack();
@@ -47,17 +61,21 @@ public class BasicAttackController : MonoBehaviour
         List<Vector2Int> attackTiles = GetAttackTiles();
         // Debug.Log("공격 타일 목록: " + string.Join(", ", tiles));
 
-        // 2. 공격 타일에 있는 적에게 대미지 적용
+        // 2. 대미지 계산
+        float damage = Damage();
+        Debug.Log("대미지: " + damage);
+
+        // 3. 공격 타일에 있는 적에게 대미지 적용
         foreach (var attackTile in attackTiles)
         {
             GameObject obj = GridManager.instance.GetOccupant(attackTile);
             if (obj != null && obj.TryGetComponent<Enemy>(out var enemy))
             {
-                enemy.Attacked(baseDamage);
+                enemy.Attacked(damage);
             }
         }
 
-        // 3. 동일한 타일에 이펙트 표시
+        // 4. 동일한 타일에 이펙트 표시
         StartCoroutine(ShowEffect(attackTiles));
     }
 
@@ -73,6 +91,20 @@ public class BasicAttackController : MonoBehaviour
         }
 
         return tiles;
+    }
+
+    public float Damage()
+    {
+        float randomValue = Random.Range(0f, 1f);
+
+        if(randomValue <= finalCritRate)
+        {
+            return finalAttackPower * finalCritMultiplier;
+        }
+        else
+        {
+            return finalAttackPower;
+        }
     }
 
     IEnumerator ShowEffect(List<Vector2Int> tiles)
@@ -98,7 +130,7 @@ public class BasicAttackController : MonoBehaviour
 
     public void LevelUp(float damage, int count)
     {
-        this.baseDamage = damage * Character.Damage;
+        this.baseAttackPower = damage * Character.Damage;
         this.baseRange += count;
 
         //if (id == 0)
@@ -121,5 +153,17 @@ public class BasicAttackController : MonoBehaviour
             colorState[colorData.colorType]++;
         }
 
+        switch(colorData.colorType)
+        {
+            case ColorData.ColorType.Red:
+                finalAttackPower += baseAttackPower * colorData.value[colorState[colorData.colorType]-1];
+                break;
+            case ColorData.ColorType.Blue:
+                finalAttackSpeed -= baseAttackSpeed * colorData.value[colorState[colorData.colorType] - 1];
+                break;
+            case ColorData.ColorType.Green:
+                finalCritRate += baseCritRate * colorData.value[colorState[colorData.colorType] - 1];
+                break;
+        }
     }
 }

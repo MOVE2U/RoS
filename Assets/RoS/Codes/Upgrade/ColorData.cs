@@ -6,8 +6,8 @@ public class ColorData : UpgradeData
     public enum ColorType
     {
         Red,
-        Green,
-        Blue
+        Blue,
+        Green
     }
 
     public ColorType colorType;
