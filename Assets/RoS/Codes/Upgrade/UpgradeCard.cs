@@ -9,15 +9,15 @@ public class UpgradeCard : MonoBehaviour
     public int level;
     public BasicAttackController weapon;
 
-    Image icon;
+    Image imageIcon;
     Text textLevel;
     Text textName;
     Text textDesc;
 
     private void Awake()
     {
-        icon = GetComponentsInChildren<Image>()[1];
-        icon.sprite = data.itemIcon;
+        imageIcon = GetComponentsInChildren<Image>()[1];
+        imageIcon.sprite = data.itemIcon;
 
         Text[] texts = GetComponentsInChildren<Text>();
         textLevel = texts[0];

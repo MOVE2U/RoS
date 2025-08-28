@@ -1,7 +1,12 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UpgradePanel : MonoBehaviour
 {
+    [Header("Upgrade Data")]
+    public List<UpgradeData> upgradeData;
+
     RectTransform rect;
     UpgradeCard[] items;
 

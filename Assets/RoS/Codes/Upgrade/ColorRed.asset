@@ -10,10 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ae756869ef361c848afd6bd93d01ffb9, type: 3}
-  m_Name: Red
+  m_Name: ColorRed
   m_EditorClassIdentifier: 
-  upgradeName: 
-  upgradeDesc: 
-  upgradeIcon: {fileID: 0}
+  upgradeName: "\uBE68\uAC04\uC0C9"
+  upgradeDesc: "\uACF5\uACA9\uB825 {0}% \uC99D\uAC00"
+  upgradeIcon: {fileID: 9188709469293079776, guid: 78576745c6e7b7b4f936d0ee20debcb5, type: 3}
   colorType: 0
-  value: []
+  value:
+  - 0.1
+  - 0.1
+  - 0.1
+  - 0.1
+  - 0.1
