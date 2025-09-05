@@ -28,6 +28,7 @@ public class BasicAttackController : MonoBehaviour
     public TextureData.TextureType? curTexture = null;
     public int textureLevel = 0;
     public float textureValue;
+    public List<Vector2Int> attackShape = new List<Vector2Int> { new Vector2Int(1, 0) };
 
     [Header("Ref")]
     public GameObject vfxPrefab;
@@ -91,12 +92,24 @@ public class BasicAttackController : MonoBehaviour
     List<Vector2Int> GetAttackTiles()
     {
         List<Vector2Int> tiles = new List<Vector2Int>();
-
         Vector2Int playerGridPos = GridManager.instance.WorldToGrid(player.transform.position);
-        for (int i = 1; i <= baseRange; i++)
+        Vector2Int dir = player.LastInputDir;
+
+        foreach (var shapeTile in attackShape)
         {
-            Vector2Int targetGrisPos = player.gridPos + player.LastInputDir * i * player.Grid;
-            tiles.Add(targetGrisPos);
+            Vector2Int rotatedTile;
+
+            // player.LastInputDir 값에 따라 shapeTile을 회전시킵니다.
+            if (dir.x == 1) // Right
+                rotatedTile = shapeTile;
+            else if (dir.x == -1) // Left
+                rotatedTile = new Vector2Int(-shapeTile.x, -shapeTile.y);
+            else if (dir.y == 1) // Up
+                rotatedTile = new Vector2Int(-shapeTile.y, shapeTile.x);
+            else // Down
+                rotatedTile = new Vector2Int(shapeTile.y, -shapeTile.x);
+
+            tiles.Add(playerGridPos + rotatedTile);
         }
 
         return tiles;
@@ -195,5 +208,36 @@ public class BasicAttackController : MonoBehaviour
 
         textureLevel++;
         textureValue = data.value[textureLevel - 1];
+    }
+
+    // 클래스 맨 아래에 새로운 메서드 2개 추가
+    public void ApplyShape(ShapeData data)
+    {
+        if (!attackShape.Contains(data.tileToAdd))
+        {
+            attackShape.Add(data.tileToAdd);
+        }
+    }
+
+    // 업그레이드 후보 타일 목록을 반환하는 메서드
+    public List<Vector2Int> GetShapeUpgradeCandidates()
+    {
+        List<Vector2Int> candidates = new List<Vector2Int>();
+        Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
+        foreach (var tile in attackShape)
+        {
+            foreach (var dir in directions)
+            {
+                Vector2Int newCandidate = tile + dir;
+                // 자기 자신, (0,0)은 후보에서 제외, 이미 공격범위거나 후보인 타일도 제외
+                if (newCandidate == Vector2Int.zero || attackShape.Contains(newCandidate) ||
+    candidates.Contains(newCandidate))
+                    continue;
+
+                candidates.Add(newCandidate);
+            }
+        }
+        return candidates;
     }
 }
