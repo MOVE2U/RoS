@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Drawing;
 using Unity.VisualScripting;
+using System.Collections;
 
 public class Enemy : Unit, ISpawnable
 {
@@ -12,6 +13,10 @@ public class Enemy : Unit, ISpawnable
     [Header("for check")]
     [SerializeField] private Vector2Int targetGridPos;
     [SerializeField] private bool isArrived;
+
+    [Header("Status Condition")]
+    public int pointillismStacks = 0;
+    public bool canMove = true;
 
     private Player player;
     private Spawner spawner;
@@ -62,7 +67,10 @@ public class Enemy : Unit, ISpawnable
     // 정리 - 죽었을 때만 호출되는 항목
     void Dead()
     {
+        GridManager.instance.UnRegisterOccupant(gridPos);
         gameObject.SetActive(false);
+        GameManager.instance.kill++;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);
     }
 
     private void EnemyMoveJudge()
@@ -147,37 +155,56 @@ public class Enemy : Unit, ISpawnable
 
     }
 
-    public void Attacked(float damage)
+    // 나중에 스킬 생기면 BasicAttackController의 상위 클래스를 만들어서, 상위 클래스를 매개변수로 변경 필요
+    public void Attacked(BasicAttackController attack, float damage)
     {
         health -= damage;
 
         if (health > 0)
         {
             AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
+
+            if (attack.curTexture == TextureData.TextureType.Pointillism)
+            {
+                pointillismStacks++;
+                if (pointillismStacks >= attack.textureValue)
+                {
+                    Dead();
+                }
+            }
+            else if (attack.curTexture == TextureData.TextureType.OilPainting)
+            {
+                StartCoroutine(StopMove(attack, attack.textureValue));
+            }
         }
         else
         {
-            GridManager.instance.UnRegisterOccupant(gridPos);
             Dead();
-            GameManager.instance.kill++;
-            //GameManager.instance.GetExp();
-
-            if (GameManager.instance.isLive)
-            {
-                AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);
-            }
         }
     }
 
     public void AutoMove(float randomWait)
     {
-        wait = randomWait;
-        EnemyMoveJudge();
+        if(canMove)
+        {
+            wait = randomWait;
+            EnemyMoveJudge();
+        }
     }
 
     // 내 스크립트 안에 있는 IEnumerator만 StartCoroutine로 직접 호출할 수 있다. 아래는 Player에서 Enemy의 StartCoroutine을 호출할 필요가 있어서 별도의 메서드를 만든 것.
     public void PushedMove(Vector2Int dir)
     {
         StartCoroutine(ExecuteMove(dir));
+    }
+
+    public IEnumerator StopMove(BasicAttackController attack, float time)
+    {
+        canMove = false;
+
+        yield return new WaitForSeconds(time);
+
+        canMove = true;
+
     }
 }

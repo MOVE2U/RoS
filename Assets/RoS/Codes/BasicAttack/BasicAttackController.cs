@@ -17,13 +17,22 @@ public class BasicAttackController : MonoBehaviour
     public float finalCritRate;
     public float finalCritMultiplier;
 
+    [Header("Effect Color")]
+    public Color redColor;
+    public Color blueColor;
+    public Color orangeColor;
+
     [Header("Upgrade State")]
     // 개발 및 확인 끝나고 나면 private로 바꿀 것
     public Dictionary<ColorData.ColorType, int> colorState = new Dictionary<ColorData.ColorType, int>();
+    public TextureData.TextureType? curTexture = null;
+    public int textureLevel = 0;
+    public float textureValue;
 
     [Header("Ref")]
-    public GameObject effectPrefab;
+    public GameObject vfxPrefab;
 
+    private bool isCrit;
     private float timer;
     private Player player;
 
@@ -71,12 +80,12 @@ public class BasicAttackController : MonoBehaviour
             GameObject obj = GridManager.instance.GetOccupant(attackTile);
             if (obj != null && obj.TryGetComponent<Enemy>(out var enemy))
             {
-                enemy.Attacked(damage);
+                enemy.Attacked(this, damage);
             }
         }
 
         // 4. 동일한 타일에 이펙트 표시
-        StartCoroutine(ShowEffect(attackTiles));
+        StartCoroutine(ShowVFX(attackTiles));
     }
 
     List<Vector2Int> GetAttackTiles()
@@ -95,10 +104,18 @@ public class BasicAttackController : MonoBehaviour
 
     public float Damage()
     {
+        isCrit = false;
         float randomValue = Random.Range(0f, 1f);
 
         if(randomValue <= finalCritRate)
         {
+            isCrit = true;
+
+            if(curTexture == TextureData.TextureType.Sketch)
+            {
+                return finalAttackPower * finalCritMultiplier * textureValue;
+            }
+
             return finalAttackPower * finalCritMultiplier;
         }
         else
@@ -107,63 +124,76 @@ public class BasicAttackController : MonoBehaviour
         }
     }
 
-    IEnumerator ShowEffect(List<Vector2Int> tiles)
+    IEnumerator ShowVFX(List<Vector2Int> tiles)
     {
-        List<GameObject> effects = new List<GameObject>();
+        Color vfxColor = Color.white;
+        if (isCrit && colorState.ContainsKey(ColorData.ColorType.Orange))
+        {
+            vfxColor = orangeColor;
+        }
+        else if(colorState.ContainsKey(ColorData.ColorType.Red))
+        {
+            vfxColor = redColor;
+        }
+
+        List<GameObject> vfxs = new List<GameObject>();
 
         // 1. 전달받은 타일 리스트에 이펙트 생성
         foreach (var tile in tiles)
         {
-            Vector3 effectPos = GridManager.instance.GridToWorld(tile);
+            Vector3 vfxPos = GridManager.instance.GridToWorld(tile);
 
-            Transform effect = GameManager.instance.pool.Get(effectPrefab).transform;
-            effect.position = effectPos;
-            effects.Add(effect.gameObject);
+            Transform vfx = GameManager.instance.pool.Get(vfxPrefab).transform;
+            vfx.position = vfxPos;
+
+            SpriteRenderer sr = vfx.GetComponent<SpriteRenderer>();
+            sr.color = vfxColor;
+
+            vfxs.Add(vfx.gameObject);
         }
 
         // 2. 0.3초 후 모든 이펙트 비활성화
         yield return new WaitForSeconds(0.3f);
 
-        foreach (var effect in effects)
-            effect.SetActive(false);
+        foreach (var vfx in vfxs)
+            vfx.SetActive(false);
     }
 
-    public void LevelUp(float damage, int count)
+    public void ApplyColor(ColorData data)
     {
-        this.baseAttackPower = damage * Character.Damage;
-        this.baseRange += count;
-
-        //if (id == 0)
-        //{
-        //    Batch();
-        //}
-        //// 형제의 스크립트를 가져와서 복잡한 로직을 짜야할 때는 부모.GetComponentsInChildren와 foreach를 이용
-        //// 형제의 스크립트에서 메서드만 실행시키면 될 때는 BroadcastMessage를 이용
-        //player.BroadcastMessage("ApplyGear", SendMessageOptions.DontRequireReceiver);
-    }
-
-    public void ApplyColor(ColorData colorData)
-    {
-        if (!colorState.ContainsKey(colorData.colorType))
+        if (!colorState.ContainsKey(data.colorType))
         {
-            colorState.Add(colorData.colorType, 1);
+            colorState.Add(data.colorType, 1);
         }
         else
         {
-            colorState[colorData.colorType]++;
+            colorState[data.colorType]++;
         }
 
-        switch(colorData.colorType)
+        int curLevel = colorState[data.colorType];
+
+        switch (data.colorType)
         {
             case ColorData.ColorType.Red:
-                finalAttackPower += baseAttackPower * colorData.value[colorState[colorData.colorType]-1];
+                finalAttackPower += baseAttackPower * data.value[colorState[data.colorType]-1];
+                redColor = data.gradient.Evaluate(0.5f + 0.5f * (float)curLevel / data.value.Length);
                 break;
             case ColorData.ColorType.Blue:
-                finalAttackSpeed -= baseAttackSpeed * colorData.value[colorState[colorData.colorType] - 1];
+                finalAttackSpeed -= baseAttackSpeed * data.value[colorState[data.colorType] - 1];
+                blueColor = data.gradient.Evaluate(0.5f + 0.5f * (float)curLevel / data.value.Length);
                 break;
-            case ColorData.ColorType.Green:
-                finalCritRate += baseCritRate * colorData.value[colorState[colorData.colorType] - 1];
+            case ColorData.ColorType.Orange:
+                finalCritRate += data.value[colorState[data.colorType] - 1];
+                orangeColor = data.gradient.Evaluate(0.5f + 0.5f * (float)curLevel / data.value.Length);
                 break;
         }
+    }
+
+    public void ApplyTexture(TextureData data)
+    {
+        curTexture = data.textureType;
+
+        textureLevel++;
+        textureValue = data.value[textureLevel - 1];
     }
 }
