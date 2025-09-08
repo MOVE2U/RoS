@@ -6,10 +6,10 @@ public class BasicAttackController : MonoBehaviour
 {
     [Header("Base Stat")]
     public float baseAttackPower = 10.0f;
-    public float baseAttackSpeed = 0.7f;
+    public float baseAttackSpeed = 1.0f;
     public float baseCritRate = 0.1f;
     public float baseCritMultiplier = 1.5f;
-    public int baseRange = 1;
+    public float vfxDurationRate = 0.5f;
 
     [Header("Final Stat")]
     public float finalAttackPower;
@@ -24,15 +24,16 @@ public class BasicAttackController : MonoBehaviour
 
     [Header("Upgrade State")]
     // 개발 및 확인 끝나고 나면 private로 바꿀 것
-    public Dictionary<ColorData.ColorType, int> colorState = new Dictionary<ColorData.ColorType, int>();
+    public Dictionary<ColorData.ColorType, int> colorLevels = new Dictionary<ColorData.ColorType, int>();
     public TextureData.TextureType? curTexture = null;
     public int textureLevel = 0;
     public float textureValue;
-    public List<Vector2Int> attackShape = new List<Vector2Int> { new Vector2Int(1, 0) };
+    public List<Vector2Int> shapeTiles = new List<Vector2Int> { new Vector2Int(1, 0) };
 
     [Header("Ref")]
     public GameObject vfxPrefab;
 
+    public bool isAttacking;
     private bool isCrit;
     private float timer;
     private Player player;
@@ -91,11 +92,11 @@ public class BasicAttackController : MonoBehaviour
 
     List<Vector2Int> GetAttackTiles()
     {
-        List<Vector2Int> tiles = new List<Vector2Int>();
-        Vector2Int playerGridPos = GridManager.instance.WorldToGrid(player.transform.position);
-        Vector2Int dir = player.LastInputDir;
+        List<Vector2Int> attackTiles = new List<Vector2Int>();
+        Vector2Int playerGridPos = player.gridPos;
+        Vector2Int dir = player.lastInputDir;
 
-        foreach (var shapeTile in attackShape)
+        foreach (var shapeTile in shapeTiles)
         {
             Vector2Int rotatedTile;
 
@@ -109,10 +110,10 @@ public class BasicAttackController : MonoBehaviour
             else // Down
                 rotatedTile = new Vector2Int(shapeTile.y, -shapeTile.x);
 
-            tiles.Add(playerGridPos + rotatedTile);
+            attackTiles.Add(playerGridPos + rotatedTile);
         }
 
-        return tiles;
+        return attackTiles;
     }
 
     public float Damage()
@@ -139,12 +140,14 @@ public class BasicAttackController : MonoBehaviour
 
     IEnumerator ShowVFX(List<Vector2Int> tiles)
     {
+        isAttacking = true;
+
         Color vfxColor = Color.white;
-        if (isCrit && colorState.ContainsKey(ColorData.ColorType.Orange))
+        if (isCrit && colorLevels.ContainsKey(ColorData.ColorType.Orange))
         {
             vfxColor = orangeColor;
         }
-        else if(colorState.ContainsKey(ColorData.ColorType.Red))
+        else if(colorLevels.ContainsKey(ColorData.ColorType.Red))
         {
             vfxColor = redColor;
         }
@@ -166,37 +169,39 @@ public class BasicAttackController : MonoBehaviour
         }
 
         // 2. 0.3초 후 모든 이펙트 비활성화
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(finalAttackSpeed * vfxDurationRate);
 
         foreach (var vfx in vfxs)
             vfx.SetActive(false);
+
+        isAttacking = false;
     }
 
     public void ApplyColor(ColorData data)
     {
-        if (!colorState.ContainsKey(data.colorType))
+        if (!colorLevels.ContainsKey(data.colorType))
         {
-            colorState.Add(data.colorType, 1);
+            colorLevels.Add(data.colorType, 1);
         }
         else
         {
-            colorState[data.colorType]++;
+            colorLevels[data.colorType]++;
         }
 
-        int curLevel = colorState[data.colorType];
+        int curLevel = colorLevels[data.colorType];
 
         switch (data.colorType)
         {
             case ColorData.ColorType.Red:
-                finalAttackPower += baseAttackPower * data.value[colorState[data.colorType]-1];
+                finalAttackPower += baseAttackPower * data.value[colorLevels[data.colorType]-1];
                 redColor = data.gradient.Evaluate(0.5f + 0.5f * (float)curLevel / data.value.Length);
                 break;
             case ColorData.ColorType.Blue:
-                finalAttackSpeed -= baseAttackSpeed * data.value[colorState[data.colorType] - 1];
+                finalAttackSpeed -= baseAttackSpeed * data.value[colorLevels[data.colorType] - 1];
                 blueColor = data.gradient.Evaluate(0.5f + 0.5f * (float)curLevel / data.value.Length);
                 break;
             case ColorData.ColorType.Orange:
-                finalCritRate += data.value[colorState[data.colorType] - 1];
+                finalCritRate += data.value[colorLevels[data.colorType] - 1];
                 orangeColor = data.gradient.Evaluate(0.5f + 0.5f * (float)curLevel / data.value.Length);
                 break;
         }
@@ -210,34 +215,30 @@ public class BasicAttackController : MonoBehaviour
         textureValue = data.value[textureLevel - 1];
     }
 
-    // 클래스 맨 아래에 새로운 메서드 2개 추가
     public void ApplyShape(ShapeData data)
     {
-        if (!attackShape.Contains(data.tileToAdd))
+        if (!shapeTiles.Contains(data.tileToAdd))
         {
-            attackShape.Add(data.tileToAdd);
+            shapeTiles.Add(data.tileToAdd);
         }
     }
 
-    // 업그레이드 후보 타일 목록을 반환하는 메서드
     public List<Vector2Int> GetShapeUpgradeCandidates()
     {
-        List<Vector2Int> candidates = new List<Vector2Int>();
+        HashSet<Vector2Int> candidates = new HashSet<Vector2Int>();
         Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
-        foreach (var tile in attackShape)
+        foreach (var shapeTile in shapeTiles)
         {
             foreach (var dir in directions)
             {
-                Vector2Int newCandidate = tile + dir;
-                // 자기 자신, (0,0)은 후보에서 제외, 이미 공격범위거나 후보인 타일도 제외
-                if (newCandidate == Vector2Int.zero || attackShape.Contains(newCandidate) ||
-    candidates.Contains(newCandidate))
-                    continue;
-
-                candidates.Add(newCandidate);
+                candidates.Add(shapeTile + dir);
             }
         }
-        return candidates;
+
+        candidates.ExceptWith(shapeTiles);
+        candidates.Remove(Vector2Int.zero);
+
+        return new List<Vector2Int>(candidates);
     }
 }

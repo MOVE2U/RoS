@@ -20,7 +20,7 @@ public class ColorData : UpgradeData
 
     public override int GetLevel(BasicAttackController basicAttackController)
     {
-        return basicAttackController.colorState.ContainsKey(colorType) ? basicAttackController.colorState[colorType] : 0;
+        return basicAttackController.colorLevels.ContainsKey(colorType) ? basicAttackController.colorLevels[colorType] : 0;
     }
 
     public override string GetDesc(int level)

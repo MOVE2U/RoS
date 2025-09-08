@@ -1793,6 +1793,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9d14742429de96e4e95483332f3c1899, type: 2}
   - {fileID: 11400000, guid: 3151366f0f976924aa3e6dd3af9b14cb, type: 2}
   - {fileID: 11400000, guid: d8fba0b3e0c5fc146a5354b6b9344046, type: 2}
+  basicAttackController: {fileID: 1727238286}
 --- !u!1 &440404028
 GameObject:
   m_ObjectHideFlags: 0
@@ -19990,7 +19991,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   upgradeData: {fileID: 0}
-  basicAttackController: {fileID: 1727238286}
+  basicAttackController: {fileID: 0}
 --- !u!114 &719186317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72298,7 +72299,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   upgradeData: {fileID: 0}
-  basicAttackController: {fileID: 1727238286}
+  basicAttackController: {fileID: 0}
 --- !u!1 &1243273912
 GameObject:
   m_ObjectHideFlags: 0
@@ -72943,7 +72944,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   upgradeData: {fileID: 0}
-  basicAttackController: {fileID: 1727238286}
+  basicAttackController: {fileID: 0}
 --- !u!114 &1395179959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74550,7 +74551,6 @@ MonoBehaviour:
   baseAttackSpeed: 0.7
   baseCritRate: 0.1
   baseCritMultiplier: 1.5
-  baseRange: 1
   finalAttackPower: 0
   finalAttackSpeed: 0
   finalCritRate: 0
@@ -74560,6 +74560,8 @@ MonoBehaviour:
   orangeColor: {r: 0, g: 0, b: 0, a: 0}
   textureLevel: 0
   textureValue: 0
+  shapeTiles:
+  - {x: 1, y: 0}
   vfxPrefab: {fileID: 8552040928180119482, guid: cadb929202a143649a9f0cc1789080c2, type: 3}
 --- !u!1 &1753777838
 GameObject:

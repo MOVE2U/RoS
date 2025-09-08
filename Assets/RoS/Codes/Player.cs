@@ -8,9 +8,8 @@ public class Player : Unit
     [SerializeField] private GridManager gridManager;
 
     private Vector2 inputVec;
-    private Vector2Int lastInputDir;
-
-    public Vector2Int LastInputDir => lastInputDir;
+    public Vector2Int lastInputDir { get; private set; }
+    public BasicAttackController basicAttackController;
 
     private new void Awake()
     {
@@ -19,6 +18,11 @@ public class Player : Unit
         // Unit 공통 변수 초기화
         moveTime = 0.3f;
         wait = 0.1f;
+    }
+
+    private void Start()
+    {
+        basicAttackController = GetComponentInChildren<BasicAttackController>();
     }
 
     private void Update()
@@ -31,26 +35,26 @@ public class Player : Unit
                 TurnManager.instance.MoveCountInc();
             }
         }
-        else if (TurnManager.instance.CurState == TurnState.EnemyTurn
-            && inputDir != Vector2Int.zero)
-        {
-            SetSprite(inputDir);
-        }
     }
 
     private void OnMove(InputValue value)
     {
+        if(basicAttackController.isAttacking == true)
+            return;
+
         inputVec = value.Get<Vector2>();
 
         if(inputVec.x != 0 && Mathf.Abs(inputVec.x) >= Mathf.Abs(inputVec.y))
         {
             inputDir = new Vector2Int((int)Mathf.Sign(inputVec.x), 0);
             lastInputDir = inputDir;
+            SetSprite(lastInputDir);
         }
         else if (Mathf.Abs(inputVec.x) < Mathf.Abs(inputVec.y))
         {
             inputDir = new Vector2Int(0, (int)Mathf.Sign(inputVec.y));
             lastInputDir = inputDir;
+            SetSprite(lastInputDir);
         }
         // 입력이 없을 때 이동 방향 초기화
         else
