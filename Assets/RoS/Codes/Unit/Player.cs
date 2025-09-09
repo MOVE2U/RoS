@@ -30,18 +30,12 @@ public class Player : Unit
         if (TurnManager.instance.CurState == TurnState.PlayerTurn
             && inputDir != Vector2Int.zero)
         {
-            if(TryMove(inputDir))
-            {
-                TurnManager.instance.MoveCountInc();
-            }
+            TryMove(inputDir);
         }
     }
 
     private void OnMove(InputValue value)
     {
-        if(basicAttackController.isAttacking == true)
-            return;
-
         inputVec = value.Get<Vector2>();
 
         if(inputVec.x != 0 && Mathf.Abs(inputVec.x) >= Mathf.Abs(inputVec.y))
