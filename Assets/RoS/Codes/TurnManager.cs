@@ -101,7 +101,7 @@ public class TurnManager : MonoBehaviour
 
         for (int i = 1; i <= maxMoveCount; i++)
         {
-            MoveCountInc();
+            MoveCountChange(1);
 
             float[] ws = { 0.1f, 1f };
             float w = ws[UnityEngine.Random.Range(0, ws.Length)];
@@ -120,8 +120,8 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    public void MoveCountInc()
+    public void MoveCountChange(int i)
     {
-        moveCount++;
+        moveCount += i;
     }
 }
