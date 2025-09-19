@@ -18,7 +18,7 @@ public class Enemy : Unit, ISpawnable
     public int pointillismStacks = 0;
     public bool canMove = true;
 
-    private Player player;
+    public Player player;
     private Spawner spawner;
 
     private new void Awake()

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 450ca5d4facdf0646a2080058970c1c1, type: 3}
   m_Name: MonsterFirst
   m_EditorClassIdentifier: 
-  prefab: {fileID: 8836736426823522045, guid: c07c069d7cfe31944b23a78866986fc7, type: 3}
+  prefab: {fileID: 126642001162263856, guid: 826c3a493db7f954e9698a1cedc1f968, type: 3}
   spawnCounts: 05000000
   minSpawnDistance: 5
   maxSpawnDistance: 8
