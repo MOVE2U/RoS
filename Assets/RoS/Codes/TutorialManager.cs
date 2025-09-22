@@ -1,8 +1,7 @@
-using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class IntroManager : MonoBehaviour
+public class TutorialManager : MonoBehaviour
 {
     public int curIndex = 0;
 

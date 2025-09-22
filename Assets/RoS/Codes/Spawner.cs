@@ -45,7 +45,7 @@ public class Spawner : MonoBehaviour
 
             // 2. 랜덤 위치 생성
             float angle = Random.Range(0f, 360f);
-            Vector3 spawnPoint = GameManager.instance.player.transform.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * Random.Range(minSpawnDistance, maxSpawnDistance);
+            Vector3 spawnPoint = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * Random.Range(minSpawnDistance, maxSpawnDistance);
 
             // 3. 해당 위치가 비어있고, spawnPoints에 없다면 추가
             if (!GridManager.instance.IsOccupant(spawnPoint) && !spawnPoints.Contains(GridManager.instance.WorldToGrid(spawnPoint)))

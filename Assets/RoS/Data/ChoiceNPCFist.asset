@@ -15,5 +15,5 @@ MonoBehaviour:
   prefab: {fileID: 5382951031568721857, guid: 98d5da8f6ad7baf4aaa3ff2c139efb18, type: 3}
   spawnCounts: 01000000
   minSpawnDistance: 4
-  maxSpawnDistance: 6
+  maxSpawnDistance: 21
   health: 0

@@ -85,26 +85,6 @@ public class HUD : MonoBehaviour
                 float maxHealth = GameManager.instance.maxHealth;
                 mySlider.value = curHealth / maxHealth;
                 break;
-            case InfoType.TurnChanging:
-                if (TurnManager.instance.CurState == TurnState.ToPlayerTurn)
-                {
-                    myImages[0].enabled = true;
-                    myTextsMeshPro[0].enabled = true;
-                    myTextsMeshPro[1].enabled = false;
-                }
-                else if (TurnManager.instance.CurState == TurnState.ToEnemyTurn)
-                {
-                    myImages[0].enabled = true;
-                    myTextsMeshPro[0].enabled = false;
-                    myTextsMeshPro[1].enabled = true;
-                }
-                else
-                {
-                    myImages[0].enabled = false;
-                    myTextsMeshPro[0].enabled = false;
-                    myTextsMeshPro[1].enabled = false;
-                }
-                break;
         }
     }
 

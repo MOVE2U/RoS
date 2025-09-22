@@ -8,8 +8,6 @@ public enum TurnState
     None,
     PlayerTurn,
     EnemyTurn,
-    ToPlayerTurn,
-    ToEnemyTurn
 }
 
 public class TurnManager : MonoBehaviour
@@ -32,10 +30,8 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private SpawnData monsterGeneral;
     [SerializeField] private SpawnData coinFirst;
     [SerializeField] private List<Vector2Int> coinPoints;
-    [SerializeField] private SpawnData coinGeneral;
     [SerializeField] private SpawnData choiceNPCFirst;
     [SerializeField] private List<Vector2Int> choiceNPCPoints;
-    [SerializeField] private SpawnData choiceNPCGeneral;
 
     public TurnState CurState => curState;
     public int TurnCount => turnCount;
@@ -60,18 +56,14 @@ public class TurnManager : MonoBehaviour
             case TurnState.EnemyTurn:
                 if (moveCount >= maxMoveCount)
                 {
-                    StartCoroutine(StartPlayerTurn());
+                    StartPlayerTurn();
                 }
                 break;
         }
     }
 
-    public IEnumerator StartPlayerTurn()
+    public void StartPlayerTurn()
     {
-        // 추후 턴전환 연출에 사용
-        curState = TurnState.ToPlayerTurn;
-        yield return new WaitForSeconds(transitionTime);
-
         curState = TurnState.PlayerTurn;
         moveCount = 0;
         turnCount++;
@@ -85,17 +77,11 @@ public class TurnManager : MonoBehaviour
         else
         {
             spawner.RandomSpawn(turnCount, monsterGeneral);
-            spawner.RandomSpawn(turnCount, coinGeneral);
-            spawner.RandomSpawn(turnCount, choiceNPCGeneral);
         }
     }
 
     private IEnumerator StartEnemyTurn()
     {
-        // 추후 턴전환 연출에 사용
-        curState = TurnState.ToEnemyTurn;
-        yield return new WaitForSeconds(transitionTime);
-
         curState = TurnState.EnemyTurn;
         moveCount = 0;
 

@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 8498215610971467719, guid: aa254be97da685d47bd0d97eaabe6116, type: 3}
   spawnCounts: 02000000
-  minSpawnDistance: 3
-  maxSpawnDistance: 5
+  minSpawnDistance: 4
+  maxSpawnDistance: 21
   health: 0

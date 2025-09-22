@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MonsterGeneral
   m_EditorClassIdentifier: 
   prefab: {fileID: 126642001162263856, guid: 826c3a493db7f954e9698a1cedc1f968, type: 3}
-  spawnCounts: 140000001e0000002800000032000000
-  minSpawnDistance: 14
-  maxSpawnDistance: 18
+  spawnCounts: 060000000700000008000000
+  minSpawnDistance: 4
+  maxSpawnDistance: 21
   health: 10
