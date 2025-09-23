@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static AudioManager;
 
 public class BasicAttackController : MonoBehaviour
 {
@@ -31,7 +32,8 @@ public class BasicAttackController : MonoBehaviour
     public List<Vector2Int> shapeTiles = new List<Vector2Int> { new Vector2Int(1, 0) };
 
     [Header("Ref")]
-    public GameObject vfxPrefab;
+    public GameObject prefabRanged;
+    public GameObject prefabMelee;
 
     public bool isAttacking;
     private bool isCrit;
@@ -61,12 +63,13 @@ public class BasicAttackController : MonoBehaviour
             if (timer > finalAttackSpeed)
             {
                 timer = 0;
-                Attack();
+                AttackRanged();
+                // AttackMelee();
             }
         }
     }
 
-    void Attack()
+    private void AttackMelee()
     {
         // 1. 공격 타일 계산
         List<Vector2Int> attackTiles = GetAttackTiles();
@@ -90,6 +93,43 @@ public class BasicAttackController : MonoBehaviour
         StartCoroutine(ShowVFX(attackTiles));
     }
 
+    private void AttackRanged()
+    {
+        // 1. 공격 타일 계산
+        List<Vector2Int> attackTiles = GetAttackTiles();
+
+        // 2. 대미지 계산
+        float damage = Damage();
+        Debug.Log("대미지: " + damage);
+
+        // 3. 프로젝타일 색상 결정
+        Color projectileColor = Color.white;
+        if (isCrit && colorLevels.ContainsKey(ColorData.ColorType.Orange))
+        {
+            projectileColor = orangeColor;
+        }
+        else if (colorLevels.ContainsKey(ColorData.ColorType.Red))
+        {
+            projectileColor = redColor;
+        }
+
+        foreach (var attackTile in attackTiles)
+        {
+            // 4. 프로젝타일 생성
+            GameObject projectile = GameManager.instance.pool.Get(prefabRanged);
+
+            // 5. 프로젝타일 위치 변경
+            projectile.transform.position = new Vector3(attackTile.x, attackTile.y, 0);
+
+            // 6. 프로젝타일 색상 변경
+            SpriteRenderer sprite = projectile.GetComponent<SpriteRenderer>();
+            sprite.color = projectileColor;
+
+            // 7. 프로젝타일 초기화
+            projectile.GetComponent<Projectile>().Init(player.lastInputDir, this, damage);
+        }
+    }
+
     List<Vector2Int> GetAttackTiles()
     {
         List<Vector2Int> attackTiles = new List<Vector2Int>();
@@ -100,7 +140,7 @@ public class BasicAttackController : MonoBehaviour
         {
             Vector2Int rotatedTile;
 
-            // player.LastInputDir 값에 따라 shapeTile을 회전시킵니다.
+            // player.LastInputDir 값에 따라 shapeTile을 회전
             if (dir.x == 1) // Right
                 rotatedTile = shapeTile;
             else if (dir.x == -1) // Left
@@ -159,7 +199,7 @@ public class BasicAttackController : MonoBehaviour
         {
             Vector3 vfxPos = GridManager.instance.GridToWorld(tile);
 
-            Transform vfx = GameManager.instance.pool.Get(vfxPrefab).transform;
+            Transform vfx = GameManager.instance.pool.Get(prefabMelee).transform;
             vfx.position = vfxPos;
 
             SpriteRenderer sr = vfx.GetComponent<SpriteRenderer>();

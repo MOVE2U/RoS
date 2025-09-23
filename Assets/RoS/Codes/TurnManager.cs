@@ -88,7 +88,7 @@ public class TurnManager : MonoBehaviour
         {
             MoveCountChange(1);
 
-            float[] ws = { 0.1f, 1f };
+            float[] ws = { 0.8f, 1f };
             float w = ws[UnityEngine.Random.Range(0, ws.Length)];
 
             foreach (Enemy e in spawner.activeEnemies)

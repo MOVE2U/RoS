@@ -36,6 +36,11 @@ public class Player : Unit
 
     private void OnMove(InputValue value)
     {
+        if(GameManager.instance.isLive == false)
+        {
+            return;
+        }
+
         inputVec = value.Get<Vector2>();
 
         if(inputVec.x != 0 && Mathf.Abs(inputVec.x) >= Mathf.Abs(inputVec.y))

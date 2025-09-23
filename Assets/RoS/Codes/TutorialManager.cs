@@ -71,19 +71,26 @@ public class TutorialManager : MonoBehaviour
                 ingameNext.SetActive(true);
                 break;
             case 12:
+                bubbles[5].GetComponentInChildren<Text>().text = "..뭐야 여긴! 뭐야 내 몸!";
+                LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[5].GetComponent<RectTransform>());
+                break;
+            case 13:
                 bubbles[5].SetActive(false);
                 bubbles[6].SetActive(true);
                 break;
-            case 13:
-                bubbles[6].SetActive(false);
-                bubbles[7].SetActive(true);
-                break;
             case 14:
-                bubbles[7].SetActive(false);
-                bubbles[8].SetActive(true);
+                bubbles[6].GetComponentInChildren<Text>().text = "..우린 살아있어.";
+                LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
                 break;
             case 15:
-                bubbles[8].SetActive(false);
+                bubbles[6].GetComponentInChildren<Text>().text = "너가 '그림'이라고 부르는 것들 말이야.";
+                LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
+                break;
+            case 16:
+                bubbles[6].GetComponentInChildren<Text>().text = "비록 이런 모습이긴 하지만.";
+                LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
+                break;
+            case 17:
                 ingameNext.SetActive(false);
                 GameManager.instance.Resume();
                 break;

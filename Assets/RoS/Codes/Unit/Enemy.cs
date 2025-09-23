@@ -1,7 +1,5 @@
 using UnityEngine;
 using System;
-using System.Drawing;
-using Unity.VisualScripting;
 using System.Collections;
 
 public class Enemy : Unit, ISpawnable
