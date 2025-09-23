@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,6 +20,7 @@ public class GameManager : MonoBehaviour
     public int coin;
     public int spawnCountTotal;
     public int exp;
+    public int NPCCount;
     // 동적으로 객체나 컴포넌트를 초기화할 때는 Awake나 Start에서 하지만, 기본 데이터 타입은 필드에서 가능하다.
     public int[] nextExp = { 3, 5, 10, 100, 150, 210, 280, 360, 450, 600 };
     [Header("Game Object")]
@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.PlayBgm(true);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
 
-        TurnManager.instance.StartPlayerTurn();
+        TurnManager.instance.StartMoveTurn();
     }
     public void GameOver()
     {

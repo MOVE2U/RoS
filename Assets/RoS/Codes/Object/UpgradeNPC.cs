@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class UpgradeNPC : MonoBehaviour, ISpawnable, Iinteractable
 {
@@ -21,17 +20,32 @@ public class UpgradeNPC : MonoBehaviour, ISpawnable, Iinteractable
         GridManager.instance.RegisterTrigger(new Vector2Int(pos.x, pos.y - 1), this.gameObject);
     }
 
-    public void OnInteract()
+    public void Hide()
     {
-        // 선택지 띄우기
-        GameManager.instance.uiLevelUp.Show();
-
-        // 코인 제거
+        // 트리거 제거, 활성화 제거
         GridManager.instance.UnRegisterOccupant(gridPos);
         GridManager.instance.UnRegisterTrigger(new Vector2Int(gridPos.x + 1, gridPos.y), this.gameObject);
         GridManager.instance.UnRegisterTrigger(new Vector2Int(gridPos.x, gridPos.y + 1), this.gameObject);
         GridManager.instance.UnRegisterTrigger(new Vector2Int(gridPos.x - 1, gridPos.y), this.gameObject);
         GridManager.instance.UnRegisterTrigger(new Vector2Int(gridPos.x, gridPos.y - 1), this.gameObject);
         this.gameObject.SetActive(false);
+    }
+
+    public void OnInteract()
+    {
+        GameManager.instance.NPCCount++;
+
+        if (GameManager.instance.NPCCount == 1)
+        {
+            TutorialManager.instance.npc = this;
+            TutorialManager.instance.NextStep();
+        }
+        else
+        {
+            Hide();
+
+            // 선택지 띄우기
+            GameManager.instance.uiLevelUp.Show(0);
+        }
     }
 }

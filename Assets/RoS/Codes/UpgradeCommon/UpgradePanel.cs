@@ -1,11 +1,10 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class UpgradePanel : MonoBehaviour
 {
     [Header("Upgrade Data")]
-    public List<UpgradeData> upgradeDatas;
+    public List<UpgradeSet> upgradeSets;
 
     [Header("External Ref")]
     public BasicAttackController basicAttackController;
@@ -24,9 +23,9 @@ public class UpgradePanel : MonoBehaviour
         }
     }
 
-    public void Show()
+    public void Show(int index)
     {
-        Next();
+        Next(index);
         rect.localScale = Vector3.one;
         GameManager.instance.Stop();
         AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
@@ -41,9 +40,9 @@ public class UpgradePanel : MonoBehaviour
         AudioManager.instance.EffectBgm(false);
     }
 
-    void Next()
+    void Next(int index)
     {
-        List<UpgradeData> finalUpgradeDatas = new List<UpgradeData>(upgradeDatas);
+        List<UpgradeData> finalUpgradeDatas = new List<UpgradeData>(upgradeSets[index].upgradeDatas);
 
         var shapeCandidates = basicAttackController.GetShapeUpgradeCandidates();
         foreach (var candidate in shapeCandidates)

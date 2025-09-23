@@ -27,7 +27,7 @@ public class Player : Unit
 
     private void Update()
     {
-        if (TurnManager.instance.CurState == TurnState.PlayerTurn
+        if (TurnManager.instance.CurState == TurnState.MoveTurn
             && inputDir != Vector2Int.zero)
         {
             TryMove(inputDir);

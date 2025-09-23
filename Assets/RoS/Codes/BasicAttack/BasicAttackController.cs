@@ -55,7 +55,7 @@ public class BasicAttackController : MonoBehaviour
 
     private void Update()
     {
-        if (TurnManager.instance.CurState == TurnState.EnemyTurn 
+        if (TurnManager.instance.CurState == TurnState.AttackTurn 
             && GameManager.instance.isLive)
         {
             timer += Time.deltaTime;

@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 public class TutorialManager : MonoBehaviour
 {
+    public static TutorialManager instance;
+
+    public UpgradeNPC npc;
     public int curIndex = 0;
 
     public Image blackScreen;
@@ -11,6 +14,11 @@ public class TutorialManager : MonoBehaviour
     public GameObject ingameNext;
     public GameObject[] bubbles;
     public GameObject[] introImages;
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     private void Start()
     {
@@ -71,28 +79,68 @@ public class TutorialManager : MonoBehaviour
                 ingameNext.SetActive(true);
                 break;
             case 12:
-                bubbles[5].GetComponentInChildren<Text>().text = "..뭐야 여긴! 뭐야 내 몸!";
-                LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[5].GetComponent<RectTransform>());
+                bubbles[5].SetActive(false);
+                bubbles[7].SetActive(true);
+                bubbles[10].SetActive(true);
+                bubbles[11].SetActive(true);
                 break;
             case 13:
-                bubbles[5].SetActive(false);
-                bubbles[6].SetActive(true);
+                bubbles[7].SetActive(false);
+                bubbles[10].GetComponentsInChildren<Image>()[1].enabled = true;
+                bubbles[8].SetActive(true);
+                bubbles[11].GetComponentsInChildren<Image>()[1].enabled = false;
                 break;
             case 14:
-                bubbles[6].GetComponentInChildren<Text>().text = "..우린 살아있어.";
-                LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
+                bubbles[8].GetComponentInChildren<Text>().text = "..우린 살아있어.";
                 break;
             case 15:
-                bubbles[6].GetComponentInChildren<Text>().text = "너가 '그림'이라고 부르는 것들 말이야.";
-                LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
+                bubbles[8].GetComponentInChildren<Text>().text = "너가 '그림'이라고 부르는 것들 말이야.";
                 break;
             case 16:
-                bubbles[6].GetComponentInChildren<Text>().text = "비록 이런 모습이긴 하지만.";
-                LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
+                bubbles[8].GetComponentInChildren<Text>().text = "비록 이런 모습이긴 하지만.";
                 break;
             case 17:
+                bubbles[8].SetActive(false);
+                bubbles[10].SetActive(false);
+                bubbles[11].SetActive(false);
+                bubbles[6].SetActive(true);
+                break;
+            case 18:
                 ingameNext.SetActive(false);
                 GameManager.instance.Resume();
+                break;
+            case 19:
+                bubbles[9].SetActive(true);
+                break;
+            case 20:
+                GameManager.instance.Stop();
+                bubbles[9].SetActive(false);
+                ingameNext.SetActive(true);
+                bubbles[6].GetComponentInChildren<Text>().text = "귀찮은 녀석들.\n또 못움직이게 하네.";
+                LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
+                break;
+            case 21:
+                bubbles[6].GetComponentInChildren<Text>().text = "너가 깨웠으니 너가 처리해.";
+                LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
+                break;
+            case 22:
+                bubbles[6].GetComponentInChildren<Text>().text = "그냥..\n그림을 그리고, 날리면 돼.";
+                LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
+                break;
+            case 23:
+                ingameNext.SetActive(false);
+                GameManager.instance.Resume();
+                break;
+            case 24:
+                GameManager.instance.Stop();
+                ingameNext.SetActive(true);
+                bubbles[6].GetComponentInChildren<Text>().text = "그림을 더 크게 그려봐.";
+                LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
+                break;
+            case 25:
+                ingameNext.SetActive(false);
+                npc.Hide();
+                GameManager.instance.uiLevelUp.Show(0);
                 break;
             default:
                 break;

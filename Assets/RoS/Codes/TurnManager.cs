@@ -6,8 +6,10 @@ using UnityEngine;
 public enum TurnState
 {
     None,
-    PlayerTurn,
-    EnemyTurn,
+    MoveTurn,
+    AttackTurn,
+    MoveToAttackTurn,
+    AttackToMoveTurn,
 }
 
 public class TurnManager : MonoBehaviour
@@ -25,6 +27,7 @@ public class TurnManager : MonoBehaviour
     [Header("external ref")]
     [SerializeField] private Spawner spawner;
     [SerializeField] private HUD hud;
+    [SerializeField] private TutorialManager tutorialManager;
     [SerializeField] private SpawnData monsterFirst;
     [SerializeField] private SpawnData monsterGeneral;
     [SerializeField] private SpawnData coinFirst;
@@ -46,24 +49,24 @@ public class TurnManager : MonoBehaviour
     {
         switch (curState)
         {
-            case TurnState.PlayerTurn:
+            case TurnState.MoveTurn:
                 if (moveCount >= maxMoveCount)
                 {
-                    StartCoroutine(StartEnemyTurn());
+                    StartCoroutine(StartAttackTurn());
                 }
                 break;
-            case TurnState.EnemyTurn:
+            case TurnState.AttackTurn:
                 if (moveCount >= maxMoveCount)
                 {
-                    StartPlayerTurn();
+                    StartMoveTurn();
                 }
                 break;
         }
     }
 
-    public void StartPlayerTurn()
+    public void StartMoveTurn()
     {
-        curState = TurnState.PlayerTurn;
+        curState = TurnState.MoveTurn;
         moveCount = 0;
         turnCount++;
 
@@ -79,9 +82,17 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    private IEnumerator StartEnemyTurn()
+    private IEnumerator StartAttackTurn()
     {
-        curState = TurnState.EnemyTurn;
+        curState = TurnState.MoveToAttackTurn;
+        if(turnCount == 1)
+        {
+            tutorialManager.NextStep();
+            yield return new WaitForSeconds(2.5f);
+            tutorialManager.NextStep();
+        }
+
+        curState = TurnState.AttackTurn;
         moveCount = 0;
 
         for (int i = 1; i <= maxMoveCount; i++)
