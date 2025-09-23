@@ -33,6 +33,7 @@ public class BasicAttackController : MonoBehaviour
 
     [Header("Ref")]
     public GameObject prefabRanged;
+    public Sprite spriteRangedWhite;
     public GameObject prefabMelee;
 
     public bool isAttacking;
@@ -123,6 +124,11 @@ public class BasicAttackController : MonoBehaviour
 
             // 6. 프로젝타일 색상 변경
             SpriteRenderer sprite = projectile.GetComponent<SpriteRenderer>();
+            if(projectileColor == orangeColor || projectileColor == redColor)
+            {
+                sprite.sprite = spriteRangedWhite;
+            }
+
             sprite.color = projectileColor;
 
             // 7. 프로젝타일 초기화

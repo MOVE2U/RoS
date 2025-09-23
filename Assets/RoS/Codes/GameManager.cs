@@ -13,8 +13,6 @@ public class GameManager : MonoBehaviour
     public float maxGameTime;
     [Header("Player Info")]
     public int playerId;
-    public float health;
-    public float maxHealth;
     public int level;
     public int kill;
     public int coin;
@@ -22,7 +20,7 @@ public class GameManager : MonoBehaviour
     public int exp;
     public int NPCCount;
     // 동적으로 객체나 컴포넌트를 초기화할 때는 Awake나 Start에서 하지만, 기본 데이터 타입은 필드에서 가능하다.
-    public int[] nextExp = { 3, 5, 10, 100, 150, 210, 280, 360, 450, 600 };
+    public int[] nextExp;
     [Header("Game Object")]
     // 유니티에서 이 변수에 오브젝트를 드래그앤드롭 하면,
     // PoolManager 컴포넌트가 있는지 확인하고 있다면 그 컴포넌트의 참조가 pool 변수에 저장되는 방식임.
@@ -40,7 +38,6 @@ public class GameManager : MonoBehaviour
     {
 
         playerId = id;
-        health = maxHealth;
 
         player.gameObject.SetActive(true);
         Vector2Int playerGridPos = GridManager.instance.WorldToGrid(player.transform.position);
@@ -96,20 +93,20 @@ public class GameManager : MonoBehaviour
         gameTime += Time.deltaTime;
     }
 
-    //public void GetExp()
-    //{
-    //    if (!isLive)
-    //        return;
+    public void GetExp()
+    {
+        if (!isLive)
+            return;
 
-    //    exp++;
+        exp++;
 
-    //    if(exp== nextExp[Mathf.Min(level,nextExp.Length-1)])
-    //    {
-    //        level++;
-    //        exp = 0;
-    //        uiLevelUp.Show();
-    //    }
-    //}
+        if (exp == nextExp[Mathf.Min(level, nextExp.Length - 1)])
+        {
+            level++;
+            exp = 0;
+            uiLevelUp.Show(1);
+        }
+    }
 
     public void Stop()
     {

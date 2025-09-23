@@ -24,7 +24,7 @@ public class Enemy : Unit, ISpawnable
         base.Awake();
 
         // Unit 공통 변수 초기화
-        moveTime = 0.3f;
+        moveTime = 0.4f;
     }
 
     // 초기화 - 활성화 될 때 공통
@@ -33,6 +33,7 @@ public class Enemy : Unit, ISpawnable
         // 오브젝트 풀링은 OnEnable에서 초기화하기도 함. 싱글톤 참조는 비용이 적음
         player = GameManager.instance.player;
         spawner = Spawner.instance;
+        GetComponent<SpriteRenderer>().color = Color.white;
 
         if (spawner == null)
             spawner = Spawner.instance;
@@ -68,6 +69,7 @@ public class Enemy : Unit, ISpawnable
         GridManager.instance.UnRegisterOccupant(gridPos);
         gameObject.SetActive(false);
         GameManager.instance.kill++;
+        GameManager.instance.GetExp();
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);
     }
 
@@ -160,6 +162,7 @@ public class Enemy : Unit, ISpawnable
 
         if (health > 0)
         {
+            StartCoroutine(AttackedVFX());
             AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
 
             if (attack.curTexture == TextureData.TextureType.Pointillism)
@@ -179,6 +182,49 @@ public class Enemy : Unit, ISpawnable
         {
             Dead();
         }
+    }
+
+    private IEnumerator AttackedVFX()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        sr.color = new Color(1, 0.5f, 0.5f);
+        yield return new WaitForSeconds(0.15f);
+        sr.color = Color.white;
+    }
+
+    public void AwakeEnemy(float shakePower)
+    {
+        StartCoroutine(AwakeVFX(shakePower));
+    }
+
+    private IEnumerator AwakeVFX(float shakePower)
+    {
+        if(TurnManager.instance.CurState != TurnState.MoveTurn)
+        {
+            yield return null;
+        }
+
+        Vector3 originalPos = transform.position;
+        float elapsedTime = 0f;
+        float shakeTimer = 0f;
+
+        while (elapsedTime < 0.3f) // 0.3초 동안 흔들림
+        {
+            elapsedTime += Time.deltaTime;
+            shakeTimer += Time.deltaTime;
+
+            if (shakeTimer >= 0.1f) // 0.15초마다 위치 변경. 높을수록 묵직하게 흔들림
+            {
+                Vector2 shakeOffset = UnityEngine.Random.insideUnitCircle * shakePower;
+                transform.position = originalPos + new Vector3(shakeOffset.x, shakeOffset.y, 0);
+
+                shakeTimer = 0f;
+            }
+
+            yield return null;
+        }
+
+        transform.position = originalPos;
     }
 
     public void AutoMove(float randomWait)

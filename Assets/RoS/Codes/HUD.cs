@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType { MoveCount, Level, Turn, Kill, Coin, Health, TurnChanging }
+    public enum InfoType { MoveCount, Level, Turn, Kill, Coin, Exp }
     public InfoType type;
 
     Text myText;
@@ -80,10 +80,10 @@ public class HUD : MonoBehaviour
             case InfoType.Coin:
                 myText.text = string.Format("Coin: {0:F0}", GameManager.instance.coin);
                 break;
-            case InfoType.Health:
-                float curHealth = GameManager.instance.health;
-                float maxHealth = GameManager.instance.maxHealth;
-                mySlider.value = curHealth / maxHealth;
+            case InfoType.Exp:
+                int curExp = GameManager.instance.exp;
+                int nextExp = GameManager.instance.nextExp[Mathf.Min(GameManager.instance.level, GameManager.instance.nextExp.Length - 1)];
+                mySlider.value = (float)curExp / nextExp;
                 break;
         }
     }
