@@ -1,9 +1,15 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TutorialManager : MonoBehaviour
 {
     public static TutorialManager instance;
+
+    [SerializeField] private SpawnData magpie;
+    [SerializeField] private List<Vector2Int> magpiePoint1;
+    [SerializeField] private List<Vector2Int> magpiePoint2;
+    [SerializeField] private List<Vector2Int> magpiePoint3;
 
     public UpgradeNPC npc;
     public int curIndex = 0;
@@ -91,10 +97,10 @@ public class TutorialManager : MonoBehaviour
                 bubbles[11].GetComponentsInChildren<Image>()[1].enabled = false;
                 break;
             case 14:
-                bubbles[8].GetComponentInChildren<Text>().text = "..우린 살아있어.";
+                bubbles[8].GetComponentInChildren<Text>().text = "..난 살아있어.";
                 break;
             case 15:
-                bubbles[8].GetComponentInChildren<Text>().text = "너가 '그림'이라고 부르는 것들 말이야.";
+                bubbles[8].GetComponentInChildren<Text>().text = "너가 '그림'이라고 부르는 거 말이야.";
                 break;
             case 16:
                 bubbles[8].GetComponentInChildren<Text>().text = "비록 이런 모습이긴 하지만.";
@@ -140,7 +146,23 @@ public class TutorialManager : MonoBehaviour
             case 25:
                 ingameNext.SetActive(false);
                 npc.Hide();
+                Spawner.instance.FixedSpawn(magpiePoint1, magpie);
                 GameManager.instance.uiLevelUp.Show(0);
+                break;
+            case 26:
+                bubbles[12].SetActive(true);
+                break;
+            case 27:
+                bubbles[12].SetActive(false);
+                npc.Hide();
+                Spawner.instance.FixedSpawn(magpiePoint2, magpie);
+                bubbles[13].SetActive(true);
+                break;
+            case 28:
+                bubbles[13].SetActive(false);
+                npc.Hide();
+                Spawner.instance.FixedSpawn(magpiePoint3, magpie);
+                bubbles[14].SetActive(true);
                 break;
             default:
                 break;

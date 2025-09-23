@@ -34,6 +34,11 @@ public class UpgradePanel : MonoBehaviour
 
     public void Hide()
     {
+        if (TutorialManager.instance.curIndex <= 28)
+        {
+            TutorialManager.instance.NextStep();
+        }
+
         rect.localScale = Vector3.zero;
         GameManager.instance.Resume();
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
