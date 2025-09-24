@@ -10,6 +10,7 @@ public class Player : Unit
     private Vector2 inputVec;
     public Vector2Int lastInputDir { get; private set; }
     public BasicAttackController basicAttackController;
+    public GameObject gameOver;
 
     private new void Awake()
     {
@@ -134,6 +135,35 @@ public class Player : Unit
                     iinteractable.OnInteract();
                 }
             }
+        }
+    }
+
+    public void CheckSurrounded()
+    {
+        // 1. 플레이어 주변 4방향
+        Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+        int enemyAroundCount = 0;
+
+        // 2. 4방향을 순회하며 검사
+        foreach (Vector2Int dir in directions)
+        {
+            Vector2Int targetPos = gridPos + dir;
+
+            // 3. 객체(occupant)를 가져옴
+            GameObject occupant = GridManager.instance.GetOccupant(targetPos);
+
+            // 4. 객체가 존재하고 Enemy 컴포넌트를 가지고 있는지 확인
+            if (occupant != null && occupant.TryGetComponent<Enemy>(out _))
+            {
+                enemyAroundCount++;
+            }
+        }
+
+        // 5. 주변 4칸이 모두 적이라면 게임 종료
+        if (enemyAroundCount == 4)
+        {
+            GameManager.instance.Stop();
+            gameOver.SetActive(true);
         }
     }
 }

@@ -109,60 +109,66 @@ public class TutorialManager : MonoBehaviour
                 bubbles[8].SetActive(false);
                 bubbles[10].SetActive(false);
                 bubbles[11].SetActive(false);
-                bubbles[6].SetActive(true);
-                break;
-            case 18:
                 ingameNext.SetActive(false);
+                bubbles[15].SetActive(true);
                 GameManager.instance.Resume();
                 break;
-            case 19:
+            case 18:
+                bubbles[15].SetActive(false);
                 bubbles[9].SetActive(true);
                 break;
-            case 20:
+            case 19:
                 GameManager.instance.Stop();
                 bubbles[9].SetActive(false);
                 ingameNext.SetActive(true);
-                bubbles[6].GetComponentInChildren<Text>().text = "귀찮은 녀석들.\n또 못움직이게 하네.";
+                bubbles[6].SetActive(true);
+                bubbles[6].GetComponentInChildren<Text>().text = "귀찮은 녀석들.\n또 못 움직이게 하네.";
                 LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
                 break;
-            case 21:
+            case 20:
                 bubbles[6].GetComponentInChildren<Text>().text = "너가 깨웠으니 너가 처리해.";
                 LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
                 break;
-            case 22:
+            case 21:
                 bubbles[6].GetComponentInChildren<Text>().text = "그냥..\n그림을 그리고, 날리면 돼.";
                 LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
                 break;
-            case 23:
+            case 22:
                 ingameNext.SetActive(false);
                 GameManager.instance.Resume();
                 break;
-            case 24:
+            case 23:
                 GameManager.instance.Stop();
                 ingameNext.SetActive(true);
                 bubbles[6].GetComponentInChildren<Text>().text = "그림을 더 크게 그려봐.";
                 LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
                 break;
-            case 25:
+            case 24:
                 ingameNext.SetActive(false);
                 npc.Hide();
                 Spawner.instance.FixedSpawn(magpiePoint1, magpie);
                 GameManager.instance.uiLevelUp.Show(0);
                 break;
-            case 26:
+            case 25:
                 bubbles[12].SetActive(true);
                 break;
-            case 27:
+            case 26:
                 bubbles[12].SetActive(false);
                 npc.Hide();
                 Spawner.instance.FixedSpawn(magpiePoint2, magpie);
                 bubbles[13].SetActive(true);
                 break;
-            case 28:
+            case 27:
                 bubbles[13].SetActive(false);
                 npc.Hide();
                 Spawner.instance.FixedSpawn(magpiePoint3, magpie);
                 bubbles[14].SetActive(true);
+                break;
+            case 28:
+                bubbles[14].SetActive(false);
+                npc.Hide();
+                GameManager.instance.Stop();
+                introImages[2].SetActive(true);
                 break;
             default:
                 break;

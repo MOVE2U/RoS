@@ -65,17 +65,16 @@ public class TilePos : MonoBehaviour, Iinteractable
         switch (type)
         {
             case TileType.Ground:
-                TurnManager.instance.MoveCountChange(1);
+                TurnManager.instance.MoveCountChange(0.8f);
                 foreach(Enemy e in Spawner.instance.activeEnemies)
                 {
                     e.AwakeEnemy(0.15f);
                 }
                 break;
             case TileType.Silently:
-                TurnManager.instance.MoveCountChange(-1);
                 break;
             case TileType.Rustle:
-                TurnManager.instance.MoveCountChange(1);
+                TurnManager.instance.MoveCountChange(0.6f);
                 foreach (Enemy e in Spawner.instance.activeEnemies)
                 {
                     e.AwakeEnemy(0.2f);

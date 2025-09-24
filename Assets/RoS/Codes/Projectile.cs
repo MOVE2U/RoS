@@ -6,7 +6,7 @@ public class Projectile : MonoBehaviour
     public Vector3 dir;
     public Vector2Int lastGridPos;
     public float damage;
-    public float speed = 20f;
+    public float speed = 25f;
 
     public void Init(Vector2Int dir, BasicAttackController basicAttackController, float damage)
     {

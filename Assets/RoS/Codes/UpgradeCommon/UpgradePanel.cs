@@ -10,6 +10,7 @@ public class UpgradePanel : MonoBehaviour
     [Header("External Ref")]
     public BasicAttackController basicAttackController;
     public Sprite[] panelImages;
+    public Sprite shapeIcon;
 
     public bool isMegpie;
 
@@ -80,7 +81,7 @@ public class UpgradePanel : MonoBehaviour
                 shapeData.title = "형태";
                 shapeData.desc = "공격 범위가 ({0}, {1}) 위치에 확장됩니다.";
                 // 아이콘은 모든 형태 업그레이드가 동일한 아이콘을 쓰도록 설정할 수 있음
-                // shapeData.icon = ...
+                shapeData.icon = shapeIcon;
 
                 finalUpgradeDatas.Add(shapeData);
             }

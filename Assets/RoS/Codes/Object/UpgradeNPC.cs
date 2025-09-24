@@ -41,6 +41,10 @@ public class UpgradeNPC : MonoBehaviour, ISpawnable, Iinteractable
         {
             TutorialManager.instance.NextStep();
         }
+        else if(GameManager.instance.NPCCount == 4)
+        {
+            TutorialManager.instance.NextStep();
+        }
         else
         {
             Hide();

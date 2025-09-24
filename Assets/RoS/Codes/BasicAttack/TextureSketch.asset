@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: "\uC2A4\uCF00\uCE58"
   desc: "\uCE58\uBA85\uD0C0 \uBC1C\uC0DD \uC2DC \uCD5C\uC885 \uB300\uBBF8\uC9C0 {0}\uBC30"
-  icon: {fileID: 0}
+  icon: {fileID: 8780731148643925331, guid: b855eef9e727ab541a7e27f8ee03c9db, type: 3}
   value:
   - 2
   - 3

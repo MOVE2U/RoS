@@ -22,7 +22,7 @@ public class TurnManager : MonoBehaviour
     [Header("for check")]
     [SerializeField] private TurnState curState = TurnState.None;
     [SerializeField] private int turnCount = 0;
-    [SerializeField] private int moveCount = 0;
+    [SerializeField] private float moveCount = 0;
 
     [Header("external ref")]
     [SerializeField] private Spawner spawner;
@@ -34,10 +34,12 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private List<Vector2Int> coinPoints;
     [SerializeField] private SpawnData choiceNPCFirst;
     [SerializeField] private List<Vector2Int> choiceNPCPoints;
+    [SerializeField] private GameObject freezeNotice;
+    [SerializeField] private GameObject moveAgainNotice;
 
     public TurnState CurState => curState;
     public int TurnCount => turnCount;
-    public int MoveCount => moveCount;
+    public float MoveCount => moveCount;
     public int MaxMoveCount => maxMoveCount;
     
     private void Awake()
@@ -58,14 +60,22 @@ public class TurnManager : MonoBehaviour
             case TurnState.AttackTurn:
                 if (moveCount >= maxMoveCount)
                 {
-                    StartMoveTurn();
+                    StartCoroutine(StartMoveTurn());
                 }
                 break;
         }
     }
 
-    public void StartMoveTurn()
+    public IEnumerator StartMoveTurn()
     {
+        if(turnCount > 0)
+        {
+            curState = TurnState.AttackToMoveTurn;
+            moveAgainNotice.SetActive(true);
+            yield return new WaitForSeconds(2f);
+            moveAgainNotice.SetActive(false);
+        }
+
         curState = TurnState.MoveTurn;
         moveCount = 0;
         turnCount++;
@@ -88,8 +98,14 @@ public class TurnManager : MonoBehaviour
         if(turnCount == 1)
         {
             tutorialManager.NextStep();
-            yield return new WaitForSeconds(2.5f);
+            yield return new WaitForSeconds(2f);
             tutorialManager.NextStep();
+        }
+        else
+        {
+            freezeNotice.SetActive(true);
+            yield return new WaitForSeconds(2f);
+            freezeNotice.SetActive(false);
         }
 
         curState = TurnState.AttackTurn;
@@ -99,7 +115,7 @@ public class TurnManager : MonoBehaviour
         {
             MoveCountChange(1);
 
-            float[] ws = { 0.8f, 1f };
+            float[] ws = { 0.5f, 0.7f };
             float w = ws[UnityEngine.Random.Range(0, ws.Length)];
 
             foreach (Enemy e in spawner.activeEnemies)
@@ -113,11 +129,18 @@ public class TurnManager : MonoBehaviour
             }
 
             yield return new WaitUntil(() => spawner.activeEnemies.TrueForAll(x => !x.IsMoving));
+
+            GameManager.instance.player.CheckSurrounded();
+
+            if (GameManager.instance.isLive == false)
+            {
+                yield break;
+            }
         }
     }
 
-    public void MoveCountChange(int i)
+    public void MoveCountChange(float f)
     {
-        moveCount += i;
+        moveCount += f;
     }
 }

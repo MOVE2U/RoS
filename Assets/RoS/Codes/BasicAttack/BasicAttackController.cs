@@ -33,6 +33,7 @@ public class BasicAttackController : MonoBehaviour
 
     [Header("Ref")]
     public GameObject prefabRanged;
+    public Sprite spriteRangedBasic;
     public Sprite spriteRangedWhite;
     public GameObject prefabMelee;
 
@@ -124,7 +125,8 @@ public class BasicAttackController : MonoBehaviour
 
             // 6. 프로젝타일 색상 변경
             SpriteRenderer sprite = projectile.GetComponent<SpriteRenderer>();
-            if(projectileColor == orangeColor || projectileColor == redColor)
+            sprite.sprite = spriteRangedBasic;
+            if (projectileColor == orangeColor || projectileColor == redColor)
             {
                 sprite.sprite = spriteRangedWhite;
             }

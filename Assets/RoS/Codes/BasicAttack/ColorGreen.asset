@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae756869ef361c848afd6bd93d01ffb9, type: 3}
   m_Name: ColorGreen
   m_EditorClassIdentifier: 
-  title: "\uC8FC\uD669\uC0C9"
+  title: "\uB178\uB780\uC0C9"
   desc: "\uCE58\uBA85\uD0C0 \uD655\uB960 {0}% \uC99D\uAC00"
-  icon: {fileID: -420194304, guid: 78576745c6e7b7b4f936d0ee20debcb5, type: 3}
+  icon: {fileID: -1778280166755557368, guid: 0f45e45eead32e442a278c6e29c49e33, type: 3}
   value:
   - 0.1
   - 0.1

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: "\uD30C\uB780\uC0C9"
   desc: "\uACF5\uACA9 \uC18D\uB3C4 {0}% \uC99D\uAC00"
-  icon: {fileID: -342478649, guid: 78576745c6e7b7b4f936d0ee20debcb5, type: 3}
+  icon: {fileID: -2255339796125091521, guid: 4b8445bf485727045b951eef34e1584a, type: 3}
   value:
   - 0.1
   - 0.1
