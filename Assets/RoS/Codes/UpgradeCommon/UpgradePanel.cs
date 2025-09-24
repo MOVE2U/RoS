@@ -95,4 +95,6 @@ public class UpgradePanel : MonoBehaviour
             finalUpgradeDatas.RemoveAt(ran); // 중복 방지
         }
     }
+
+
 }

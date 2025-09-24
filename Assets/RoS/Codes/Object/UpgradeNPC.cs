@@ -35,14 +35,11 @@ public class UpgradeNPC : MonoBehaviour, ISpawnable, Iinteractable
     {
         GameManager.instance.NPCCount++;
 
+        TutorialManager.instance.npc = this;
+
         if (GameManager.instance.NPCCount == 1)
         {
-            TutorialManager.instance.npc = this;
             TutorialManager.instance.NextStep();
-        }
-        else if(GameManager.instance.NPCCount <= 4)
-        {
-            TutorialManager.instance.npc = this;
         }
         else
         {

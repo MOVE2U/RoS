@@ -117,6 +117,8 @@ public class GridManager : MonoBehaviour
         {
             triggers[gridPos] = new List<GameObject> { obj };
         }
+
+        Debug.Log($"<color=green>REGISTER TRIGGER:</color> {obj.name} at {gridPos}. List count is now {triggers[gridPos].Count}");
     }
 
     public void RegisterTrigger(Vector3 worldPos, GameObject obj)
@@ -130,6 +132,9 @@ public class GridManager : MonoBehaviour
     {
         if (triggers.TryGetValue(gridPos, out var existingList))
         {
+            bool removed = existingList.Remove(obj);
+            Debug.Log($"<color=red>UNREGISTER TRIGGER:</color> {obj.name} at {gridPos}. Removed: {removed}. List count is now {existingList.Count}");
+
             existingList.Remove(obj);
 
             if (existingList.Count == 0)
