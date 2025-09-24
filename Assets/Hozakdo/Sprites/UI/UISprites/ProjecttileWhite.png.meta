@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 93ea94af910821f4d8d0525f5c29bc9c
+guid: b16c43529e71fda469fe49858da5f919
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8859010761679180652
-    second: magpie_SD2_0
+      213: -3179686385602875697
+    second: ProjecttileWhite_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,17 +96,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: magpie_SD2_0
+      name: ProjecttileWhite_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 40
-        height: 33
+        width: 20
+        height: 20
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c631047c95781fa70800000000000000
-      internalID: 8859010761679180652
+      spriteID: fceaef8341c7fd3d0800000000000000
+      internalID: -3179686385602875697
       vertices: []
       indices: 
       edges: []
@@ -135,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      magpie_SD2_0: 8859010761679180652
+      ProjecttileWhite_0: -3179686385602875697
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

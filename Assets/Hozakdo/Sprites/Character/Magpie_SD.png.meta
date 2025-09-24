@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2676fa29173fee446b3b2c0c88e64020
+guid: 81038b0105652004985583a0ed3c5349
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1321010267891290787
-    second: Gauge3_0
+      213: -1159298024751668309
+    second: Magpie_SD_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,27 +96,40 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Gauge3_0
+      name: Magpie_SD_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 16
-        height: 16
+        width: 25
+        height: 23
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d5d22bd0924daade0800000000000000
-      internalID: -1321010267891290787
+      spriteID: ba36dd5b69859efe0800000000000000
+      internalID: -1159298024751668309
       vertices: []
       indices: 
       edges: []
@@ -125,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 92b1744a240ac4b459dc5cc700fe7e45
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Gauge3_0: -1321010267891290787
+      Magpie_SD_0: -1159298024751668309
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
