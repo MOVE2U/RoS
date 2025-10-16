@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class Coin : MonoBehaviour, ISpawnable, Iinteractable
 {
@@ -6,20 +6,21 @@ public class Coin : MonoBehaviour, ISpawnable, Iinteractable
 
     public void OnSpawn(SpawnData spawnData, Vector2Int pos)
     {
-        // ³í¸® ÁÂÇ¥ ¾÷µ¥ÀÌÆ®
+        // ë…¼ë¦¬ ì¢Œí‘œ ì—…ë°ì´íŠ¸
         gridPos = pos;
         GridManager.instance.RegisterTrigger(pos, this.gameObject);
 
-        // ¿ùµå ÁÂÇ¥ ¾÷µ¥ÀÌÆ®
+        // ì›”ë“œ ì¢Œí‘œ ì—…ë°ì´íŠ¸
         transform.position = new Vector3(gridPos.x, gridPos.y, 0);
     }
 
     public void OnInteract()
     {
-        // ÄÚÀÎ È¹µæ ·ÎÁ÷
-        GameManager.instance.coin++;
+        // ì½”ì¸ íšë“ ë¡œì§
+        // GameManager.instance.coin++;
+        GameManager.instance.GetExp();
 
-        // ÄÚÀÎ Á¦°Å
+        // ì½”ì¸ ì œê±°
         GridManager.instance.UnRegisterTrigger(gridPos, this.gameObject);
         this.gameObject.SetActive(false);
     }

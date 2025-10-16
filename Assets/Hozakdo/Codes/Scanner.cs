@@ -1,18 +1,18 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class Scanner : MonoBehaviour
 {
     public float scanRange;
     public LayerMask targetLayer;
-    // RaycastHitÀº ÀÇµµÀûÀ¸·Î Å½»ö µµ±¸(CircleCastAll, Raycast µî)¸¦ ÅëÇØ Å½»ö µµ±¸¿Í Ãæµ¹ÇÑ ¿ÀºêÁ§Æ®ÀÇ Á¤º¸¸¦ ´ãÀ½
-    // À¯»çÇÏ°Ô OnTriggerEnter2D´Â ÀÌº¥Æ®°¡ ¹ß»ıÇßÀ» ¶§ ÀÚµ¿ È£ÃâµÇ¸ç, Ãæµ¹ÇÑ ¿ÀºêÁ§Æ®ÀÇ Á¤º¸¸¦ ´ãÀ½
-    // Âü°í·Î RaycastHitÀº publicÀÌ¾îµµ À¯´ÏÆ¼ ÀÎ½ºÆåÅÍ Ã¢¿¡ ³ëÃâµÇÁö ¾ÊÀ½
+    // RaycastHitì€ ì˜ë„ì ìœ¼ë¡œ íƒìƒ‰ ë„êµ¬(CircleCastAll, Raycast ë“±)ë¥¼ í†µí•´ íƒìƒ‰ ë„êµ¬ì™€ ì¶©ëŒí•œ ì˜¤ë¸Œì íŠ¸ì˜ ì •ë³´ë¥¼ ë‹´ìŒ
+    // ìœ ì‚¬í•˜ê²Œ OnTriggerEnter2DëŠ” ì´ë²¤íŠ¸ê°€ ë°œìƒí–ˆì„ ë•Œ ìë™ í˜¸ì¶œë˜ë©°, ì¶©ëŒí•œ ì˜¤ë¸Œì íŠ¸ì˜ ì •ë³´ë¥¼ ë‹´ìŒ
+    // ì°¸ê³ ë¡œ RaycastHitì€ publicì´ì–´ë„ ìœ ë‹ˆí‹° ì¸ìŠ¤í™í„° ì°½ì— ë…¸ì¶œë˜ì§€ ì•ŠìŒ
     public RaycastHit2D[] targets;
     public Transform nearestTarget;
 
     private void FixedUpdate()
     {
-        // CircleCastAll·Î ¿ÀºêÁ§Æ®¸¦ Å½»öÇÏ°í, Å½»öÇÑ ¿ÀºêÁ§Æ®ÀÇ Á¤º¸¸¦ RaycastHit2D ¹è¿­¿¡ ÀúÀå
+        // CircleCastAllë¡œ ì˜¤ë¸Œì íŠ¸ë¥¼ íƒìƒ‰í•˜ê³ , íƒìƒ‰í•œ ì˜¤ë¸Œì íŠ¸ì˜ ì •ë³´ë¥¼ RaycastHit2D ë°°ì—´ì— ì €ì¥
         targets = Physics2D.CircleCastAll(transform.position, scanRange, Vector2.zero, 0, targetLayer);
         nearestTarget = GetNearest();
     }

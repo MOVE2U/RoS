@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "TextureData", menuName = "Scriptable Objects/TextureData")]
 public class TextureData : UpgradeData

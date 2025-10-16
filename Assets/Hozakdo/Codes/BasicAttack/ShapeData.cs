@@ -1,10 +1,10 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
-// UpgradePanel¿¡¼­ µ¿ÀûÀ¸·Î »ı¼º
+// UpgradePanelì—ì„œ ë™ì ìœ¼ë¡œ ìƒì„±
 [CreateAssetMenu(fileName = "ShapeData", menuName = "Scriptable Objects/ShapeData")]
 public class ShapeData : UpgradeData
 {
-    // ¾÷±×·¹ÀÌµå ½Ã Ãß°¡µÉ Å¸ÀÏÀÇ »ó´ë À§Ä¡. UpgradePanelÀÌ µ¿ÀûÀ¸·Î ÇÒ´ç
+    // ì—…ê·¸ë ˆì´ë“œ ì‹œ ì¶”ê°€ë  íƒ€ì¼ì˜ ìƒëŒ€ ìœ„ì¹˜. UpgradePanelì´ ë™ì ìœ¼ë¡œ í• ë‹¹
     public Vector2Int tileToAdd;
 
     public override void Apply(BasicAttackController basicAttackController)

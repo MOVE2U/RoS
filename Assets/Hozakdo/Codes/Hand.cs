@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class Hand : MonoBehaviour
 {
@@ -13,8 +13,8 @@ public class Hand : MonoBehaviour
     Quaternion leftRotReverse = Quaternion.Euler(0, 0, -135);
     private void Awake()
     {
-        // ³ª[0]ºÎÅÍ Ã£°í ºÎ¸ğ[1]¸¦ Ã£´Â´Ù.
-        // GetComponentInParent¸¦ ¾²Áö ¾Ê´Â ÀÌÀ¯´Â '³ª'¿¡°Ô SpriteRenderer°¡ ÀÖ±â ¶§¹®
+        // ë‚˜[0]ë¶€í„° ì°¾ê³  ë¶€ëª¨[1]ë¥¼ ì°¾ëŠ”ë‹¤.
+        // GetComponentInParentë¥¼ ì“°ì§€ ì•ŠëŠ” ì´ìœ ëŠ” 'ë‚˜'ì—ê²Œ SpriteRendererê°€ ìˆê¸° ë•Œë¬¸
         player = GetComponentsInParent<SpriteRenderer>()[1];
     }
     private void LateUpdate()
@@ -23,7 +23,7 @@ public class Hand : MonoBehaviour
 
         if(isLeft)
         {
-            // °ªÀ» ÇÏ³ª¸¸ º¯°æÇÏ´Â if¹®ÀÇ °æ¿ì »ïÇ×¿¬»êÀÚ¸¦ ¾´´Ù.
+            // ê°’ì„ í•˜ë‚˜ë§Œ ë³€ê²½í•˜ëŠ” ifë¬¸ì˜ ê²½ìš° ì‚¼í•­ì—°ì‚°ìë¥¼ ì“´ë‹¤.
             transform.localRotation = isReverse ? leftRotReverse : leftRot;
             spriter.flipY = isReverse;
             spriter.sortingOrder = isReverse ? 4 : 6;

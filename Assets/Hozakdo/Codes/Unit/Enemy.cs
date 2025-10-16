@@ -1,6 +1,7 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Enemy : Unit, ISpawnable
 {
@@ -23,14 +24,14 @@ public class Enemy : Unit, ISpawnable
     {
         base.Awake();
 
-        // Unit °øÅë º¯¼ö ÃÊ±âÈ­
-        moveTime = 0.4f;
+        // Unit ê³µí†µ ë³€ìˆ˜ ì´ˆê¸°í™”
+        moveTime = 0.2f;
     }
 
-    // ÃÊ±âÈ­ - È°¼ºÈ­ µÉ ¶§ °øÅë
+    // ì´ˆê¸°í™” - í™œì„±í™” ë  ë•Œ ê³µí†µ
     private void OnEnable()
     {
-        // ¿ÀºêÁ§Æ® Ç®¸µÀº OnEnable¿¡¼­ ÃÊ±âÈ­ÇÏ±âµµ ÇÔ. ½Ì±ÛÅæ ÂüÁ¶´Â ºñ¿ëÀÌ ÀûÀ½
+        // ì˜¤ë¸Œì íŠ¸ í’€ë§ì€ OnEnableì—ì„œ ì´ˆê¸°í™”í•˜ê¸°ë„ í•¨. ì‹±ê¸€í†¤ ì°¸ì¡°ëŠ” ë¹„ìš©ì´ ì ìŒ
         player = GameManager.instance.player;
         spawner = Spawner.instance;
         GetComponent<SpriteRenderer>().color = Color.white;
@@ -42,34 +43,35 @@ public class Enemy : Unit, ISpawnable
         health = maxHealth;
     }
 
-    // ÃÊ±âÈ­ - ¿ÜºÎ¿¡¼­ Àü´Ş¹ŞÀº µ¥ÀÌÅÍ·Î ¼¼ÆÃÇÏ´Â Ç×¸ñ
+    // ì´ˆê¸°í™” - ì™¸ë¶€ì—ì„œ ì „ë‹¬ë°›ì€ ë°ì´í„°ë¡œ ì„¸íŒ…í•˜ëŠ” í•­ëª©
     public void OnSpawn(SpawnData spawnData, Vector2Int pos)
     {
         health = spawnData.health;
         maxHealth = spawnData.health;
 
-        // ³í¸® ÁÂÇ¥ ¾÷µ¥ÀÌÆ®
+        // ë…¼ë¦¬ ì¢Œí‘œ ì—…ë°ì´íŠ¸
         gridPos = pos;
         GridManager.instance.RegisterOccupant(pos, this.gameObject);
 
-        // ¿ùµå ÁÂÇ¥ ¾÷µ¥ÀÌÆ®
+        // ì›”ë“œ ì¢Œí‘œ ì—…ë°ì´íŠ¸
         transform.position = new Vector3(gridPos.x, gridPos.y, 0);
     }
 
-    // Á¤¸® - ºñÈ°¼ºÈ­ µÉ ¶§ °øÅë
+    // ì •ë¦¬ - ë¹„í™œì„±í™” ë  ë•Œ ê³µí†µ
     private void OnDisable()
     {
         GridManager.instance.UnRegisterOccupant(gridPos);
         spawner.RemoveEnemy(this);
     }
 
-    // Á¤¸® - Á×¾úÀ» ¶§¸¸ È£ÃâµÇ´Â Ç×¸ñ
+    // ì •ë¦¬ - ì£½ì—ˆì„ ë•Œë§Œ í˜¸ì¶œë˜ëŠ” í•­ëª©
     void Dead()
     {
         GridManager.instance.UnRegisterOccupant(gridPos);
         gameObject.SetActive(false);
         GameManager.instance.kill++;
-        GameManager.instance.GetExp();
+        // GameManager.instance.GetExp();
+        Spawner.instance.FixedSpawn(new List<Vector2Int> { gridPos }, TurnManager.instance.coinDrop);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);
     }
 
@@ -155,7 +157,7 @@ public class Enemy : Unit, ISpawnable
 
     }
 
-    // ³ªÁß¿¡ ½ºÅ³ »ı±â¸é BasicAttackControllerÀÇ »óÀ§ Å¬·¡½º¸¦ ¸¸µé¾î¼­, »óÀ§ Å¬·¡½º¸¦ ¸Å°³º¯¼ö·Î º¯°æ ÇÊ¿ä
+    // ë‚˜ì¤‘ì— ìŠ¤í‚¬ ìƒê¸°ë©´ BasicAttackControllerì˜ ìƒìœ„ í´ë˜ìŠ¤ë¥¼ ë§Œë“¤ì–´ì„œ, ìƒìœ„ í´ë˜ìŠ¤ë¥¼ ë§¤ê°œë³€ìˆ˜ë¡œ ë³€ê²½ í•„ìš”
     public void Attacked(BasicAttackController attack, float damage)
     {
         health -= damage;
@@ -199,7 +201,7 @@ public class Enemy : Unit, ISpawnable
 
     private IEnumerator AwakeVFX(float shakePower)
     {
-        if(TurnManager.instance.CurState != TurnState.MoveTurn)
+        if(TurnManager.instance.CurState != TurnState.PlayerTurn)
         {
             yield return null;
         }
@@ -208,12 +210,12 @@ public class Enemy : Unit, ISpawnable
         float elapsedTime = 0f;
         float shakeTimer = 0f;
 
-        while (elapsedTime < 0.3f) // 0.3ÃÊ µ¿¾È Èçµé¸²
+        while (elapsedTime < 0.3f) // 0.3ì´ˆ ë™ì•ˆ í”ë“¤ë¦¼
         {
             elapsedTime += Time.deltaTime;
             shakeTimer += Time.deltaTime;
 
-            if (shakeTimer >= 0.1f) // 0.15ÃÊ¸¶´Ù À§Ä¡ º¯°æ. ³ôÀ»¼ö·Ï ¹¬Á÷ÇÏ°Ô Èçµé¸²
+            if (shakeTimer >= 0.1f) // 0.15ì´ˆë§ˆë‹¤ ìœ„ì¹˜ ë³€ê²½. ë†’ì„ìˆ˜ë¡ ë¬µì§í•˜ê²Œ í”ë“¤ë¦¼
             {
                 Vector2 shakeOffset = UnityEngine.Random.insideUnitCircle * shakePower;
                 transform.position = originalPos + new Vector3(shakeOffset.x, shakeOffset.y, 0);
@@ -227,16 +229,17 @@ public class Enemy : Unit, ISpawnable
         transform.position = originalPos;
     }
 
-    public void AutoMove(float randomWait)
+    public void AutoMove(float enemyWait)
     {
         if(canMove)
         {
-            wait = randomWait;
+            wait = enemyWait;
             EnemyMoveJudge();
         }
     }
 
-    // ³» ½ºÅ©¸³Æ® ¾È¿¡ ÀÖ´Â IEnumerator¸¸ StartCoroutine·Î Á÷Á¢ È£ÃâÇÒ ¼ö ÀÖ´Ù. ¾Æ·¡´Â Player¿¡¼­ EnemyÀÇ StartCoroutineÀ» È£ÃâÇÒ ÇÊ¿ä°¡ ÀÖ¾î¼­ º°µµÀÇ ¸Ş¼­µå¸¦ ¸¸µç °Í.
+    // ë‚´ ìŠ¤í¬ë¦½íŠ¸ ì•ˆì— ìˆëŠ” IEnumeratorë§Œ StartCoroutineë¡œ ì§ì ‘ í˜¸ì¶œí•  ìˆ˜ ìˆë‹¤.
+    // ì•„ë˜ëŠ” Playerì—ì„œ Enemyì˜ StartCoroutineì„ í˜¸ì¶œí•  í•„ìš”ê°€ ìˆì–´ì„œ ë³„ë„ì˜ ë©”ì„œë“œë¥¼ ë§Œë“  ê²ƒ.
     public void PushedMove(Vector2Int dir)
     {
         StartCoroutine(ExecuteMove(dir));

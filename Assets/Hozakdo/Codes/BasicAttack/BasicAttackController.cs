@@ -1,7 +1,6 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static AudioManager;
 
 public class BasicAttackController : MonoBehaviour
 {
@@ -24,7 +23,7 @@ public class BasicAttackController : MonoBehaviour
     public Color orangeColor;
 
     [Header("Upgrade State")]
-    // °³¹ß ¹× È®ÀÎ ³¡³ª°í ³ª¸é private·Î ¹Ù²Ü °Í
+    // ê°œë°œ ë° í™•ì¸ ëë‚˜ê³  ë‚˜ë©´ privateë¡œ ë°”ê¿€ ê²ƒ
     public Dictionary<ColorData.ColorType, int> colorLevels = new Dictionary<ColorData.ColorType, int>();
     public TextureData.TextureType? curTexture = null;
     public int textureLevel = 0;
@@ -55,33 +54,34 @@ public class BasicAttackController : MonoBehaviour
         player = GameManager.instance.player;
     }
 
-    private void Update()
-    {
-        if (TurnManager.instance.CurState == TurnState.AttackTurn 
-            && GameManager.instance.isLive)
-        {
-            timer += Time.deltaTime;
+    // private void Update()
+    // {
+    //     if (TurnManager.instance.CurState == TurnState.EnemyTurn
+    //         && GameManager.instance.isLive)
+    //     {
 
-            if (timer > finalAttackSpeed)
-            {
-                timer = 0;
-                AttackRanged();
-                // AttackMelee();
-            }
-        }
-    }
+    //         timer += Time.deltaTime;
 
-    private void AttackMelee()
+    //         if (timer > finalAttackSpeed)
+    //         {
+    //             timer = 0;
+    //             AttackRanged();
+    //             // AttackMelee();
+    //         }
+    //     }
+    // }
+
+    public void AttackMelee()
     {
-        // 1. °ø°İ Å¸ÀÏ °è»ê
+        // 1. ê³µê²© íƒ€ì¼ ê³„ì‚°
         List<Vector2Int> attackTiles = GetAttackTiles();
-        // Debug.Log("°ø°İ Å¸ÀÏ ¸ñ·Ï: " + string.Join(", ", tiles));
+        // Debug.Log("ê³µê²© íƒ€ì¼ ëª©ë¡: " + string.Join(", ", tiles));
 
-        // 2. ´ë¹ÌÁö °è»ê
+        // 2. ëŒ€ë¯¸ì§€ ê³„ì‚°
         float damage = Damage();
-        Debug.Log("´ë¹ÌÁö: " + damage);
+        Debug.Log("ëŒ€ë¯¸ì§€: " + damage);
 
-        // 3. °ø°İ Å¸ÀÏ¿¡ ÀÖ´Â Àû¿¡°Ô ´ë¹ÌÁö Àû¿ë
+        // 3. ê³µê²© íƒ€ì¼ì— ìˆëŠ” ì ì—ê²Œ ëŒ€ë¯¸ì§€ ì ìš©
         foreach (var attackTile in attackTiles)
         {
             GameObject obj = GridManager.instance.GetOccupant(attackTile);
@@ -91,20 +91,23 @@ public class BasicAttackController : MonoBehaviour
             }
         }
 
-        // 4. µ¿ÀÏÇÑ Å¸ÀÏ¿¡ ÀÌÆåÆ® Ç¥½Ã
+        // 4. ë™ì¼í•œ íƒ€ì¼ì— ì´í™íŠ¸ í‘œì‹œ
         StartCoroutine(ShowVFX(attackTiles));
+
+        // 5. ê³µê²© ë¡œì§ì´ ì™„ë£Œëœ ì‹œì ì— í„´ ì¶”ê°€
+        TurnManager.instance.MoveCountAdd(1);
     }
 
     private void AttackRanged()
     {
-        // 1. °ø°İ Å¸ÀÏ °è»ê
+        // 1. ê³µê²© íƒ€ì¼ ê³„ì‚°
         List<Vector2Int> attackTiles = GetAttackTiles();
 
-        // 2. ´ë¹ÌÁö °è»ê
+        // 2. ëŒ€ë¯¸ì§€ ê³„ì‚°
         float damage = Damage();
-        Debug.Log("´ë¹ÌÁö: " + damage);
+        Debug.Log("ëŒ€ë¯¸ì§€: " + damage);
 
-        // 3. ÇÁ·ÎÁ§Å¸ÀÏ »ö»ó °áÁ¤
+        // 3. í”„ë¡œì íƒ€ì¼ ìƒ‰ìƒ ê²°ì •
         Color projectileColor = Color.white;
         if (isCrit && colorLevels.ContainsKey(ColorData.ColorType.Orange))
         {
@@ -117,13 +120,13 @@ public class BasicAttackController : MonoBehaviour
 
         foreach (var attackTile in attackTiles)
         {
-            // 4. ÇÁ·ÎÁ§Å¸ÀÏ »ı¼º
+            // 4. í”„ë¡œì íƒ€ì¼ ìƒì„±
             GameObject projectile = GameManager.instance.pool.Get(prefabRanged);
 
-            // 5. ÇÁ·ÎÁ§Å¸ÀÏ À§Ä¡ º¯°æ
+            // 5. í”„ë¡œì íƒ€ì¼ ìœ„ì¹˜ ë³€ê²½
             projectile.transform.position = new Vector3(attackTile.x, attackTile.y, 0);
 
-            // 6. ÇÁ·ÎÁ§Å¸ÀÏ »ö»ó º¯°æ
+            // 6. í”„ë¡œì íƒ€ì¼ ìƒ‰ìƒ ë³€ê²½
             SpriteRenderer sprite = projectile.GetComponent<SpriteRenderer>();
             sprite.sprite = spriteRangedBasic;
             if (projectileColor == orangeColor || projectileColor == redColor)
@@ -133,7 +136,7 @@ public class BasicAttackController : MonoBehaviour
 
             sprite.color = projectileColor;
 
-            // 7. ÇÁ·ÎÁ§Å¸ÀÏ ÃÊ±âÈ­
+            // 7. í”„ë¡œì íƒ€ì¼ ì´ˆê¸°í™”
             projectile.GetComponent<Projectile>().Init(player.lastInputDir, this, damage);
         }
     }
@@ -148,7 +151,7 @@ public class BasicAttackController : MonoBehaviour
         {
             Vector2Int rotatedTile;
 
-            // player.LastInputDir °ª¿¡ µû¶ó shapeTileÀ» È¸Àü
+            // player.LastInputDir ê°’ì— ë”°ë¼ shapeTileì„ íšŒì „
             if (dir.x == 1) // Right
                 rotatedTile = shapeTile;
             else if (dir.x == -1) // Left
@@ -202,7 +205,7 @@ public class BasicAttackController : MonoBehaviour
 
         List<GameObject> vfxs = new List<GameObject>();
 
-        // 1. Àü´Ş¹ŞÀº Å¸ÀÏ ¸®½ºÆ®¿¡ ÀÌÆåÆ® »ı¼º
+        // 1. ì „ë‹¬ë°›ì€ íƒ€ì¼ ë¦¬ìŠ¤íŠ¸ì— ì´í™íŠ¸ ìƒì„±
         foreach (var tile in tiles)
         {
             Vector3 vfxPos = GridManager.instance.GridToWorld(tile);
@@ -216,7 +219,7 @@ public class BasicAttackController : MonoBehaviour
             vfxs.Add(vfx.gameObject);
         }
 
-        // 2. 0.3ÃÊ ÈÄ ¸ğµç ÀÌÆåÆ® ºñÈ°¼ºÈ­
+        // 2. 0.3ì´ˆ í›„ ëª¨ë“  ì´í™íŠ¸ ë¹„í™œì„±í™”
         yield return new WaitForSeconds(finalAttackSpeed * vfxDurationRate);
 
         foreach (var vfx in vfxs)

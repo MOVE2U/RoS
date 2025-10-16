@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class UpgradeNPC : MonoBehaviour, ISpawnable, Iinteractable
 {
@@ -6,14 +6,14 @@ public class UpgradeNPC : MonoBehaviour, ISpawnable, Iinteractable
 
     public void OnSpawn(SpawnData spawnData, Vector2Int pos)
     {
-        // ³í¸® ÁÂÇ¥ ¾÷µ¥ÀÌÆ®
+        // ë…¼ë¦¬ ì¢Œí‘œ ì—…ë°ì´íŠ¸
         gridPos = pos;
         GridManager.instance.RegisterOccupant(pos, this.gameObject);
 
-        // ¿ùµå ÁÂÇ¥ ¾÷µ¥ÀÌÆ®
+        // ì›”ë“œ ì¢Œí‘œ ì—…ë°ì´íŠ¸
         transform.position = new Vector3(gridPos.x, gridPos.y, 0);
 
-        // ÁÖº¯À» Æ®¸®°Å·Î µî·Ï
+        // ì£¼ë³€ì„ íŠ¸ë¦¬ê±°ë¡œ ë“±ë¡
         GridManager.instance.RegisterTrigger(new Vector2Int(pos.x + 1, pos.y), this.gameObject);
         GridManager.instance.RegisterTrigger(new Vector2Int(pos.x, pos.y + 1), this.gameObject);
         GridManager.instance.RegisterTrigger(new Vector2Int(pos.x - 1, pos.y), this.gameObject);
@@ -22,7 +22,7 @@ public class UpgradeNPC : MonoBehaviour, ISpawnable, Iinteractable
 
     public void Hide()
     {
-        // Æ®¸®°Å Á¦°Å, È°¼ºÈ­ Á¦°Å
+        // íŠ¸ë¦¬ê±° ì œê±°, í™œì„±í™” ì œê±°
         GridManager.instance.UnRegisterOccupant(gridPos);
         GridManager.instance.UnRegisterTrigger(new Vector2Int(gridPos.x + 1, gridPos.y), this.gameObject);
         GridManager.instance.UnRegisterTrigger(new Vector2Int(gridPos.x, gridPos.y + 1), this.gameObject);
@@ -49,7 +49,7 @@ public class UpgradeNPC : MonoBehaviour, ISpawnable, Iinteractable
         {
             Hide();
 
-            // ¼±ÅÃÁö ¶ç¿ì±â
+            // ì„ íƒì§€ ë„ìš°ê¸°
             GameManager.instance.uiLevelUp.Show(0);
         }
     }

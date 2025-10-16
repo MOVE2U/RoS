@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using UnityEngine;
 
@@ -8,18 +8,18 @@ public class AchieveManager : MonoBehaviour
     public GameObject[] unlockCharacter;
     public GameObject uiNotice;
 
-    // enumÀº »ó¼ö¿¡ ÀÌ¸§À» ºÙÀÎ °ÍÀ¸·Î, °¡µ¶¼ºÀÌ ¸ñÀû
-    // enum Å¸ÀÔÀ» Á¤ÀÇÇÑ°ÅÁö, enum ÀÚÃ¼¸¦ ¾µ ¼ø ¾ø´Ù. ¾µ ¶§´Â ÇÏ³ª¾¿ ¾´´Ù. Achieve P = Achieve.unlockPotato; Ã³·³.
-    // ±×·¡¼­ enum ¾ÈÀÇ ¸ğµç °ªÀ» °¡Áø '¾î¶²°Í'Àº ¹è¿­·Î ¸¸µé¾î¾ß ÇÑ´Ù.
+    // enumì€ ìƒìˆ˜ì— ì´ë¦„ì„ ë¶™ì¸ ê²ƒìœ¼ë¡œ, ê°€ë…ì„±ì´ ëª©ì 
+    // enum íƒ€ì…ì„ ì •ì˜í•œê±°ì§€, enum ìì²´ë¥¼ ì“¸ ìˆœ ì—†ë‹¤. ì“¸ ë•ŒëŠ” í•˜ë‚˜ì”© ì“´ë‹¤. Achieve P = Achieve.unlockPotato; ì²˜ëŸ¼.
+    // ê·¸ë˜ì„œ enum ì•ˆì˜ ëª¨ë“  ê°’ì„ ê°€ì§„ 'ì–´ë–¤ê²ƒ'ì€ ë°°ì—´ë¡œ ë§Œë“¤ì–´ì•¼ í•œë‹¤.
     enum Achieve { unlockPotato, unlockBean }
-    // ¹è¿­Àº µ¥ÀÌÅÍ ÀúÀå°ú ¹İº¹ Ã³¸®¿¡ À¯¸®ÇÏ¹Ç·Î ÀÌ°ÍÀÌ ÇÊ¿äÇÏ´Ù¸é enumÀ» ¹è¿­¿¡ ´ã´Â´Ù
+    // ë°°ì—´ì€ ë°ì´í„° ì €ì¥ê³¼ ë°˜ë³µ ì²˜ë¦¬ì— ìœ ë¦¬í•˜ë¯€ë¡œ ì´ê²ƒì´ í•„ìš”í•˜ë‹¤ë©´ enumì„ ë°°ì—´ì— ë‹´ëŠ”ë‹¤
     Achieve[] achieves;
     WaitForSecondsRealtime wait;
     private void Awake()
     {
-        // enumÀÇ ÀÏºÎ¸¸ ¹è¿­¿¡ ´ãÀ» ¼öµµ ÀÖ´Ù. ±×·¡¼­ ÃÊ±âÈ­¸¦ ÅëÇØ ÀüÃ¼¸¦ ´ã´Â´Ù´Â ¸í½Ã°¡ ÇÊ¿äÇÑ °Í.
-        // GetValues´Â array¸¦ ¹İÈ¯ÇÑ´Ù. array´Â ¹è¿­ÀÇ ºÎ¸ğ Å¬·¡½º °°Àº °Í.´õ Á¤È®ÇÑ Å¸ÀÔÀ» ¸»ÇØÁÖ±â À§ÇØ (Achieve[])¾¸
-        // GetValuesÀÇ ÀÎÀÚ´Â typeÀÌ´Ù. ±×·¡¼­ typeof°¡ ÇÊ¿ä
+        // enumì˜ ì¼ë¶€ë§Œ ë°°ì—´ì— ë‹´ì„ ìˆ˜ë„ ìˆë‹¤. ê·¸ë˜ì„œ ì´ˆê¸°í™”ë¥¼ í†µí•´ ì „ì²´ë¥¼ ë‹´ëŠ”ë‹¤ëŠ” ëª…ì‹œê°€ í•„ìš”í•œ ê²ƒ.
+        // GetValuesëŠ” arrayë¥¼ ë°˜í™˜í•œë‹¤. arrayëŠ” ë°°ì—´ì˜ ë¶€ëª¨ í´ë˜ìŠ¤ ê°™ì€ ê²ƒ.ë” ì •í™•í•œ íƒ€ì…ì„ ë§í•´ì£¼ê¸° ìœ„í•´ (Achieve[])ì”€
+        // GetValuesì˜ ì¸ìëŠ” typeì´ë‹¤. ê·¸ë˜ì„œ typeofê°€ í•„ìš”
         achieves = (Achieve[])Enum.GetValues(typeof(Achieve));
         wait = new WaitForSecondsRealtime(5);
         if(!PlayerPrefs.HasKey("MyData"))
@@ -39,7 +39,7 @@ public class AchieveManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // ÇÑ¹ø¸¸ ¾²´Â ¸Ş¼­µå¶óµµ ¸Ş¼­µå·Î ¸¸µé¾î¼­ È£ÃâÇÏ´Â°Ô °¡µ¶¼º¿¡ ÁÁ´Ù.
+        // í•œë²ˆë§Œ ì“°ëŠ” ë©”ì„œë“œë¼ë„ ë©”ì„œë“œë¡œ ë§Œë“¤ì–´ì„œ í˜¸ì¶œí•˜ëŠ”ê²Œ ê°€ë…ì„±ì— ì¢‹ë‹¤.
         UnlockCharacter();
     }
     void UnlockCharacter()

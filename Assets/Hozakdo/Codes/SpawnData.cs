@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "SpawnData", menuName = "Scriptable Objects/SpawnData")]
 public class SpawnData : ScriptableObject

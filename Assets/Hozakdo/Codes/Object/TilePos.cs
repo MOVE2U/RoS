@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -65,20 +65,11 @@ public class TilePos : MonoBehaviour, Iinteractable
         switch (type)
         {
             case TileType.Ground:
-                TurnManager.instance.MoveCountChange(0.8f);
-                foreach(Enemy e in Spawner.instance.activeEnemies)
-                {
-                    e.AwakeEnemy(0.15f);
-                }
+                TurnManager.instance.MoveCountAdd(1);
                 break;
             case TileType.Silently:
                 break;
             case TileType.Rustle:
-                TurnManager.instance.MoveCountChange(0.6f);
-                foreach (Enemy e in Spawner.instance.activeEnemies)
-                {
-                    e.AwakeEnemy(0.2f);
-                }
                 break;
         }
     }

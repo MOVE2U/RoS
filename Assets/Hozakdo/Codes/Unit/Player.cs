@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,7 +17,7 @@ public class Player : Unit
         base.Awake();
 
         // Unit 공통 변수 초기화
-        moveTime = 0.3f;
+        moveTime = 0.2f;
         wait = 0.1f;
     }
 
@@ -28,7 +28,7 @@ public class Player : Unit
 
     private void Update()
     {
-        if (TurnManager.instance.CurState == TurnState.MoveTurn
+        if (TurnManager.instance.CurState == TurnState.PlayerTurn
             && inputDir != Vector2Int.zero)
         {
             TryMove(inputDir);
@@ -56,31 +56,45 @@ public class Player : Unit
             lastInputDir = inputDir;
             SetSprite(lastInputDir);
         }
-        // 입력이 없을 때 이동 방향 초기화
+        // 입력이 없으면 이동 방향 초기화
         else
         {
             inputDir = Vector2Int.zero;
         }
     }
 
-    protected override bool ObjectEncounter(GameObject obj, Vector2Int dir)
+    private void OnAttack(InputValue value)
     {
-        // 1. 만난 오브젝트가 Enemy 라면
-        if(obj.TryGetComponent<Enemy>(out var encountEnemy))
+        if(GameManager.instance.isLive == false)
         {
-            // TryPush한 결과를 그대로 return
-            return TryPush(encountEnemy, dir);
+            return;
         }
 
-        // 2. 나중에 다른거 만난 경우를 추가
+        if(TurnManager.instance.CurState == TurnState.PlayerTurn)
+        {
+            basicAttackController.AttackMelee();
+        }
+    }
 
-        // 99. 기본적으론 뭔갈 만나면 false를 리턴해서 움직이지 않음
+    protected override bool ObjectEncounter(GameObject obj, Vector2Int dir)
+    {
+        // 미는 기능 주석 처리
+        // // 1. 만난 오브젝트가 Enemy 인지
+        // if (obj.TryGetComponent<Enemy>(out var encountEnemy))
+        // {
+        //     // TryPush의 결과를 그대로 return
+        //     return TryPush(encountEnemy, dir);
+        // }
+
+        // 2. 다른 상호작용할 경우를 추가
+
+        // 99. 기본적으로 상호작용 못하면 false를 반환하여 이동이 막힘
         return false;
     }
 
     private bool TryPush(Enemy firstEnemy, Vector2Int dir)
     {
-        // 1. 밀려날 유닛들을 담기
+        // 1. 밀어낼 적들을 수집
         List<Enemy> pushChain = new List<Enemy>();
         pushChain.Add(firstEnemy);
         Enemy lastEnemy = firstEnemy;
@@ -90,7 +104,7 @@ public class Player : Unit
             Vector2Int nextGridPos = lastEnemy.gridPos + dir * grid;
             GameObject nextObject = GridManager.instance.GetOccupant(nextGridPos);
 
-            // case1: 다응 칸이 빈칸이면 Push 가능. 루프 탈출
+            // case1: 다음 칸이 비어있으면 Push 가능, 루프 종료
             if (nextObject == null)
             {
                 break;
@@ -123,7 +137,7 @@ public class Player : Unit
 
     protected override void TriggerEncounter(Vector2Int gridPos)
     {
-        // 이동 지점에 트리거 확인하고 처리
+        // 이동 위치에 트리거가 있으면 처리
         if (GridManager.instance.HasTriggers(gridPos))
         {
             List<GameObject> triggers = GridManager.instance.GetTriggers(gridPos);
@@ -144,7 +158,7 @@ public class Player : Unit
         Vector2Int[] directions = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
         int enemyAroundCount = 0;
 
-        // 2. 4방향을 순회하며 검사
+        // 2. 4방향을 순회하며 체크
         foreach (Vector2Int dir in directions)
         {
             Vector2Int targetPos = gridPos + dir;
@@ -159,7 +173,7 @@ public class Player : Unit
             }
         }
 
-        // 5. 주변 4칸이 모두 적이라면 게임 종료
+        // 5. 주변 4칸이 모두 적이면 게임 종료
         if (enemyAroundCount == 4)
         {
             GameManager.instance.Stop();

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,13 +37,13 @@ public class UpgradePanel : MonoBehaviour
         {
             isMegpie = true;
             panelImage.sprite = panelImages[0];
-            panelTitle.text = "±×¸®±â";
+            panelTitle.text = "ê·¸ë¦¬ê¸°";
         }
         else
         {
             isMegpie = false;
             panelImage.sprite = panelImages[1];
-            panelTitle.text = "Ä¥ÇÏ±â";
+            panelTitle.text = "ì¹ í•˜ê¸°";
         }
 
         Next(index);
@@ -55,11 +55,6 @@ public class UpgradePanel : MonoBehaviour
 
     public void Hide()
     {
-        if (isMegpie)
-        {
-            TutorialManager.instance.NextStep();
-        }
-
         rect.localScale = Vector3.zero;
         GameManager.instance.Resume();
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
@@ -70,7 +65,7 @@ public class UpgradePanel : MonoBehaviour
     {
         List<UpgradeData> finalUpgradeDatas = new List<UpgradeData>(upgradeSets[index].upgradeDatas);
 
-        // ÇüÅÂ ¾÷±×·¹ÀÌµåÀÏ °æ¿ì¿¡¸¸
+        // í˜•íƒœ ì—…ê·¸ë ˆì´ë“œì¼ ê²½ìš°ì—ë§Œ
         if(index == 0)
         {
             var shapeCandidates = basicAttackController.GetShapeUpgradeCandidates();
@@ -78,22 +73,22 @@ public class UpgradePanel : MonoBehaviour
             {
                 ShapeData shapeData = ScriptableObject.CreateInstance<ShapeData>();
                 shapeData.tileToAdd = candidate;
-                shapeData.title = "ÇüÅÂ";
-                shapeData.desc = "°ø°İ ¹üÀ§°¡ ({0}, {1}) À§Ä¡¿¡ È®ÀåµË´Ï´Ù.";
-                // ¾ÆÀÌÄÜÀº ¸ğµç ÇüÅÂ ¾÷±×·¹ÀÌµå°¡ µ¿ÀÏÇÑ ¾ÆÀÌÄÜÀ» ¾²µµ·Ï ¼³Á¤ÇÒ ¼ö ÀÖÀ½
+                shapeData.title = "í˜•íƒœ";
+                shapeData.desc = "ê³µê²© ë²”ìœ„ê°€ ({0}, {1}) ìœ„ì¹˜ì— í™•ì¥ë©ë‹ˆë‹¤.";
+                // ì•„ì´ì½˜ì€ ëª¨ë“  í˜•íƒœ ì—…ê·¸ë ˆì´ë“œê°€ ë™ì¼í•œ ì•„ì´ì½˜ì„ ì“°ë„ë¡ ì„¤ì •í•  ìˆ˜ ìˆìŒ
                 shapeData.icon = shapeIcon;
 
                 finalUpgradeDatas.Add(shapeData);
             }
         }
 
-        // ÃÖÁ¾ ¸ñ·ÏÀ» ¼¯¾î¼­ 3°³¸¦ Ä«µå¿¡ ÇÒ´ç
+        // ìµœì¢… ëª©ë¡ì„ ì„ì–´ì„œ 3ê°œë¥¼ ì¹´ë“œì— í• ë‹¹
         for (int i = 0; i < upgradeCards.Length; i++)
         {
-            // ÀÌ¹Ì ¼±ÅÃµÈ Ä«µå´Â Á¦¿ÜÇÏ°í ´Ù½Ã »Ì±â À§ÇÑ ·ÎÁ÷
+            // ì´ë¯¸ ì„ íƒëœ ì¹´ë“œëŠ” ì œì™¸í•˜ê³  ë‹¤ì‹œ ë½‘ê¸° ìœ„í•œ ë¡œì§
             int ran = Random.Range(0, finalUpgradeDatas.Count);
             upgradeCards[i].SetUp(finalUpgradeDatas[ran]);
-            finalUpgradeDatas.RemoveAt(ran); // Áßº¹ ¹æÁö
+            finalUpgradeDatas.RemoveAt(ran); // ì¤‘ë³µ ë°©ì§€
         }
     }
 

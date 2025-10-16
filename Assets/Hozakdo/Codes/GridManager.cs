@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -13,7 +13,7 @@ public class GridManager : MonoBehaviour
     }
 
     #region occupant
-    // ÀÖÀ½? ¿©ºÎ
+    // ìˆìŒ? ì—¬ë¶€
     public bool IsOccupant(Vector2Int gridPos)
     {
         return occupants.ContainsKey(gridPos);
@@ -25,7 +25,7 @@ public class GridManager : MonoBehaviour
         return IsOccupant(gridPos);
     }
 
-    // ÀÖÀ¸¸é Áà
+    // ìˆìœ¼ë©´ ì¤˜
     public GameObject GetOccupant(Vector2Int gridPos)
     {
         if (occupants.TryGetValue(gridPos, out var obj))
@@ -39,7 +39,7 @@ public class GridManager : MonoBehaviour
         return GetOccupant(gridPos);
     }
 
-    // µî·Ï
+    // ë“±ë¡
     public void RegisterOccupant(Vector2Int gridPos, GameObject obj)
     {
         occupants[gridPos] = obj;
@@ -51,7 +51,7 @@ public class GridManager : MonoBehaviour
         RegisterOccupant(gridPos, obj);
     }
 
-    // µî·Ï ÇØÁ¦
+    // ë“±ë¡ í•´ì œ
     public void UnRegisterOccupant(Vector2Int gridPos)
     {
         if (occupants.ContainsKey(gridPos))
@@ -64,7 +64,7 @@ public class GridManager : MonoBehaviour
         UnRegisterOccupant(gridPos);
     }
 
-    // ÀÌµ¿
+    // ì´ë™
     public void MoveOccupant(Vector2Int from, Vector2Int to, GameObject obj)
     {
         UnRegisterOccupant(from);
@@ -80,7 +80,7 @@ public class GridManager : MonoBehaviour
     #endregion
 
     #region trigger
-    // ÀÖÀ½? ¿©ºÎ
+    // ìˆìŒ? ì—¬ë¶€
     public bool HasTriggers(Vector2Int gridPos)
     {
         return triggers.ContainsKey(gridPos);
@@ -92,7 +92,7 @@ public class GridManager : MonoBehaviour
         return HasTriggers(gridPos);
     }
 
-    // ÀÖÀ¸¸é Áà
+    // ìˆìœ¼ë©´ ì¤˜
     public List<GameObject> GetTriggers(Vector2Int gridPos)
     {
         if (triggers.TryGetValue(gridPos, out var list))
@@ -106,7 +106,7 @@ public class GridManager : MonoBehaviour
         return GetTriggers(gridPos);
     }
 
-    // µî·Ï
+    // ë“±ë¡
     public void RegisterTrigger(Vector2Int gridPos, GameObject obj)
     {
         if(triggers.TryGetValue(gridPos, out var existingList))
@@ -127,7 +127,7 @@ public class GridManager : MonoBehaviour
         RegisterTrigger(gridPos, obj);
     }
 
-    // µî·Ï ÇØÁ¦
+    // ë“±ë¡ í•´ì œ
     public void UnRegisterTrigger(Vector2Int gridPos, GameObject obj)
     {
         if (triggers.TryGetValue(gridPos, out var existingList))
@@ -151,13 +151,13 @@ public class GridManager : MonoBehaviour
     }
     #endregion
 
-    // ±×¸®µå ÁÂÇ¥·Î º¯È¯
+    // ê·¸ë¦¬ë“œ ì¢Œí‘œë¡œ ë³€í™˜
     public Vector2Int WorldToGrid(Vector3 pos)
     {
         return Vector2Int.RoundToInt(pos);
     }
     
-    // ¿ùµå ÁÂÇ¥·Î º¯È¯
+    // ì›”ë“œ ì¢Œí‘œë¡œ ë³€í™˜
     public Vector3 GridToWorld(Vector2Int pos)
     {
         return new Vector3(pos.x, pos.y, 0);
@@ -165,28 +165,28 @@ public class GridManager : MonoBehaviour
     
     private void OnDrawGizmos()
     {
-        // tileObject µñ¼Å³Ê¸®°¡ ÃÊ±âÈ­µÇÁö ¾Ê¾ÒÀ¸¸é ¾Æ¹«°Íµµ ÇÏÁö ¾ÊÀ½ (¾ÈÀüÀåÄ¡)
+        // tileObject ë”•ì…”ë„ˆë¦¬ê°€ ì´ˆê¸°í™”ë˜ì§€ ì•Šì•˜ìœ¼ë©´ ì•„ë¬´ê²ƒë„ í•˜ì§€ ì•ŠìŒ (ì•ˆì „ì¥ì¹˜)
         if (occupants == null)
         {
             return;
         }
    
-        // ±âÁî¸ğÀÇ »ö»óÀ» »¡°£»öÀ¸·Î ¼³Á¤
+        // ê¸°ì¦ˆëª¨ì˜ ìƒ‰ìƒì„ ë¹¨ê°„ìƒ‰ìœ¼ë¡œ ì„¤ì •
         Gizmos.color = Color.red;
    
-        // tileObject µñ¼Å³Ê¸®¿¡ µî·ÏµÈ ¸ğµç Ç×¸ñ¿¡ ´ëÇØ ·çÇÁ¸¦ µ½´Ï´Ù.
+        // tileObject ë”•ì…”ë„ˆë¦¬ì— ë“±ë¡ëœ ëª¨ë“  í•­ëª©ì— ëŒ€í•´ ë£¨í”„ë¥¼ ë•ë‹ˆë‹¤.
         foreach (var tile in occupants)
         {
-            // tile.Key´Â ±×¸®µå ÁÂÇ¥ (Vector2Int)
-            // tile.Value´Â µî·ÏµÈ °ÔÀÓ ¿ÀºêÁ§Æ® (GameObject)
+            // tile.KeyëŠ” ê·¸ë¦¬ë“œ ì¢Œí‘œ (Vector2Int)
+            // tile.ValueëŠ” ë“±ë¡ëœ ê²Œì„ ì˜¤ë¸Œì íŠ¸ (GameObject)
    
-            if (tile.Value != null) // È¤½Ã ¸ğ¸¦ null °ª¿¡ ´ëºñ
+            if (tile.Value != null) // í˜¹ì‹œ ëª¨ë¥¼ null ê°’ì— ëŒ€ë¹„
             {
-                // ±×¸®µå ÁÂÇ¥¸¦ ½ÇÁ¦ ¿ùµå ÁÂÇ¥·Î º¯È¯
+                // ê·¸ë¦¬ë“œ ì¢Œí‘œë¥¼ ì‹¤ì œ ì›”ë“œ ì¢Œí‘œë¡œ ë³€í™˜
                 Vector3 worldPos = GridToWorld(tile.Key);
    
-                // ÇØ´ç ¿ùµå ÁÂÇ¥¿¡ ¹İÅõ¸íÇÑ Å¥ºê¸¦ ±×¸³´Ï´Ù.
-                // »çÀÌÁî´Â Å¸ÀÏ Å©±â¿¡ ¸Â°Ô Á¶ÀıÇÏ¼¼¿ä. (¿¹: new Vector3(1, 1, 0.1f))
+                // í•´ë‹¹ ì›”ë“œ ì¢Œí‘œì— ë°˜íˆ¬ëª…í•œ íë¸Œë¥¼ ê·¸ë¦½ë‹ˆë‹¤.
+                // ì‚¬ì´ì¦ˆëŠ” íƒ€ì¼ í¬ê¸°ì— ë§ê²Œ ì¡°ì ˆí•˜ì„¸ìš”. (ì˜ˆ: new Vector3(1, 1, 0.1f))
                 Gizmos.DrawCube(worldPos, Vector3.one* 0.8f);
             }
         }

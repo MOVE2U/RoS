@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 
 public class UpgradeCard : MonoBehaviour
@@ -27,13 +27,13 @@ public class UpgradeCard : MonoBehaviour
         if (gridPanelTransform != null)
         {
             gridPanel = gridPanelTransform.gameObject;
-            // gridPanel ¾ÈÀÇ ImageµéÀ» Ã£À» ¶§µµ ºñÈ°¼ºÈ­¸¦ °í·ÁÇØ true¸¦ ³Ö¾îÁÖ´Â °ÍÀÌ ¾ÈÀüÇÕ´Ï´Ù.
+            // gridPanel ì•ˆì˜ Imageë“¤ì„ ì°¾ì„ ë•Œë„ ë¹„í™œì„±í™”ë¥¼ ê³ ë ¤í•´ trueë¥¼ ë„£ì–´ì£¼ëŠ” ê²ƒì´ ì•ˆì „í•©ë‹ˆë‹¤.
             grids = gridPanel.GetComponentsInChildren<Image>(true);
         }
         else
         {
-            // ¸¸¾à ¸ø Ã£¾Ò´Ù¸é, ¾î¶² ¿ÀºêÁ§Æ®¿¡¼­ ¹®Á¦°¡ ¹ß»ıÇß´ÂÁö Á¤È®ÇÑ ¿¡·¯ ¸Ş½ÃÁö¸¦ Ãâ·ÂÇÕ´Ï´Ù.
-            Debug.LogError("'" + gameObject.name + "' ¿ÀºêÁ§Æ®ÀÇ ÀÚ½Ä Áß 'Panel'À» Ã£À» ¼ö ¾ø½À´Ï´Ù! ÇÏÀÌ¾î¶óÅ° ±¸Á¶¿Í ÀÌ¸§À» È®ÀÎÇØÁÖ¼¼¿ä.", this.gameObject);
+            // ë§Œì•½ ëª» ì°¾ì•˜ë‹¤ë©´, ì–´ë–¤ ì˜¤ë¸Œì íŠ¸ì—ì„œ ë¬¸ì œê°€ ë°œìƒí–ˆëŠ”ì§€ ì •í™•í•œ ì—ëŸ¬ ë©”ì‹œì§€ë¥¼ ì¶œë ¥í•©ë‹ˆë‹¤.
+            Debug.LogError("'" + gameObject.name + "' ì˜¤ë¸Œì íŠ¸ì˜ ìì‹ ì¤‘ 'Panel'ì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤! í•˜ì´ì–´ë¼í‚¤ êµ¬ì¡°ì™€ ì´ë¦„ì„ í™•ì¸í•´ì£¼ì„¸ìš”.", this.gameObject);
         }
     }
 
@@ -53,19 +53,19 @@ public class UpgradeCard : MonoBehaviour
         {
             gridPanel.SetActive(true);
 
-            // ÃÊ±âÈ­
+            // ì´ˆê¸°í™”
             foreach (Image gridCell in grids)
             {
                 gridCell.color = Color.white;
             }
 
-            // ±âÁ¸ °ø°İ ¹üÀ§ °ËÀº»ö Ä¥
+            // ê¸°ì¡´ ê³µê²© ë²”ìœ„ ê²€ì€ìƒ‰ ì¹ 
             foreach (Vector2Int existingTile in basicAttackController.shapeTiles)
             {
                 GridVisual(existingTile, Color.black);
             }
 
-            // ´ë»ó Å¸ÀÏ Ä¥ÇÏ±â
+            // ëŒ€ìƒ íƒ€ì¼ ì¹ í•˜ê¸°
             GridVisual(((ShapeData)data).tileToAdd, new Color(0.251f, 0.878f, 0.816f));
         }
     }

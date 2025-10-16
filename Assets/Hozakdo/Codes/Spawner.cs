@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections.Generic;
 
 public class Spawner : MonoBehaviour
@@ -40,14 +40,14 @@ public class Spawner : MonoBehaviour
 
         for (int i = 0; i < count * maxAttempts; i++)
         {
-            // 1. ¸ñÇ¥ÇÏ´Â °³¼ö¿¡ µµ´ŞÇßÀ¸¸é Å»Ãâ (for¹®Àº '½Ãµµ'ÇÏ´Â °ÍÀÌ±â ¶§¹®¿¡, ¸ñÇ¥ÇÑ countÀÇ 5¹è·Î ½ÃµµÇÑ´Ù)
+            // 1. ëª©í‘œí•˜ëŠ” ê°œìˆ˜ì— ë„ë‹¬í–ˆìœ¼ë©´ íƒˆì¶œ (forë¬¸ì€ 'ì‹œë„'í•˜ëŠ” ê²ƒì´ê¸° ë•Œë¬¸ì—, ëª©í‘œí•œ countì˜ 5ë°°ë¡œ ì‹œë„í•œë‹¤)
             if (spawnPoints.Count >= count) break;
 
-            // 2. ·£´ı À§Ä¡ »ı¼º
+            // 2. ëœë¤ ìœ„ì¹˜ ìƒì„±
             float angle = Random.Range(0f, 360f);
             Vector3 spawnPoint = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * Random.Range(minSpawnDistance, maxSpawnDistance);
 
-            // 3. ÇØ´ç À§Ä¡°¡ ºñ¾îÀÖ°í, spawnPoints¿¡ ¾ø´Ù¸é Ãß°¡
+            // 3. í•´ë‹¹ ìœ„ì¹˜ê°€ ë¹„ì–´ìˆê³ , spawnPointsì— ì—†ë‹¤ë©´ ì¶”ê°€
             if (!GridManager.instance.IsOccupant(spawnPoint) && !spawnPoints.Contains(GridManager.instance.WorldToGrid(spawnPoint)))
             {
                 spawnPoints.Add(GridManager.instance.WorldToGrid(spawnPoint));
@@ -61,7 +61,7 @@ public class Spawner : MonoBehaviour
         {
             GameObject Object = GameManager.instance.pool.Get(spawnData.prefab);
 
-            // ÃÊ±âÈ­
+            // ì´ˆê¸°í™”
             ISpawnable spawnable = Object.GetComponent<ISpawnable>();
             if (spawnable != null)
             {

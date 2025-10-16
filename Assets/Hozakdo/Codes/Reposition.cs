@@ -1,14 +1,14 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Reposition : MonoBehaviour
 {
-    // 트리거의 주체는 이 스크립트를 가진 객체
-    // 이 객체는 트리거로 설정된 콜라이더여야 함
-    // 트리거 안에 들어오거나 나가면서 이벤트를 발생시키는 객체가 collision을 통해 전달됨
-    // collision을 통해 이벤트를 발생시킨 객체의 정보를 알 수 있음. 
-    // collision.gameObject: 트리거와 상호작용한 게임 오브젝트
-    // collision.transform.position: 해당 객체의 위치
-    // collision.CompareTag: 해당 객체의 태그를 확인
+    // ?몃━嫄곗쓽 二쇱껜?????ㅽ겕由쏀듃瑜?媛吏?媛앹껜
+    // ??媛앹껜???몃━嫄곕줈 ?ㅼ젙??肄쒕씪?대뜑?ъ빞 ??
+    // ?몃━嫄??덉뿉 ?ㅼ뼱?ㅺ굅???섍?硫댁꽌 ?대깽?몃? 諛쒖깮?쒗궎??媛앹껜媛 collision???듯빐 ?꾨떖??
+    // collision???듯빐 ?대깽?몃? 諛쒖깮?쒗궓 媛앹껜???뺣낫瑜??????덉쓬. 
+    // collision.gameObject: ?몃━嫄곗? ?곹샇?묒슜??寃뚯엫 ?ㅻ툕?앺듃
+    // collision.transform.position: ?대떦 媛앹껜???꾩튂
+    // collision.CompareTag: ?대떦 媛앹껜???쒓렇瑜??뺤씤
     Collider2D coll;
 
     void Awake()
@@ -18,7 +18,7 @@ public class Reposition : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D collision)
     {
-        // 충돌한 객체의 태그가 Area일 때만 이하가 실행됨
+        // 異⑸룎??媛앹껜???쒓렇媛 Area???뚮쭔 ?댄븯媛 ?ㅽ뻾??
         if (!collision.CompareTag("Area"))
             return;
         

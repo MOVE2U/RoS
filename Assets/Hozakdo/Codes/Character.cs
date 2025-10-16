@@ -1,10 +1,10 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    // ÇÁ·ÎÆÛÆ¼´Â µ¿ÀûÀ¸·Î °ªÀ» °¡Á®¿À´Â º¯¼ö
-    // º¯¼ö¸¦ ¼³Á¤ÇÏ°í, Update¿¡¼­ get ÀÌÇÏ¸¦ Ã³¸®ÇÏ´Â °Í°ú ºñ½ÁÇÏ´Ù.
-    // ÀæÀº º¯°æÀÌ ÀÖ´Â°Å¸é Update, ¾Æ´Ï¸é ÇÁ·ÎÆÛÆ¼¸¦ »ç¿ëÇÏ´Â°Ô ÃÖÀûÈ­¿¡ ÁÁ´Ù.
+    // í”„ë¡œí¼í‹°ëŠ” ë™ì ìœ¼ë¡œ ê°’ì„ ê°€ì ¸ì˜¤ëŠ” ë³€ìˆ˜
+    // ë³€ìˆ˜ë¥¼ ì„¤ì •í•˜ê³ , Updateì—ì„œ get ì´í•˜ë¥¼ ì²˜ë¦¬í•˜ëŠ” ê²ƒê³¼ ë¹„ìŠ·í•˜ë‹¤.
+    // ìž¦ì€ ë³€ê²½ì´ ìžˆëŠ”ê±°ë©´ Update, ì•„ë‹ˆë©´ í”„ë¡œí¼í‹°ë¥¼ ì‚¬ìš©í•˜ëŠ”ê²Œ ìµœì í™”ì— ì¢‹ë‹¤.
     public static float Speed
     {
         get

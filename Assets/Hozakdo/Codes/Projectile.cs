@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
@@ -14,7 +14,7 @@ public class Projectile : MonoBehaviour
         this.basicAttackController = basicAttackController;
         this.damage = damage;
 
-        // ÃÖÃÊ »ı¼º ½Ã Ãæµ¹ Ã¼Å©. OnEnable¿¡¼­ ÇÏ¸é ÀÌÀü À§Ä¡¿¡¼­ Ãæµ¹Ã¼Å©ÇÏ¹Ç·Î Init¿¡¼­ ÇØ¾ßÇÔ
+        // ìµœì´ˆ ìƒì„± ì‹œ ì¶©ëŒ ì²´í¬. OnEnableì—ì„œ í•˜ë©´ ì´ì „ ìœ„ì¹˜ì—ì„œ ì¶©ëŒì²´í¬í•˜ë¯€ë¡œ Initì—ì„œ í•´ì•¼í•¨
         lastGridPos = GridManager.instance.WorldToGrid(transform.position);
         CheckHit(lastGridPos);
     }
@@ -23,7 +23,7 @@ public class Projectile : MonoBehaviour
     {
         transform.Translate(dir * speed * Time.deltaTime);
 
-        // 2. gridPos°¡ º¯°æµÆÀ» ¶§ Ãæµ¹ Ã¼Å©
+        // 2. gridPosê°€ ë³€ê²½ëì„ ë•Œ ì¶©ëŒ ì²´í¬
         Vector2Int curGridPos = GridManager.instance.WorldToGrid(transform.position);
         if(curGridPos != lastGridPos)
         {
@@ -36,22 +36,22 @@ public class Projectile : MonoBehaviour
     {
         GameObject obj = GridManager.instance.GetOccupant(gridPos);
 
-        // 1. Ãæµ¹ÇÑ ¿ÀºêÁ§Æ®°¡ ¾øÀ¸¸é return
+        // 1. ì¶©ëŒí•œ ì˜¤ë¸Œì íŠ¸ê°€ ì—†ìœ¼ë©´ return
         if (obj == null)
         {
             return;
         }
 
-        // 2. UpgradeNPC¸é return
+        // 2. UpgradeNPCë©´ return
         if (obj.TryGetComponent<UpgradeNPC>(out _))
         {
             return;
         }
 
-        // 3. ±× ¿Ü ¿ÀºêÁ§Æ® Ãæµ¹ ½Ã ÇÁ·ÎÁ§Å¸ÀÏ »ç¶óÁü
+        // 3. ê·¸ ì™¸ ì˜¤ë¸Œì íŠ¸ ì¶©ëŒ ì‹œ í”„ë¡œì íƒ€ì¼ ì‚¬ë¼ì§
         this.gameObject.SetActive(false);
 
-        // 4. Enemy¸é ´ë¹ÌÁö Àû¿ë
+        // 4. Enemyë©´ ëŒ€ë¯¸ì§€ ì ìš©
         if (obj.TryGetComponent<Enemy>(out var enemy))
         {
             enemy.Attacked(basicAttackController, damage);

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,7 +38,7 @@ public class TutorialManager : MonoBehaviour
         switch (curIndex)
         {
             case 1:
-                blackScreenText.text = "..±×·¡, ³Ê ¸»ÀÌ¾ß.";
+                blackScreenText.text = "..ê·¸ë˜, ë„ˆ ë§ì´ì•¼.";
                 break;
             case 2:
                 nextArrowBlack.SetActive(true);
@@ -65,7 +65,7 @@ public class TutorialManager : MonoBehaviour
                 bubbles[4].SetActive(false);
                 nextArrowBlack.SetActive(false);
                 blackScreen.gameObject.SetActive(true);
-                blackScreenText.text = "»ıÀü Ã³À½ º» °­¾ĞÀûÀÎ ±îÄ¡¿¡ È¦·Á, ³ªµµ ¸ğ¸£°Ô ¼ÕÀ» »¸¾ú´Ù.";
+                blackScreenText.text = "ìƒì „ ì²˜ìŒ ë³¸ ê°•ì••ì ì¸ ê¹Œì¹˜ì— í™€ë ¤, ë‚˜ë„ ëª¨ë¥´ê²Œ ì†ì„ ë»—ì—ˆë‹¤.";
                 break;
             case 8:
                 blackScreen.gameObject.SetActive(false);
@@ -75,10 +75,10 @@ public class TutorialManager : MonoBehaviour
             case 9:
                 GameManager.instance.Stop();
                 blackScreen.gameObject.SetActive(true);
-                blackScreenText.text = "±îÄ¡¿¡°Ô ¼ÕÀÌ ´êÀº ¼ø°£, ±×¸²ÀÌ ³ª¸¦ Áı¾î»ïÅ³ µí ²ø¾î´ç°å´Ù.";
+                blackScreenText.text = "ê¹Œì¹˜ì—ê²Œ ì†ì´ ë‹¿ì€ ìˆœê°„, ê·¸ë¦¼ì´ ë‚˜ë¥¼ ì§‘ì–´ì‚¼í‚¬ ë“¯ ëŒì–´ë‹¹ê²¼ë‹¤.";
                 break;
             case 10:
-                blackScreenText.text = "±×¸®°í Á¤½ÅÀ» Â÷·ÈÀ» ¶©..";
+                blackScreenText.text = "ê·¸ë¦¬ê³  ì •ì‹ ì„ ì°¨ë ¸ì„ ë•..";
                 break;
             case 11:
                 blackScreen.gameObject.SetActive(false);
@@ -97,13 +97,13 @@ public class TutorialManager : MonoBehaviour
                 bubbles[11].GetComponentsInChildren<Image>()[1].enabled = false;
                 break;
             case 14:
-                bubbles[8].GetComponentInChildren<Text>().text = "..³­ »ì¾ÆÀÖ¾î.";
+                bubbles[8].GetComponentInChildren<Text>().text = "..ë‚œ ì‚´ì•„ìˆì–´.";
                 break;
             case 15:
-                bubbles[8].GetComponentInChildren<Text>().text = "³Ê°¡ '±×¸²'ÀÌ¶ó°í ºÎ¸£´Â °Å ¸»ÀÌ¾ß.";
+                bubbles[8].GetComponentInChildren<Text>().text = "ë„ˆê°€ 'ê·¸ë¦¼'ì´ë¼ê³  ë¶€ë¥´ëŠ” ê±° ë§ì´ì•¼.";
                 break;
             case 16:
-                bubbles[8].GetComponentInChildren<Text>().text = "ºñ·Ï ÀÌ·± ¸ğ½ÀÀÌ±ä ÇÏÁö¸¸.";
+                bubbles[8].GetComponentInChildren<Text>().text = "ë¹„ë¡ ì´ëŸ° ëª¨ìŠµì´ê¸´ í•˜ì§€ë§Œ.";
                 break;
             case 17:
                 bubbles[8].SetActive(false);
@@ -122,15 +122,15 @@ public class TutorialManager : MonoBehaviour
                 bubbles[9].SetActive(false);
                 ingameNext.SetActive(true);
                 bubbles[6].SetActive(true);
-                bubbles[6].GetComponentInChildren<Text>().text = "±ÍÂúÀº ³à¼®µé.\n¶Ç ¸ø ¿òÁ÷ÀÌ°Ô ÇÏ³×.";
+                bubbles[6].GetComponentInChildren<Text>().text = "ê·€ì°®ì€ ë…€ì„ë“¤.\në˜ ëª» ì›€ì§ì´ê²Œ í•˜ë„¤.";
                 LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
                 break;
             case 20:
-                bubbles[6].GetComponentInChildren<Text>().text = "³Ê°¡ ±ú¿üÀ¸´Ï ³Ê°¡ Ã³¸®ÇØ.";
+                bubbles[6].GetComponentInChildren<Text>().text = "ë„ˆê°€ ê¹¨ì› ìœ¼ë‹ˆ ë„ˆê°€ ì²˜ë¦¬í•´.";
                 LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
                 break;
             case 21:
-                bubbles[6].GetComponentInChildren<Text>().text = "±×³É..\n±×¸²À» ±×¸®°í, ³¯¸®¸é µÅ.";
+                bubbles[6].GetComponentInChildren<Text>().text = "ê·¸ëƒ¥..\nê·¸ë¦¼ì„ ê·¸ë¦¬ê³ , ë‚ ë¦¬ë©´ ë¼.";
                 LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
                 break;
             case 22:
@@ -140,7 +140,7 @@ public class TutorialManager : MonoBehaviour
             case 23:
                 GameManager.instance.Stop();
                 ingameNext.SetActive(true);
-                bubbles[6].GetComponentInChildren<Text>().text = "±×¸²À» ´õ Å©°Ô ±×·ÁºÁ.";
+                bubbles[6].GetComponentInChildren<Text>().text = "ê·¸ë¦¼ì„ ë” í¬ê²Œ ê·¸ë ¤ë´.";
                 LayoutRebuilder.ForceRebuildLayoutImmediate(bubbles[6].GetComponent<RectTransform>());
                 break;
             case 24:

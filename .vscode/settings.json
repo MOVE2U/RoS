@@ -1,0 +1,23 @@
+{
+    "files.encoding": "utf8bom",
+    "files.autoGuessEncoding": true,
+    "[csharp]": {
+        "files.encoding": "utf8bom"
+    },
+    "omnisharp.useModernNet": false,
+    "omnisharp.path": "latest",
+    "omnisharp.enableRoslynAnalyzers": true,
+    "omnisharp.enableEditorConfigSupport": true,
+    "omnisharp.useGlobalMono": "never",
+    "dotnet.formatting.organizeImportsOnFormat": true,
+    "dotnet.defaultSolution": "Hozakdo.sln",
+    
+    // Visual Studio 스타일 설정
+    // 1. CodeLens (n references) 끄기
+    "editor.codeLens": false,
+    
+    // 2. 참조 찾기(Shift+F12)를 하단 패널에 표시 (Visual Studio 스타일)
+    "references.preferredLocation": "view",
+    "dotnet.codeLens.enableReferencesCodeLens": false,
+    "dotnet.codeLens.enableTestsCodeLens": false
+}

@@ -1,10 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    // 정적 변수는 유니티에서 인스펙터 창에 노출되지 않는다. 따라서 드래그앤드롭으로 할당할 수 없다.
+    // ?뺤쟻 蹂?섎뒗 ?좊땲?곗뿉???몄뒪?숉꽣 李쎌뿉 ?몄텧?섏? ?딅뒗?? ?곕씪???쒕옒洹몄븻?쒕∼?쇰줈 ?좊떦?????녿떎.
     public static GameManager instance;
 
     [Header("Game Control")]
@@ -19,12 +19,12 @@ public class GameManager : MonoBehaviour
     public int spawnCountTotal;
     public int exp;
     public int NPCCount;
-    // 동적으로 객체나 컴포넌트를 초기화할 때는 Awake나 Start에서 하지만, 기본 데이터 타입은 필드에서 가능하다.
+    // ?숈쟻?쇰줈 媛앹껜??而댄룷?뚰듃瑜?珥덇린?뷀븷 ?뚮뒗 Awake??Start?먯꽌 ?섏?留? 湲곕낯 ?곗씠????낆? ?꾨뱶?먯꽌 媛?ν븯??
     public int[] nextExp;
     [Header("Game Object")]
-    // 유니티에서 이 변수에 오브젝트를 드래그앤드롭 하면,
-    // PoolManager 컴포넌트가 있는지 확인하고 있다면 그 컴포넌트의 참조가 pool 변수에 저장되는 방식임.
-    // 이 방식은 Awake 호출 전에 Unity에서 수행함.
+    // ?좊땲?곗뿉????蹂?섏뿉 ?ㅻ툕?앺듃瑜??쒕옒洹몄븻?쒕∼ ?섎㈃,
+    // PoolManager 而댄룷?뚰듃媛 ?덈뒗吏 ?뺤씤?섍퀬 ?덈떎硫?洹?而댄룷?뚰듃??李몄“媛 pool 蹂?섏뿉 ??λ릺??諛⑹떇??
+    // ??諛⑹떇? Awake ?몄텧 ?꾩뿉 Unity?먯꽌 ?섑뻾??
     public PoolManager pool;
     public Player player;
     public UpgradePanel uiLevelUp;
@@ -41,14 +41,15 @@ public class GameManager : MonoBehaviour
 
         player.gameObject.SetActive(true);
         Vector2Int playerGridPos = GridManager.instance.WorldToGrid(player.transform.position);
-        player.transform.position = GridManager.instance.GridToWorld(playerGridPos); // 보정
-        GridManager.instance.RegisterOccupant(playerGridPos, player.gameObject); // 등록
+        player.transform.position = GridManager.instance.GridToWorld(playerGridPos); // 蹂댁젙
+        GridManager.instance.RegisterOccupant(playerGridPos, player.gameObject); // ?깅줉
         Resume();
 
         AudioManager.instance.PlayBgm(true);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
 
-        TurnManager.instance.StartCoroutine(TurnManager.instance.StartMoveTurn());
+        TurnManager.instance.ChangeCurState(TurnState.PlayerTurn);
+        TurnManager.instance.StartPlayerTurn();
     }
     public void GameOver()
     {
@@ -104,17 +105,17 @@ public class GameManager : MonoBehaviour
         {
             level++;
             exp = 0;
-            uiLevelUp.Show(1);
+            uiLevelUp.Show(0);
         }
     }
 
     public void Stop()
     {
-        // isLive -> 게임 로직(예: 경험치, UI 갱신 등)을 멈춤
-        // Time.timeScale -> 시간 관련 연산, 물리 엔진, 애니메이션을 정지
+        // isLive -> 寃뚯엫 濡쒖쭅(?? 寃쏀뿕移? UI 媛깆떊 ????硫덉땄
+        // Time.timeScale -> ?쒓컙 愿???곗궛, 臾쇰━ ?붿쭊, ?좊땲硫붿씠?섏쓣 ?뺤?
 
-        // Time.timeScale을 0으로 하면 Time.deltaTime, Time.fixedDeltaTime 등이 0이 되어 시간 기반 연산이 0이 된다.
-        // 근데 이게 Update를 막지는 못함. 시간과 관련이 없는 다른 함수들은 실행될 수 있다.
+        // Time.timeScale??0?쇰줈 ?섎㈃ Time.deltaTime, Time.fixedDeltaTime ?깆씠 0???섏뼱 ?쒓컙 湲곕컲 ?곗궛??0???쒕떎.
+        // 洹쇰뜲 ?닿쾶 Update瑜?留됱???紐삵븿. ?쒓컙怨?愿?⑥씠 ?녿뒗 ?ㅻⅨ ?⑥닔?ㅼ? ?ㅽ뻾?????덈떎.
         isLive = false;
         Time.timeScale = 0;
     }

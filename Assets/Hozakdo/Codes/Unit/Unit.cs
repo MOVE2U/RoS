@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using NUnit.Framework;
@@ -42,7 +42,7 @@ public class Unit : MonoBehaviour
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
-        // ±âÅ¸ È°¼ºÈ­ ½Ã ÃÊ±âÈ­
+        // ê¸°íƒ€ í™œì„±í™” ì‹œ ì´ˆê¸°í™”
         gridPos = GridManager.instance.WorldToGrid(transform.position);
         isMoving = false;
         inputDir = Vector2Int.zero;
@@ -50,16 +50,16 @@ public class Unit : MonoBehaviour
 
     protected bool TryMove(Vector2Int inputDir)
     {
-        // 1. ÀÌµ¿ ÁßÀÌ¸é ÀÌµ¿ ¾ÈÇÔ
+        // 1. ì´ë™ ì¤‘ì´ë©´ ì´ë™ ì•ˆí•¨
         if (isMoving)
         {
             return false;
         }
 
-        // 2. ÀÌµ¿ ¼º°ø ¿©ºÎ¿Í °ü°è ¾øÀÌ ½ºÇÁ¶óÀÌÆ® ¹æÇâÀº ÀÏ´Ü ¹Ù²Ş
+        // 2. ì´ë™ ì„±ê³µ ì—¬ë¶€ì™€ ê´€ê³„ ì—†ì´ ìŠ¤í”„ë¼ì´íŠ¸ ë°©í–¥ì€ ì¼ë‹¨ ë°”ê¿ˆ
         SetSprite(inputDir);
 
-        // 3. ÀÌµ¿ ¹æÇâ¿¡ ¹¹ ÀÖ´ÂÁö °Ë»çÇÏ°í Ã³¸®
+        // 3. ì´ë™ ë°©í–¥ì— ë­ ìˆëŠ”ì§€ ê²€ì‚¬í•˜ê³  ì²˜ë¦¬
         Vector2Int nextGridPos = gridPos + inputDir * grid;
         GameObject nextObject = GridManager.instance.GetOccupant(nextGridPos);
         if(nextObject != null)
@@ -67,7 +67,7 @@ public class Unit : MonoBehaviour
             return ObjectEncounter(nextObject, inputDir);
         }
 
-        // 4. ÀÌµ¿ ½ÇÇà
+        // 4. ì´ë™ ì‹¤í–‰
         StartCoroutine(ExecuteMove(inputDir));
 
         return true;
@@ -82,21 +82,21 @@ public class Unit : MonoBehaviour
     {
         isMoving = true;
 
-        // ÀÌµ¿ ¹æÇâ Ä¸ÃÄ
+        // ì´ë™ ë°©í–¥ ìº¡ì³
         moveDir = dir;
 
-        // ³í¸® ÁÂÇ¥ ¾÷µ¥ÀÌÆ®
+        // ë…¼ë¦¬ ì¢Œí‘œ ì—…ë°ì´íŠ¸
         Vector2Int startGridPos = gridPos;
         gridPos += dir * grid;
 
-        // GridManager¿¡ ÁÂÇ¥ º¯°æ ¾Ë¸²
+        // GridManagerì— ì¢Œí‘œ ë³€ê²½ ì•Œë¦¼
         GridManager.instance.MoveOccupant(startGridPos, gridPos, gameObject);
 
-        // ÀÌµ¿ ¾Ö´Ï¸ŞÀÌ¼ÇÀ» À§ÇÑ ¿ùµå ÁÂÇ¥ °è»ê
+        // ì´ë™ ì• ë‹ˆë©”ì´ì…˜ì„ ìœ„í•œ ì›”ë“œ ì¢Œí‘œ ê³„ì‚°
         Vector3 startPos = GridManager.instance.GridToWorld(startGridPos);
         Vector3 endPos = GridManager.instance.GridToWorld(gridPos);
 
-        // ÀÌµ¿ ¾Ö´Ï¸ŞÀÌ¼Ç
+        // ì´ë™ ì• ë‹ˆë©”ì´ì…˜
         float elapsedTime = 0;
         while (elapsedTime < moveTime)
         {

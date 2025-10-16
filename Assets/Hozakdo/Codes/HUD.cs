@@ -1,4 +1,4 @@
-using TMPro;
+ï»¿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -42,13 +42,13 @@ public class HUD : MonoBehaviour
         switch(type)
         {
             case InfoType.MoveCount:
-                if (TurnManager.instance.CurState == TurnState.MoveTurn)
+                if (TurnManager.instance.CurState == TurnState.PlayerTurn)
                 {
                     float curCount = TurnManager.instance.MoveCount;
                     float maxCount = TurnManager.instance.MaxMoveCount;
                     mySlider.value = curCount / maxCount;
                 }
-                if (TurnManager.instance.CurState == TurnState.AttackTurn)
+                if (TurnManager.instance.CurState == TurnState.EnemyTurn)
                 {
                     float curCount = TurnManager.instance.MaxMoveCount - TurnManager.instance.MoveCount;
                     float maxCount = TurnManager.instance.MaxMoveCount;
@@ -59,15 +59,15 @@ public class HUD : MonoBehaviour
                 myText.text = string.Format("Lv.{0:F0}", GameManager.instance.level);
                 break;
             case InfoType.Turn:
-                if (TurnManager.instance.CurState == TurnState.MoveTurn)
+                if (TurnManager.instance.CurState == TurnState.PlayerTurn)
                 {
                     myText.enabled = true;
-                    myText.text = string.Format("..±×µéÀÌ ±ü´Ù");
+                    myText.text = string.Format("..ê·¸ë“¤ì´ ê¹¬ë‹¤");
                 }
-                else if (TurnManager.instance.CurState == TurnState.AttackTurn)
+                else if (TurnManager.instance.CurState == TurnState.EnemyTurn)
                 {
                     myText.enabled = true;
-                    myText.text = string.Format("..±×µéÀÌ ´Ù½Ã Àáµç´Ù");
+                    myText.text = string.Format("..ê·¸ë“¤ì´ ë‹¤ì‹œ ì ë“ ë‹¤");
                 }
                 else
                 {

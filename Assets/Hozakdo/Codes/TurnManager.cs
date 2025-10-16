@@ -1,28 +1,30 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Ŭ���� �ܺο� ����� enum�� ���������� ��� ����
+// 클래스 외부에 선언된 enum은 전역적으로 사용 가능
 public enum TurnState
 {
     None,
-    MoveTurn,
-    AttackTurn,
-    MoveToAttackTurn,
-    AttackToMoveTurn,
+    PlayerTurn,
+    EnemyTurn,
 }
 
 public class TurnManager : MonoBehaviour
 {
     public static TurnManager instance;
 
-    [Header("value")]
-    [SerializeField] private int maxMoveCount = 10;
+    // 초기값 인스펙터에서 설정.
+    [SerializeField] private float enemyWaitTime;
+    [SerializeField] private int enemyMoveCount;
 
-    [Header("for check")]
-    [SerializeField] private TurnState curState = TurnState.None;
-    [SerializeField] private int turnCount = 0;
-    [SerializeField] private float moveCount = 0;
+    // 초기값은 인스펙터에서 설정. 외부 수정은 메서드로.
+    [field: SerializeField] public int MaxMoveCount { get; private set; }
+
+    // 초기값은 Awake에서 설정. 체크용으로 인스펙터에 노출. 외부 수정은 메서드로.
+    [field: SerializeField] public TurnState CurState { get; private set; }
+    [field: SerializeField] public int TurnCount { get; private set; }
+    [field: SerializeField] public int MoveCount { get; private set; }
 
     [Header("external ref")]
     [SerializeField] private Spawner spawner;
@@ -30,117 +32,88 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private TutorialManager tutorialManager;
     [SerializeField] private SpawnData monsterFirst;
     [SerializeField] private SpawnData monsterGeneral;
-    [SerializeField] private SpawnData coinFirst;
-    [SerializeField] private List<Vector2Int> coinPoints;
-    [SerializeField] private SpawnData choiceNPCFirst;
-    [SerializeField] private List<Vector2Int> choiceNPCPoints;
     [SerializeField] private GameObject freezeNotice;
     [SerializeField] private GameObject moveAgainNotice;
+    public SpawnData coinDrop;
 
-    public TurnState CurState => curState;
-    public int TurnCount => turnCount;
-    public float MoveCount => moveCount;
-    public int MaxMoveCount => maxMoveCount;
-    
     private void Awake()
     {
         instance = this;
+
+        CurState = TurnState.None;
+        TurnCount = 0;
+        MoveCount = 0;
     }
 
-    private void Update()
+    public void StartPlayerTurn()
     {
-        switch (curState)
-        {
-            case TurnState.MoveTurn:
-                if (moveCount >= maxMoveCount)
-                {
-                    StartCoroutine(StartAttackTurn());
-                }
-                break;
-            case TurnState.AttackTurn:
-                if (moveCount >= maxMoveCount)
-                {
-                    StartCoroutine(StartMoveTurn());
-                }
-                break;
-        }
-    }
+        TurnCount++;
+        MoveCount = 0;
 
-    public IEnumerator StartMoveTurn()
-    {
-        if(turnCount > 0)
+        if (TurnCount == 1)
         {
-            curState = TurnState.AttackToMoveTurn;
-            moveAgainNotice.SetActive(true);
-            yield return new WaitForSeconds(2f);
-            moveAgainNotice.SetActive(false);
-        }
-
-        curState = TurnState.MoveTurn;
-        moveCount = 0;
-        turnCount++;
-
-        if(turnCount == 1)
-        {
-            spawner.RandomSpawn(turnCount, monsterFirst);
-            spawner.FixedSpawn(coinPoints, coinFirst);
-            spawner.FixedSpawn(choiceNPCPoints, choiceNPCFirst);
+            spawner.RandomSpawn(TurnCount, monsterFirst);
         }
         else
         {
-            spawner.RandomSpawn(turnCount, monsterGeneral);
+            spawner.RandomSpawn(TurnCount, monsterGeneral);
         }
     }
 
-    private IEnumerator StartAttackTurn()
+    private IEnumerator StartEnemyTurn()
     {
-        curState = TurnState.MoveToAttackTurn;
-        if(turnCount == 1)
+        MoveCount = 0;
+
+        for (int i = 1; i <= MaxMoveCount; i++)
         {
-            tutorialManager.NextStep();
-            yield return new WaitForSeconds(2f);
-            tutorialManager.NextStep();
-        }
-        else
-        {
-            freezeNotice.SetActive(true);
-            yield return new WaitForSeconds(2f);
-            freezeNotice.SetActive(false);
-        }
-
-        curState = TurnState.AttackTurn;
-        moveCount = 0;
-
-        for (int i = 1; i <= maxMoveCount; i++)
-        {
-            MoveCountChange(1);
-
-            float[] ws = { 0.5f, 0.7f };
-            float w = ws[UnityEngine.Random.Range(0, ws.Length)];
-
-            foreach (Enemy e in spawner.activeEnemies)
+            // 적 이동
+            float waitTime = enemyWaitTime;
+            foreach (Enemy enemy in spawner.activeEnemies)
             {
-                if (e == null)
+                if (enemy == null)
                 {
                     continue;
                 }
 
-                e.AutoMove(w);
+                enemy.AutoMove(waitTime);
             }
-
             yield return new WaitUntil(() => spawner.activeEnemies.TrueForAll(x => !x.IsMoving));
 
+            // 플레이어 패배 조건 확인
             GameManager.instance.player.CheckSurrounded();
-
             if (GameManager.instance.isLive == false)
             {
                 yield break;
             }
+
+            // 적 이동 후 이동 횟수 증가
+            MoveCountAdd(enemyMoveCount);
         }
     }
 
-    public void MoveCountChange(float f)
+    public void MoveCountAdd(int i)
     {
-        moveCount += f;
+        MoveCount += i;
+
+        // MoveCount가 최대치에 도달하면 즉시 턴 전환
+        if (MoveCount >= MaxMoveCount)
+        {
+            switch (CurState)
+            {
+                case TurnState.PlayerTurn:
+                    CurState = TurnState.EnemyTurn;
+                    StartCoroutine(StartEnemyTurn());
+                    break;
+                case TurnState.EnemyTurn:
+                    CurState = TurnState.PlayerTurn;
+                    StartPlayerTurn();
+                    break;
+            }
+        }
+    }
+    
+    public void ChangeCurState(TurnState state)
+    {
+        CurState = state;
     }
 }
