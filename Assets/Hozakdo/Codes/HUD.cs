@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType { MoveCount, Level, Turn, Kill, Coin, Exp }
+    public enum InfoType { MoveCount, Level, Turn, Kill, Coin, Exp, ProtoTurn, AttackRange }
     public InfoType type;
 
     Text myText;
@@ -39,7 +39,7 @@ public class HUD : MonoBehaviour
 
     private void LateUpdate()
     {
-        switch(type)
+        switch (type)
         {
             case InfoType.MoveCount:
                 if (TurnManager.instance.CurState == TurnState.PlayerTurn)
@@ -85,6 +85,24 @@ public class HUD : MonoBehaviour
                 int nextExp = GameManager.instance.nextExp[Mathf.Min(GameManager.instance.level, GameManager.instance.nextExp.Length - 1)];
                 mySlider.value = (float)curExp / nextExp;
                 break;
+            case InfoType.ProtoTurn:
+                if (TurnManager.instance.CurState == TurnState.PlayerTurn)
+                {
+                    myTexts[0].text = "내 턴";
+                    myTexts[1].text = string.Format("{0:F0} / {1:F0}", TurnManager.instance.MoveCount, TurnManager.instance.MaxMoveCount);
+                }
+                else if (TurnManager.instance.CurState == TurnState.EnemyTurn)
+                {
+                    myTexts[0].text = "적 턴";
+                    myTexts[1].text = string.Format("{0:F0} / {1:F0}", TurnManager.instance.MoveCount, TurnManager.instance.MaxMoveCount);
+                }
+                break;
+            case InfoType.AttackRange:
+                foreach (var shapeTile in GameManager.instance.player.basicAttackController.shapeTiles)
+                {
+                    GridVisual(shapeTile, Color.black);
+                }
+                break;
         }
     }
 
@@ -100,6 +118,110 @@ public class HUD : MonoBehaviour
         if (ColorUtility.TryParseHtmlString(imageColorHex, out Color imageColor))
         {
             myImages[index - 1].color = imageColor;
+        }
+    }
+
+    void GridVisual(Vector2Int gridPos, Color color)
+    {
+        if (gridPos == new Vector2Int(-2, 2))
+        {
+            myImages[1].color = color;
+        }
+        else if (gridPos == new Vector2Int(-1, 2))
+        {
+            myImages[2].color = color;
+        }
+        else if (gridPos == new Vector2Int(0, 2))
+        {
+            myImages[3].color = color;
+        }
+        else if (gridPos == new Vector2Int(1, 2))
+        {
+            myImages[4].color = color;
+        }
+        else if (gridPos == new Vector2Int(2, 2))
+        {
+            myImages[5].color = color;
+        }
+        else if (gridPos == new Vector2Int(-2, 1))
+        {
+            myImages[6].color = color;
+        }
+        else if (gridPos == new Vector2Int(-1, 1))
+        {
+            myImages[7].color = color;
+        }
+        else if (gridPos == new Vector2Int(0, 1))
+        {
+            myImages[8].color = color;
+        }
+        else if (gridPos == new Vector2Int(1, 1))
+        {
+            myImages[9].color = color;
+        }
+        else if (gridPos == new Vector2Int(2, 1))
+        {
+            myImages[10].color = color;
+        }
+        else if (gridPos == new Vector2Int(-2, 0))
+        {
+            myImages[11].color = color;
+        }
+        else if (gridPos == new Vector2Int(-1, 0))
+        {
+            myImages[12].color = color;
+        }
+        else if (gridPos == new Vector2Int(0, 0))
+        {
+            myImages[13].color = color;
+        }
+        else if (gridPos == new Vector2Int(1, 0))
+        {
+            myImages[14].color = color;
+        }
+        else if (gridPos == new Vector2Int(2, 0))
+        {
+            myImages[15].color = color;
+        }
+        else if (gridPos == new Vector2Int(-2, -1))
+        {
+            myImages[16].color = color;
+        }
+        else if (gridPos == new Vector2Int(-1, -1))
+        {
+            myImages[17].color = color;
+        }
+        else if (gridPos == new Vector2Int(0, -1))
+        {
+            myImages[18].color = color;
+        }
+        else if (gridPos == new Vector2Int(1, -1))
+        {
+            myImages[19].color = color;
+        }
+        else if (gridPos == new Vector2Int(2, -1))
+        {
+            myImages[20].color = color;
+        }
+        else if (gridPos == new Vector2Int(-2, -2))
+        {
+            myImages[21].color = color;
+        }
+        else if (gridPos == new Vector2Int(-1, -2))
+        {
+            myImages[22].color = color;
+        }
+        else if (gridPos == new Vector2Int(0, -2))
+        {
+            myImages[23].color = color;
+        }
+        else if (gridPos == new Vector2Int(1, -2))
+        {
+            myImages[24].color = color;
+        }
+        else if (gridPos == new Vector2Int(2, -2))
+        {
+            myImages[25].color = color;
         }
     }
 }

@@ -28,7 +28,7 @@ public class BasicAttackController : MonoBehaviour
     public TextureData.TextureType? curTexture = null;
     public int textureLevel = 0;
     public float textureValue;
-    public List<Vector2Int> shapeTiles = new List<Vector2Int> { new Vector2Int(1, 0) };
+    public List<Vector2Int> shapeTiles = new List<Vector2Int>();
 
     [Header("Ref")]
     public GameObject prefabRanged;
@@ -52,6 +52,22 @@ public class BasicAttackController : MonoBehaviour
     private void Start()
     {
         player = GameManager.instance.player;
+
+        shapeTiles.Clear(); // 기존 내용 비우기
+        
+        // 공격 타입에 따라 초기 공격 타일 설정
+        switch (player.attackType)
+        {
+            case Player.AttackType.Melee:
+                shapeTiles.Add(new Vector2Int(1, 0));
+                break;
+            case Player.AttackType.Ranged:
+                shapeTiles.Add(new Vector2Int(1, 0));
+                break;
+            case Player.AttackType.Mouse:
+                shapeTiles.Add(new Vector2Int(0, 0));
+                break;
+        }
     }
 
     // private void Update()
@@ -74,7 +90,7 @@ public class BasicAttackController : MonoBehaviour
     public void AttackMelee()
     {
         // 1. 공격 타일 계산
-        List<Vector2Int> attackTiles = GetAttackTiles();
+        List<Vector2Int> attackTiles = GetAttackTiles(player.gridPos);
         // Debug.Log("공격 타일 목록: " + string.Join(", ", tiles));
 
         // 2. 대미지 계산
@@ -94,14 +110,14 @@ public class BasicAttackController : MonoBehaviour
         // 4. 동일한 타일에 이펙트 표시
         StartCoroutine(ShowVFX(attackTiles));
 
-        // 5. 공격 로직이 완료된 시점에 턴 추가
-        TurnManager.instance.MoveCountAdd(1);
+        // 5. 공격 로직이 완료된 시점에 턴 추가. 프로토타입에선 임시로 연출 이후에 턴 추가하자.
+        // TurnManager.instance.MoveCountAdd(1);
     }
 
     private void AttackRanged()
     {
         // 1. 공격 타일 계산
-        List<Vector2Int> attackTiles = GetAttackTiles();
+        List<Vector2Int> attackTiles = GetAttackTiles(player.gridPos);
 
         // 2. 대미지 계산
         float damage = Damage();
@@ -141,27 +157,65 @@ public class BasicAttackController : MonoBehaviour
         }
     }
 
-    List<Vector2Int> GetAttackTiles()
+    public void AttackMouse(Vector2Int mouseGridPos)
+    {
+        // 1. 공격 타일 계산
+        List<Vector2Int> attackTiles = GetAttackTiles(mouseGridPos);
+        // Debug.Log("공격 타일 목록: " + string.Join(", ", tiles));
+
+        // 2. 대미지 계산
+        float damage = Damage();
+        Debug.Log("대미지: " + damage);
+
+        // 3. 공격 타일에 있는 적에게 대미지 적용
+        foreach (var attackTile in attackTiles)
+        {
+            GameObject obj = GridManager.instance.GetOccupant(attackTile);
+            if (obj != null && obj.TryGetComponent<Enemy>(out var enemy))
+            {
+                enemy.Attacked(this, damage);
+            }
+        }
+
+        // 4. 동일한 타일에 이펙트 표시
+        StartCoroutine(ShowVFX(attackTiles));
+
+        // 5. 공격 로직이 완료된 시점에 턴 추가. 프로토타입에선 임시로 연출 이후에 턴 추가하자.
+        // TurnManager.instance.MoveCountAdd(1);
+    }
+
+    List<Vector2Int> GetAttackTiles(Vector2Int baseGridPos)
     {
         List<Vector2Int> attackTiles = new List<Vector2Int>();
-        Vector2Int playerGridPos = player.gridPos;
-        Vector2Int dir = player.lastInputDir;
 
-        foreach (var shapeTile in shapeTiles)
+        switch (player.attackType)
         {
-            Vector2Int rotatedTile;
+            case Player.AttackType.Melee:
+            case Player.AttackType.Ranged:
+                Vector2Int dir = player.lastInputDir;
+                foreach (var shapeTile in shapeTiles)
+                {
+                    Vector2Int rotatedTile;
 
-            // player.LastInputDir 값에 따라 shapeTile을 회전
-            if (dir.x == 1) // Right
-                rotatedTile = shapeTile;
-            else if (dir.x == -1) // Left
-                rotatedTile = new Vector2Int(-shapeTile.x, -shapeTile.y);
-            else if (dir.y == 1) // Up
-                rotatedTile = new Vector2Int(-shapeTile.y, shapeTile.x);
-            else // Down
-                rotatedTile = new Vector2Int(shapeTile.y, -shapeTile.x);
+                    // player.LastInputDir 값에 따라 shapeTile을 회전
+                    if (dir.x == 1) // Right
+                        rotatedTile = shapeTile;
+                    else if (dir.x == -1) // Left
+                        rotatedTile = new Vector2Int(-shapeTile.x, -shapeTile.y);
+                    else if (dir.y == 1) // Up
+                        rotatedTile = new Vector2Int(-shapeTile.y, shapeTile.x);
+                    else // Down
+                        rotatedTile = new Vector2Int(shapeTile.y, -shapeTile.x);
 
-            attackTiles.Add(playerGridPos + rotatedTile);
+                    attackTiles.Add(baseGridPos + rotatedTile);
+                }
+                break;
+            case Player.AttackType.Mouse:
+                foreach (var shapeTile in shapeTiles)
+                {
+                    attackTiles.Add(baseGridPos + shapeTile);
+                }
+                break;
         }
 
         return attackTiles;
@@ -224,6 +278,9 @@ public class BasicAttackController : MonoBehaviour
 
         foreach (var vfx in vfxs)
             vfx.SetActive(false);
+
+        // 3. 공격 로직이 완료된 시점에 턴 추가. 프로토타입에선 임시로 연출 이후에 턴 추가하자.
+        TurnManager.instance.MoveCountAdd(1);
 
         isAttacking = false;
     }

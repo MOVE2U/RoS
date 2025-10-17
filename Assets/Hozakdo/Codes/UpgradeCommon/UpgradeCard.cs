@@ -77,105 +77,105 @@ public class UpgradeCard : MonoBehaviour
 
     void GridVisual(Vector2Int gridPos, Color color)
     {
-        if (gridPos == new Vector2Int(0, 2))
+        if (gridPos == new Vector2Int(-2, 2))
         {
             grids[1].color = color;
         }
-        else if (gridPos == new Vector2Int(1, 2))
+        else if (gridPos == new Vector2Int(-1, 2))
         {
             grids[2].color = color;
         }
-        else if (gridPos == new Vector2Int(2, 2))
+        else if (gridPos == new Vector2Int(0, 2))
         {
             grids[3].color = color;
         }
-        else if (gridPos == new Vector2Int(3, 2))
+        else if (gridPos == new Vector2Int(1, 2))
         {
             grids[4].color = color;
         }
-        else if (gridPos == new Vector2Int(4, 2))
+        else if (gridPos == new Vector2Int(2, 2))
         {
             grids[5].color = color;
         }
-        else if (gridPos == new Vector2Int(0, 1))
+        else if (gridPos == new Vector2Int(-2, 1))
         {
             grids[6].color = color;
         }
-        else if (gridPos == new Vector2Int(1, 1))
+        else if (gridPos == new Vector2Int(-1, 1))
         {
             grids[7].color = color;
         }
-        else if (gridPos == new Vector2Int(2, 1))
+        else if (gridPos == new Vector2Int(0, 1))
         {
             grids[8].color = color;
         }
-        else if (gridPos == new Vector2Int(3, 1))
+        else if (gridPos == new Vector2Int(1, 1))
         {
             grids[9].color = color;
         }
-        else if (gridPos == new Vector2Int(4, 1))
+        else if (gridPos == new Vector2Int(2, 1))
         {
             grids[10].color = color;
         }
-        else if (gridPos == new Vector2Int(0, 0))
+        else if (gridPos == new Vector2Int(-2, 0))
         {
             grids[11].color = color;
         }
-        else if (gridPos == new Vector2Int(1, 0))
+        else if (gridPos == new Vector2Int(-1, 0))
+        {
+            grids[12].color = color;
+        }
+        else if (gridPos == new Vector2Int(0, 0))
         {
             grids[13].color = color;
         }
-        else if (gridPos == new Vector2Int(2, 0))
+        else if (gridPos == new Vector2Int(1, 0))
         {
             grids[14].color = color;
         }
-        else if (gridPos == new Vector2Int(3, 0))
+        else if (gridPos == new Vector2Int(2, 0))
         {
             grids[15].color = color;
         }
-        else if (gridPos == new Vector2Int(4, 0))
+        else if (gridPos == new Vector2Int(-2, -1))
         {
             grids[16].color = color;
         }
-        else if (gridPos == new Vector2Int(0, -1))
+        else if (gridPos == new Vector2Int(-1, -1))
         {
             grids[17].color = color;
         }
-        else if (gridPos == new Vector2Int(1, -1))
+        else if (gridPos == new Vector2Int(0, -1))
         {
             grids[18].color = color;
         }
-        else if (gridPos == new Vector2Int(2, -1))
+        else if (gridPos == new Vector2Int(1, -1))
         {
             grids[19].color = color;
         }
-        else if (gridPos == new Vector2Int(3, -1))
+        else if (gridPos == new Vector2Int(2, -1))
         {
             grids[20].color = color;
         }
-        else if (gridPos == new Vector2Int(4, -1))
+        else if (gridPos == new Vector2Int(-2, -2))
         {
             grids[21].color = color;
         }
-        else if (gridPos == new Vector2Int(0, -2))
+        else if (gridPos == new Vector2Int(-1, -2))
         {
             grids[22].color = color;
         }
-        else if (gridPos == new Vector2Int(1, -2))
+        else if (gridPos == new Vector2Int(0, -2))
         {
             grids[23].color = color;
         }
-        else if (gridPos == new Vector2Int(2, -2))
+        else if (gridPos == new Vector2Int(1, -2))
         {
             grids[24].color = color;
         }
-        else if (gridPos == new Vector2Int(3, -2))
+        else if (gridPos == new Vector2Int(2, -2))
         {
             grids[25].color = color;
-        }
-        else
-        {
-            grids[26].color = color;
         }
     }
 }

@@ -95,23 +95,29 @@ public class TurnManager : MonoBehaviour
     {
         MoveCount += i;
 
-        // MoveCount가 최대치에 도달하면 즉시 턴 전환
         if (MoveCount >= MaxMoveCount)
         {
-            switch (CurState)
-            {
-                case TurnState.PlayerTurn:
-                    CurState = TurnState.EnemyTurn;
-                    StartCoroutine(StartEnemyTurn());
-                    break;
-                case TurnState.EnemyTurn:
-                    CurState = TurnState.PlayerTurn;
-                    StartPlayerTurn();
-                    break;
-            }
+            StartCoroutine(DelayedTurnChange());
         }
     }
-    
+
+    private IEnumerator DelayedTurnChange()
+    {
+        yield return new WaitForSeconds(0.1f);
+        
+        switch (CurState)
+        {
+            case TurnState.PlayerTurn:
+                CurState = TurnState.EnemyTurn;
+                StartCoroutine(StartEnemyTurn());
+                break;
+            case TurnState.EnemyTurn:
+                CurState = TurnState.PlayerTurn;
+                StartPlayerTurn();
+                break;
+        }
+    }
+
     public void ChangeCurState(TurnState state)
     {
         CurState = state;

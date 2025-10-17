@@ -12,13 +12,19 @@ public class Player : Unit
     public BasicAttackController basicAttackController;
     public GameObject gameOver;
 
+    public enum AttackType { Melee, Ranged, Mouse }
+    public AttackType attackType;
+
     private new void Awake()
     {
         base.Awake();
 
+        // 초기 공격 타입 설정(임시)
+        attackType = AttackType.Mouse;
+
         // Unit 공통 변수 초기화
         moveTime = 0.2f;
-        wait = 0.1f;
+        wait = 0.2f;
     }
 
     private void Start()
@@ -73,6 +79,30 @@ public class Player : Unit
         if(TurnManager.instance.CurState == TurnState.PlayerTurn)
         {
             basicAttackController.AttackMelee();
+        }
+    }
+
+    private void OnAttackMouse(InputValue value)
+    {
+        if(GameManager.instance.isLive == false)
+        {
+            return;
+        }
+
+        if(TurnManager.instance.CurState == TurnState.PlayerTurn 
+            && !basicAttackController.isAttacking)
+        {
+            // 1. 마우스 스크린 좌표 가져오기
+            Vector2 mousePosition = Mouse.current.position.ReadValue();
+            
+            // 2. 스크린 좌표를 월드 좌표로 변환
+            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+            
+            // 3. 월드 좌표를 그리드 좌표로 변환
+            Vector2Int mouseGridPos = gridManager.WorldToGrid(worldPosition);
+            
+            // 4. 해당 그리드 위치에 공격 실행
+            basicAttackController.AttackMouse(mouseGridPos);
         }
     }
 
