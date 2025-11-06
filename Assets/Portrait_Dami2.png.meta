@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Portrait_Dami2_0: 6822094623350727339
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

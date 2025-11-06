@@ -98,10 +98,13 @@ public class HUD : MonoBehaviour
                 }
                 break;
             case InfoType.AttackRange:
-                foreach (var shapeTile in GameManager.instance.player.basicAttackController.shapeTiles)
+                if (GameManager.instance.player.basicAttackController != null)
                 {
-                    GridVisual(shapeTile, Color.black);
-                }
+                    foreach (var shapeTile in GameManager.instance.player.basicAttackController.shapeTiles)
+                    {
+                        GridVisual(shapeTile, Color.black);
+                    }    
+                }                
                 break;
         }
     }

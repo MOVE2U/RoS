@@ -178,7 +178,7 @@ public class BasicAttackController : MonoBehaviour
         }
 
         // 4. 동일한 타일에 이펙트 표시
-        StartCoroutine(ShowVFX(attackTiles));
+        StartCoroutine(ShowVFX(attackTiles));/*  */
 
         // 5. 공격 로직이 완료된 시점에 턴 추가. 프로토타입에선 임시로 연출 이후에 턴 추가하자.
         // TurnManager.instance.MoveCountAdd(1);
