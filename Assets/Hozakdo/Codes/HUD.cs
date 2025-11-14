@@ -45,13 +45,13 @@ public class HUD : MonoBehaviour
                 if (TurnManager.instance.CurState == TurnState.PlayerTurn)
                 {
                     float curCount = TurnManager.instance.MoveCount;
-                    float maxCount = TurnManager.instance.MaxMoveCount;
+                    float maxCount = TurnManager.instance.MaxPlayerMoveCount;
                     mySlider.value = curCount / maxCount;
                 }
                 if (TurnManager.instance.CurState == TurnState.EnemyTurn)
                 {
-                    float curCount = TurnManager.instance.MaxMoveCount - TurnManager.instance.MoveCount;
-                    float maxCount = TurnManager.instance.MaxMoveCount;
+                    float curCount = TurnManager.instance.MaxEnemyMoveCount - TurnManager.instance.MoveCount;
+                    float maxCount = TurnManager.instance.MaxEnemyMoveCount;
                     mySlider.value = curCount / maxCount;
                 }
                 break;
@@ -88,13 +88,7 @@ public class HUD : MonoBehaviour
             case InfoType.ProtoTurn:
                 if (TurnManager.instance.CurState == TurnState.PlayerTurn)
                 {
-                    myTexts[0].text = "내 턴";
-                    myTexts[1].text = string.Format("{0:F0} / {1:F0}", TurnManager.instance.MoveCount, TurnManager.instance.MaxMoveCount);
-                }
-                else if (TurnManager.instance.CurState == TurnState.EnemyTurn)
-                {
-                    myTexts[0].text = "적 턴";
-                    myTexts[1].text = string.Format("{0:F0} / {1:F0}", TurnManager.instance.MoveCount, TurnManager.instance.MaxMoveCount);
+                    myTexts[1].text = (TurnManager.instance.MaxPlayerMoveCount - TurnManager.instance.MoveCount).ToString();
                 }
                 break;
             case InfoType.AttackRange:

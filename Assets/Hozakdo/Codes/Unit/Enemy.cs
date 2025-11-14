@@ -68,11 +68,28 @@ public class Enemy : Unit, ISpawnable
     void Dead()
     {
         GridManager.instance.UnRegisterOccupant(gridPos);
-        gameObject.SetActive(false);
+        
+        // gameObject.SetActive(false) 이전에 activeEnemies.Count 체크 필요
+        // (SetActive(false) -> OnDisable -> RemoveEnemy 순서로 실행되어 Count가 변경됨)
+        bool isLastEnemy = (spawner.activeEnemies.Count == 1); // 자기 자신만 남은 경우
+        
+        gameObject.SetActive(false); // OnDisable 호출됨 -> RemoveEnemy 실행
         GameManager.instance.kill++;
         // GameManager.instance.GetExp();
-        Spawner.instance.FixedSpawn(new List<Vector2Int> { gridPos }, TurnManager.instance.coinDrop);
+        // Spawner.instance.FixedSpawn(new List<Vector2Int> { gridPos }, TurnManager.instance.coinDrop);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);
+        
+        // 모든 적이 제거되었으면 업그레이드 창 띄우기
+        if (isLastEnemy)
+        {
+            GameManager.instance.StartCoroutine(ShowUpgradePanelNextFrame());
+        }
+    }
+
+    private IEnumerator ShowUpgradePanelNextFrame()
+    {
+        yield return null; // 다음 프레임까지 대기
+        GameManager.instance.uiLevelUp.Show(0);
     }
 
     private void EnemyMoveJudge()

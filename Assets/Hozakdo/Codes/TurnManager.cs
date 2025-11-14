@@ -19,7 +19,8 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private int enemyMoveCount;
 
     // 초기값은 인스펙터에서 설정. 외부 수정은 메서드로.
-    [field: SerializeField] public int MaxMoveCount { get; private set; }
+    [field: SerializeField] public int MaxPlayerMoveCount { get; private set; }
+    [field: SerializeField] public int MaxEnemyMoveCount { get; private set; }
 
     // 초기값은 Awake에서 설정. 체크용으로 인스펙터에 노출. 외부 수정은 메서드로.
     [field: SerializeField] public TurnState CurState { get; private set; }
@@ -64,7 +65,7 @@ public class TurnManager : MonoBehaviour
     {
         MoveCount = 0;
 
-        for (int i = 1; i <= MaxMoveCount; i++)
+        for (int i = 1; i <= MaxEnemyMoveCount; i++)
         {
             // 적 이동
             float waitTime = enemyWaitTime;
@@ -95,9 +96,20 @@ public class TurnManager : MonoBehaviour
     {
         MoveCount += i;
 
-        if (MoveCount >= MaxMoveCount)
+        switch (CurState)
         {
-            StartCoroutine(DelayedTurnChange());
+            case TurnState.PlayerTurn:
+                // if (MoveCount >= MaxPlayerMoveCount)
+                // {
+                //     StartCoroutine(DelayedTurnChange());
+                // }
+                break;
+            case TurnState.EnemyTurn:
+                if (MoveCount >= MaxEnemyMoveCount)
+                {
+                    StartCoroutine(DelayedTurnChange());
+                }
+                break;
         }
     }
 
@@ -116,6 +128,11 @@ public class TurnManager : MonoBehaviour
                 StartPlayerTurn();
                 break;
         }
+    }
+
+    public void EndPlayerTurn()
+    {
+        StartCoroutine(DelayedTurnChange());
     }
 
     public void ChangeCurState(TurnState state)

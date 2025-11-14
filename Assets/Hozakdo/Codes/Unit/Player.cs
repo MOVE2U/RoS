@@ -35,7 +35,8 @@ public class Player : Unit
     private void Update()
     {
         if (TurnManager.instance.CurState == TurnState.PlayerTurn
-            && inputDir != Vector2Int.zero)
+            && inputDir != Vector2Int.zero
+            && TurnManager.instance.MaxPlayerMoveCount - TurnManager.instance.MoveCount >0)
         {
             TryMove(inputDir);
         }
@@ -76,7 +77,8 @@ public class Player : Unit
             return;
         }
 
-        if(TurnManager.instance.CurState == TurnState.PlayerTurn)
+        if(TurnManager.instance.CurState == TurnState.PlayerTurn
+            && TurnManager.instance.MaxPlayerMoveCount - TurnManager.instance.MoveCount >0)
         {
             basicAttackController.AttackMelee();
         }
@@ -90,7 +92,8 @@ public class Player : Unit
         }
 
         if(TurnManager.instance.CurState == TurnState.PlayerTurn 
-            && !basicAttackController.isAttacking)
+            && !basicAttackController.isAttacking
+            && TurnManager.instance.MaxPlayerMoveCount - TurnManager.instance.MoveCount >0)
         {
             // 1. 마우스 스크린 좌표 가져오기
             Vector2 mousePosition = Mouse.current.position.ReadValue();
