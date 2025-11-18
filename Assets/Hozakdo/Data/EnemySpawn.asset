@@ -10,10 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 450ca5d4facdf0646a2080058970c1c1, type: 3}
-  m_Name: MonsterFirst
+  m_Name: EnemySpawn
   m_EditorClassIdentifier: 
   prefab: {fileID: 126642001162263856, guid: 826c3a493db7f954e9698a1cedc1f968, type: 3}
-  spawnCounts: 05000000
-  minSpawnDistance: 3
-  maxSpawnDistance: 19
+  spawnCounts: 3
   health: 10

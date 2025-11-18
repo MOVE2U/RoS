@@ -43,7 +43,6 @@ public class Unit : MonoBehaviour
         }
 
         // 기타 활성화 시 초기화
-        gridPos = GridManager.instance.WorldToGrid(transform.position);
         isMoving = false;
         inputDir = Vector2Int.zero;
     }
@@ -59,15 +58,23 @@ public class Unit : MonoBehaviour
         // 2. 이동 성공 여부와 관계 없이 스프라이트 방향은 일단 바꿈
         SetSprite(inputDir);
 
-        // 3. 이동 방향에 뭐 있는지 검사하고 처리
+        // 3. 이동할 좌표 계산
         Vector2Int nextGridPos = gridPos + inputDir * grid;
+
+        // 4. 스테이지 경계 체크
+        if (!StageManager.instance.IsWithinBounds(nextGridPos))
+        {
+            return false;
+        }
+
+        // 5. 이동 방향에 뭐 있는지 검사하고 처리
         GameObject nextObject = GridManager.instance.GetOccupant(nextGridPos);
         if(nextObject != null)
         {
             return ObjectEncounter(nextObject, inputDir);
         }
 
-        // 4. 이동 실행
+        // 6. 이동 실행
         StartCoroutine(ExecuteMove(inputDir));
 
         return true;

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class UpgradePanel : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class UpgradePanel : MonoBehaviour
     public BasicAttackController basicAttackController;
     public Sprite[] panelImages;
     public Sprite shapeIcon;
+    public GameObject stageMoveUI;
 
     public bool isMegpie;
 
@@ -22,7 +24,7 @@ public class UpgradePanel : MonoBehaviour
         rect = GetComponent<RectTransform>();
         upgradeCards = GetComponentsInChildren<UpgradeCard>(true);
 
-        foreach(var upgradeCard in upgradeCards)
+        foreach (var upgradeCard in upgradeCards)
         {
             upgradeCard.basicAttackController = basicAttackController;
         }
@@ -33,11 +35,11 @@ public class UpgradePanel : MonoBehaviour
         Image panelImage = GetComponentsInChildren<Image>()[1];
         Text panelTitle = GetComponentsInChildren<Text>()[0];
 
-        if(index == 0)
+        if (index == 0)
         {
             isMegpie = true;
             panelImage.sprite = panelImages[0];
-            panelTitle.text = "그리기";
+            panelTitle.text = "스테이지 클리어";
         }
         else
         {
@@ -53,20 +55,12 @@ public class UpgradePanel : MonoBehaviour
         AudioManager.instance.EffectBgm(true);
     }
 
-    public void Hide()
-    {
-        rect.localScale = Vector3.zero;
-        GameManager.instance.Resume();
-        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
-        AudioManager.instance.EffectBgm(false);
-    }
-
     void Next(int index)
     {
         List<UpgradeData> finalUpgradeDatas = new List<UpgradeData>(upgradeSets[index].upgradeDatas);
 
         // 형태 업그레이드일 경우에만
-        if(index == 0)
+        if (index == 0)
         {
             var shapeCandidates = basicAttackController.GetShapeUpgradeCandidates();
             foreach (var candidate in shapeCandidates)
@@ -92,5 +86,19 @@ public class UpgradePanel : MonoBehaviour
         }
     }
 
+    public void Hide()
+    {
+        rect.localScale = Vector3.zero;
+        GameManager.instance.Resume();
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
+        AudioManager.instance.EffectBgm(false);
 
+        StartCoroutine(ShowStageMove());
+    }
+    
+    private IEnumerator ShowStageMove()
+    {
+        yield return new WaitForSeconds(0.5f);
+        stageMoveUI.SetActive(true);
+    }
 }

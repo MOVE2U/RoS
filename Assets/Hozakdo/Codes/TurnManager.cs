@@ -31,8 +31,6 @@ public class TurnManager : MonoBehaviour
     [SerializeField] private Spawner spawner;
     [SerializeField] private HUD hud;
     [SerializeField] private TutorialManager tutorialManager;
-    [SerializeField] private SpawnData monsterFirst;
-    [SerializeField] private SpawnData monsterGeneral;
     [SerializeField] private GameObject freezeNotice;
     [SerializeField] private GameObject moveAgainNotice;
     public SpawnData coinDrop;
@@ -46,19 +44,19 @@ public class TurnManager : MonoBehaviour
         MoveCount = 0;
     }
 
+    private void Update()
+    {
+        // 플레이어 턴일 때 스페이스 바를 누르면 턴 종료
+        if (CurState == TurnState.PlayerTurn && Input.GetKeyDown(KeyCode.Space))
+        {
+            EndPlayerTurn();
+        }
+    }
+
     public void StartPlayerTurn()
     {
         TurnCount++;
         MoveCount = 0;
-
-        if (TurnCount == 1)
-        {
-            spawner.RandomSpawn(TurnCount, monsterFirst);
-        }
-        else
-        {
-            spawner.RandomSpawn(TurnCount, monsterGeneral);
-        }
     }
 
     private IEnumerator StartEnemyTurn()

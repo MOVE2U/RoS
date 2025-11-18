@@ -135,6 +135,13 @@ public class Player : Unit
         while(true)
         {
             Vector2Int nextGridPos = lastEnemy.gridPos + dir * grid;
+
+            // 스테이지 경계 체크
+            if (!StageManager.instance.IsWithinBounds(nextGridPos))
+            {
+                return false;
+            }
+
             GameObject nextObject = GridManager.instance.GetOccupant(nextGridPos);
 
             // case1: 다음 칸이 비어있으면 Push 가능, 루프 종료

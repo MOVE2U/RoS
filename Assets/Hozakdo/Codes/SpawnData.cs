@@ -4,8 +4,6 @@
 public class SpawnData : ScriptableObject
 {
     public GameObject prefab;
-    public int[] spawnCounts;
-    public int minSpawnDistance;
-    public int maxSpawnDistance;
+    public int spawnCounts;
     public int health;
 }

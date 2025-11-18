@@ -88,7 +88,7 @@ public class Enemy : Unit, ISpawnable
 
     private IEnumerator ShowUpgradePanelNextFrame()
     {
-        yield return null; // 다음 프레임까지 대기
+        yield return new WaitForSeconds(1f);
         GameManager.instance.uiLevelUp.Show(0);
     }
 

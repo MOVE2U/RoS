@@ -40,9 +40,7 @@ public class GameManager : MonoBehaviour
         playerId = id;
 
         player.gameObject.SetActive(true);
-        Vector2Int playerGridPos = GridManager.instance.WorldToGrid(player.transform.position);
-        player.transform.position = GridManager.instance.GridToWorld(playerGridPos); // 蹂댁젙
-        GridManager.instance.RegisterOccupant(playerGridPos, player.gameObject); // ?깅줉
+        StageManager.instance.SetStartStage();
         Resume();
 
         AudioManager.instance.PlayBgm(true);

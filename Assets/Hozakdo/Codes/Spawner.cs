@@ -23,18 +23,16 @@ public class Spawner : MonoBehaviour
         Spawn(spawnData);
     }
 
-    public void RandomSpawn(int index, SpawnData spawnData)
+    public void RandomSpawn(SpawnData spawnData, Vector2Int minCoord, Vector2Int maxCoord)
     {
-        int count = spawnData.spawnCounts[Mathf.Min(index - 1, spawnData.spawnCounts.Length - 1)];
-        int minSpawnDistance = spawnData.minSpawnDistance;
-        int maxSpawnDistance = spawnData.maxSpawnDistance;
         GameObject prefab = spawnData.prefab;
+        int count = spawnData.spawnCounts;
 
-        GetSpawnPoints(count, minSpawnDistance, maxSpawnDistance);
+        GetSpawnPoints(count, minCoord, maxCoord);
         Spawn(spawnData);
     }
 
-    private void GetSpawnPoints(int count, int minSpawnDistance, int maxSpawnDistance)
+    private void GetSpawnPoints(int count, Vector2Int minCoord, Vector2Int maxCoord)
     {
         spawnPoints.Clear();
 
@@ -43,14 +41,16 @@ public class Spawner : MonoBehaviour
             // 1. 목표하는 개수에 도달했으면 탈출 (for문은 '시도'하는 것이기 때문에, 목표한 count의 5배로 시도한다)
             if (spawnPoints.Count >= count) break;
 
-            // 2. 랜덤 위치 생성
-            float angle = Random.Range(0f, 360f);
-            Vector3 spawnPoint = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * Random.Range(minSpawnDistance, maxSpawnDistance);
+            // 2. minCoord와 maxCoord 사이에서 랜덤 위치 생성
+            int randomX = Random.Range(minCoord.x, maxCoord.x + 1);
+            int randomY = Random.Range(minCoord.y, maxCoord.y + 1);
+            Vector2Int spawnPoint = new Vector2Int(randomX, randomY);
 
             // 3. 해당 위치가 비어있고, spawnPoints에 없다면 추가
-            if (!GridManager.instance.IsOccupant(spawnPoint) && !spawnPoints.Contains(GridManager.instance.WorldToGrid(spawnPoint)))
+            Vector3 worldPos = GridManager.instance.GridToWorld(spawnPoint);
+            if (!GridManager.instance.IsOccupant(worldPos) && !spawnPoints.Contains(spawnPoint))
             {
-                spawnPoints.Add(GridManager.instance.WorldToGrid(spawnPoint));
+                spawnPoints.Add(spawnPoint);
             }
         }
     }
