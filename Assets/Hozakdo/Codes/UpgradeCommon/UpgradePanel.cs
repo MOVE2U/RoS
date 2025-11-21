@@ -12,7 +12,6 @@ public class UpgradePanel : MonoBehaviour
     public BasicAttackController basicAttackController;
     public Sprite[] panelImages;
     public Sprite shapeIcon;
-    public GameObject stageMoveUI;
 
     public bool isMegpie;
 
@@ -93,12 +92,6 @@ public class UpgradePanel : MonoBehaviour
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
         AudioManager.instance.EffectBgm(false);
 
-        StartCoroutine(ShowStageMove());
-    }
-    
-    private IEnumerator ShowStageMove()
-    {
-        yield return new WaitForSeconds(0.5f);
-        stageMoveUI.SetActive(true);
+        StageManager.instance.ShowStageMoveUI();
     }
 }

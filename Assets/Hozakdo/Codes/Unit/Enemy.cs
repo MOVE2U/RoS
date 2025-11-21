@@ -68,28 +68,20 @@ public class Enemy : Unit, ISpawnable
     void Dead()
     {
         GridManager.instance.UnRegisterOccupant(gridPos);
-        
+
         // gameObject.SetActive(false) 이전에 activeEnemies.Count 체크 필요
         // (SetActive(false) -> OnDisable -> RemoveEnemy 순서로 실행되어 Count가 변경됨)
         bool isLastEnemy = (spawner.activeEnemies.Count == 1); // 자기 자신만 남은 경우
-        
+
         gameObject.SetActive(false); // OnDisable 호출됨 -> RemoveEnemy 실행
         GameManager.instance.kill++;
         // GameManager.instance.GetExp();
         // Spawner.instance.FixedSpawn(new List<Vector2Int> { gridPos }, TurnManager.instance.coinDrop);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);
-        
-        // 모든 적이 제거되었으면 업그레이드 창 띄우기
-        if (isLastEnemy)
-        {
-            GameManager.instance.StartCoroutine(ShowUpgradePanelNextFrame());
-        }
-    }
 
-    private IEnumerator ShowUpgradePanelNextFrame()
-    {
-        yield return new WaitForSeconds(1f);
-        GameManager.instance.uiLevelUp.Show(0);
+        // 스테이지 종료 조건 체크
+        StageManager.instance.CheckStageClear(isLastEnemy);
+
     }
 
     private void EnemyMoveJudge()
@@ -196,6 +188,21 @@ public class Enemy : Unit, ISpawnable
             {
                 StartCoroutine(StopMove(attack, attack.textureValue));
             }
+        }
+        else
+        {
+            Dead();
+        }
+    }
+
+    public void ProtoAttacked(float damage)
+    {
+        health -= damage;
+
+        if (health > 0)
+        {
+            StartCoroutine(AttackedVFX());
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
         }
         else
         {

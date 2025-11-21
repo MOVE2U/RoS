@@ -47,7 +47,7 @@ public class TurnManager : MonoBehaviour
     private void Update()
     {
         // 플레이어 턴일 때 스페이스 바를 누르면 턴 종료
-        if (CurState == TurnState.PlayerTurn && Input.GetKeyDown(KeyCode.Space))
+        if (CurState == TurnState.PlayerTurn && Input.GetKeyDown(KeyCode.Tab))
         {
             EndPlayerTurn();
         }

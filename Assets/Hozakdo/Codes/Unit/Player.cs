@@ -20,7 +20,7 @@ public class Player : Unit
         base.Awake();
 
         // 초기 공격 타입 설정(임시)
-        attackType = AttackType.Mouse;
+        attackType = AttackType.Melee;
 
         // Unit 공통 변수 초기화
         moveTime = 0.2f;
@@ -36,7 +36,8 @@ public class Player : Unit
     {
         if (TurnManager.instance.CurState == TurnState.PlayerTurn
             && inputDir != Vector2Int.zero
-            && TurnManager.instance.MaxPlayerMoveCount - TurnManager.instance.MoveCount >0)
+            && TurnManager.instance.MaxPlayerMoveCount - TurnManager.instance.MoveCount >0
+            && StageManager.instance.isStageInProgress)
         {
             TryMove(inputDir);
         }
@@ -84,30 +85,30 @@ public class Player : Unit
         }
     }
 
-    private void OnAttackMouse(InputValue value)
-    {
-        if(GameManager.instance.isLive == false)
-        {
-            return;
-        }
+    // private void OnAttackMouse(InputValue value)
+    // {
+    //     if(GameManager.instance.isLive == false)
+    //     {
+    //         return;
+    //     }
 
-        if(TurnManager.instance.CurState == TurnState.PlayerTurn 
-            && !basicAttackController.isAttacking
-            && TurnManager.instance.MaxPlayerMoveCount - TurnManager.instance.MoveCount >0)
-        {
-            // 1. 마우스 스크린 좌표 가져오기
-            Vector2 mousePosition = Mouse.current.position.ReadValue();
+    //     if(TurnManager.instance.CurState == TurnState.PlayerTurn 
+    //         && !basicAttackController.isAttacking
+    //         && TurnManager.instance.MaxPlayerMoveCount - TurnManager.instance.MoveCount >0)
+    //     {
+    //         // 1. 마우스 스크린 좌표 가져오기
+    //         Vector2 mousePosition = Mouse.current.position.ReadValue();
             
-            // 2. 스크린 좌표를 월드 좌표로 변환
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+    //         // 2. 스크린 좌표를 월드 좌표로 변환
+    //         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
             
-            // 3. 월드 좌표를 그리드 좌표로 변환
-            Vector2Int mouseGridPos = gridManager.WorldToGrid(worldPosition);
+    //         // 3. 월드 좌표를 그리드 좌표로 변환
+    //         Vector2Int mouseGridPos = gridManager.WorldToGrid(worldPosition);
             
-            // 4. 해당 그리드 위치에 공격 실행
-            basicAttackController.AttackMouse(mouseGridPos);
-        }
-    }
+    //         // 4. 해당 그리드 위치에 공격 실행
+    //         basicAttackController.AttackMouse(mouseGridPos);
+    //     }
+    // }
 
     protected override bool ObjectEncounter(GameObject obj, Vector2Int dir)
     {

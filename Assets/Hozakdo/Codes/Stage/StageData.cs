@@ -21,8 +21,6 @@ public class StageData : MonoBehaviour
     {
         if (isCurStage)
         {
-            IsVisited = true;
-
             fogBlack.SetActive(false);
             fogWhite.SetActive(false);
         }
