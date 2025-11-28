@@ -1,34 +1,28 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
-public class Enemy : Unit, ISpawnable
+public abstract class EnemyAbstract : Unit, ISpawnable
 {
-    [Header("value")]
-    [SerializeField] private float health;
-    [SerializeField] private float maxHealth;
-
     [Header("for check")]
     [SerializeField] private Vector2Int targetGridPos;
-    [SerializeField] private bool isArrived;
+    [SerializeField] protected bool isArrived;
 
     [Header("Status Condition")]
     public int pointillismStacks = 0;
     public bool canMove = true;
-
     private Player player;
     private Spawner spawner;
 
+    public abstract void ExecuteAI();
+
+    #region LifeCycle
     private new void Awake()
     {
         base.Awake();
-
-        // Unit 공통 변수 초기화
-        moveTime = 0.2f;
     }
 
-    // 초기화 - 활성화 될 때 공통
+    // 활성화 될 때
     private void OnEnable()
     {
         // 오브젝트 풀링은 OnEnable에서 초기화하기도 함. 싱글톤 참조는 비용이 적음
@@ -40,10 +34,9 @@ public class Enemy : Unit, ISpawnable
             spawner = Spawner.instance;
         spawner.AddEnemy(this);
         isMoving = false;
-        health = maxHealth;
     }
 
-    // 초기화 - 외부에서 전달받은 데이터로 세팅하는 항목
+    // 외부에서 전달받은 데이터로 세팅
     public void OnSpawn(SpawnData spawnData, Vector2Int pos)
     {
         health = spawnData.health;
@@ -57,15 +50,15 @@ public class Enemy : Unit, ISpawnable
         transform.position = new Vector3(gridPos.x, gridPos.y, 0);
     }
 
-    // 정리 - 비활성화 될 때 공통
+    // 비활성화 될 때
     private void OnDisable()
     {
         GridManager.instance.UnRegisterOccupant(gridPos);
         spawner.RemoveEnemy(this);
     }
 
-    // 정리 - 죽었을 때만 호출되는 항목
-    void Dead()
+    // 죽었을 때만 호출
+    public override void Dead()
     {
         GridManager.instance.UnRegisterOccupant(gridPos);
 
@@ -81,11 +74,17 @@ public class Enemy : Unit, ISpawnable
 
         // 스테이지 종료 조건 체크
         StageManager.instance.CheckStageClear(isLastEnemy);
-
     }
+    #endregion
 
-    private void EnemyMoveJudge()
+    #region Move
+    // 어디로 어떻게 갈지 판단 후 이동 시도
+    public void EnemyMoveJudge()
     {
+        if (!canMove) return; // canMove는 유화 효과 때문에 쓰던것. 지금은 안씀
+
+        wait = TurnManager.instance.enemyTurnDelay; // 이동 후 턴 넘김을 위한 대기 시간이라 TurnManager에서 관리
+
         GetTargetGridPos();
 
         if (!isArrived)
@@ -114,6 +113,7 @@ public class Enemy : Unit, ISpawnable
         }
     }
 
+    // 플레이어 상하좌우 중 가장 가까운 빈 칸을 목표로 설정
     private void GetTargetGridPos()
     {
         targetGridPos = Vector2Int.zero;
@@ -151,29 +151,60 @@ public class Enemy : Unit, ISpawnable
         }
     }
 
+    // 목표한 좌표로 이동할 방향을 설정
     private void GetInputDir()
     {
         Vector2Int dir = targetGridPos - gridPos;
 
-        if (UnityEngine.Random.value < 0.5f)
+        // X축과 Y축 중 0이 아닌 것만 후보로 선택
+        bool canMoveX = dir.x != 0;
+        bool canMoveY = dir.y != 0;
+
+        if (canMoveX && canMoveY)
         {
+            // 둘 다 이동 가능하면 랜덤 선택
+            if (UnityEngine.Random.value < 0.5f)
+            {
+                inputDir = new Vector2Int(Math.Sign(dir.x), 0);
+            }
+            else
+            {
+                inputDir = new Vector2Int(0, Math.Sign(dir.y));
+            }
+        }
+        else if (canMoveX)
+        {
+            // X축만 이동 가능
             inputDir = new Vector2Int(Math.Sign(dir.x), 0);
+        }
+        else if (canMoveY)
+        {
+            // Y축만 이동 가능
+            inputDir = new Vector2Int(0, Math.Sign(dir.y));
         }
         else
         {
-            inputDir = new Vector2Int(0, Math.Sign(dir.y));
+            // 둘 다 0인 경우 (이미 목표 위치에 있음)
+            inputDir = Vector2Int.zero;
         }
-
     }
 
-    // 나중에 스킬 생기면 BasicAttackController의 상위 클래스를 만들어서, 상위 클래스를 매개변수로 변경 필요
+    // 내 스크립트 안에 있는 IEnumerator만 StartCoroutine로 직접 호출할 수 있다.
+    // 아래는 Player에서 Enemy의 StartCoroutine을 호출할 필요가 있어서 별도의 메서드를 만든 것.
+    public void PushedMove(Vector2Int dir)
+    {
+        StartCoroutine(ExecuteMove(dir));
+    }
+    #endregion
+
+    #region Archive
     public void Attacked(BasicAttackController attack, float damage)
     {
         health -= damage;
 
         if (health > 0)
         {
-            StartCoroutine(AttackedVFX());
+            // StartCoroutine(base.AttackedVFX());
             AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
 
             if (attack.curTexture == TextureData.TextureType.Pointillism)
@@ -195,29 +226,6 @@ public class Enemy : Unit, ISpawnable
         }
     }
 
-    public void ProtoAttacked(float damage)
-    {
-        health -= damage;
-
-        if (health > 0)
-        {
-            StartCoroutine(AttackedVFX());
-            AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
-        }
-        else
-        {
-            Dead();
-        }
-    }
-
-    private IEnumerator AttackedVFX()
-    {
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        sr.color = new Color(1, 0.5f, 0.5f);
-        yield return new WaitForSeconds(0.15f);
-        sr.color = Color.white;
-    }
-
     public void AwakeEnemy(float shakePower)
     {
         StartCoroutine(AwakeVFX(shakePower));
@@ -225,7 +233,7 @@ public class Enemy : Unit, ISpawnable
 
     private IEnumerator AwakeVFX(float shakePower)
     {
-        if(TurnManager.instance.CurState != TurnState.PlayerTurn)
+        if (TurnManager.instance.CurState != TurnState.PlayerTurn)
         {
             yield return null;
         }
@@ -253,22 +261,6 @@ public class Enemy : Unit, ISpawnable
         transform.position = originalPos;
     }
 
-    public void AutoMove(float enemyWait)
-    {
-        if(canMove)
-        {
-            wait = enemyWait;
-            EnemyMoveJudge();
-        }
-    }
-
-    // 내 스크립트 안에 있는 IEnumerator만 StartCoroutine로 직접 호출할 수 있다.
-    // 아래는 Player에서 Enemy의 StartCoroutine을 호출할 필요가 있어서 별도의 메서드를 만든 것.
-    public void PushedMove(Vector2Int dir)
-    {
-        StartCoroutine(ExecuteMove(dir));
-    }
-
     public IEnumerator StopMove(BasicAttackController attack, float time)
     {
         canMove = false;
@@ -276,6 +268,6 @@ public class Enemy : Unit, ISpawnable
         yield return new WaitForSeconds(time);
 
         canMove = true;
-
     }
+    #endregion
 }

@@ -101,7 +101,7 @@ public class BasicAttackController : MonoBehaviour
         foreach (var attackTile in attackTiles)
         {
             GameObject obj = GridManager.instance.GetOccupant(attackTile);
-            if (obj != null && obj.TryGetComponent<Enemy>(out var enemy))
+            if (obj != null && obj.TryGetComponent<EnemyAbstract>(out var enemy))
             {
                 enemy.Attacked(this, damage);
             }
@@ -171,7 +171,7 @@ public class BasicAttackController : MonoBehaviour
         foreach (var attackTile in attackTiles)
         {
             GameObject obj = GridManager.instance.GetOccupant(attackTile);
-            if (obj != null && obj.TryGetComponent<Enemy>(out var enemy))
+            if (obj != null && obj.TryGetComponent<EnemyAbstract>(out var enemy))
             {
                 enemy.Attacked(this, damage);
             }

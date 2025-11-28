@@ -7,11 +7,13 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     [Header("value")]
-    [SerializeField] protected int grid = 1;
+    public int grid = 1;
+    public float health;
+    public float maxHealth;
 
     [Header("for check")]
     [SerializeField] protected bool isMoving;
-    [SerializeField] protected float moveTime;
+    [SerializeField] protected float moveTime; // Player는 Awake, Enemy는 개별 프리팹 인스펙터에서 설정.
     [SerializeField] protected float wait;
     [SerializeField] protected Vector2Int inputDir;
     [SerializeField] protected Vector2Int moveDir;
@@ -45,6 +47,7 @@ public class Unit : MonoBehaviour
         // 기타 활성화 시 초기화
         isMoving = false;
         inputDir = Vector2Int.zero;
+        health = maxHealth;
     }
 
     protected bool TryMove(Vector2Int inputDir)
@@ -69,7 +72,7 @@ public class Unit : MonoBehaviour
 
         // 5. 이동 방향에 뭐 있는지 검사하고 처리
         GameObject nextObject = GridManager.instance.GetOccupant(nextGridPos);
-        if(nextObject != null)
+        if (nextObject != null)
         {
             return ObjectEncounter(nextObject, inputDir);
         }
@@ -143,5 +146,35 @@ public class Unit : MonoBehaviour
         {
             spriteRenderer.sprite = spriteDown;
         }
+    }
+
+    #region Attacked
+    public void ProtoAttacked(float damage)
+    {
+        health -= damage;
+
+        if (health > 0)
+        {
+            StartCoroutine(AttackedVFX());
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Hit);
+        }
+        else
+        {
+            Dead();
+        }
+    }
+
+    private IEnumerator AttackedVFX()
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        sr.color = new Color(1, 0.5f, 0.5f);
+        yield return new WaitForSeconds(0.15f);
+        sr.color = Color.white;
+    }
+    #endregion
+
+    public virtual void Dead()
+    {
+
     }
 }

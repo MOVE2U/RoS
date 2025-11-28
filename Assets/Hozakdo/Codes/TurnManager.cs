@@ -15,12 +15,13 @@ public class TurnManager : MonoBehaviour
     public static TurnManager instance;
 
     // 초기값 인스펙터에서 설정.
-    [SerializeField] private float enemyWaitTime;
+    public float enemyTurnDelay;
     [SerializeField] private int enemyMoveCount;
 
     // 초기값은 인스펙터에서 설정. 외부 수정은 메서드로.
     [field: SerializeField] public int MaxPlayerMoveCount { get; private set; }
     [field: SerializeField] public int MaxEnemyMoveCount { get; private set; }
+    [field: SerializeField] public int MaxTurnCount { get; private set; }
 
     // 초기값은 Awake에서 설정. 체크용으로 인스펙터에 노출. 외부 수정은 메서드로.
     [field: SerializeField] public TurnState CurState { get; private set; }
@@ -55,26 +56,31 @@ public class TurnManager : MonoBehaviour
 
     public void StartPlayerTurn()
     {
-        TurnCount++;
         MoveCount = 0;
     }
 
     private IEnumerator StartEnemyTurn()
     {
+        TurnCount++;
+        if(TurnCount >= MaxTurnCount)
+        {
+            GameManager.instance.Stop();
+            GameManager.instance.player.gameOver.SetActive(true);
+        }
+
         MoveCount = 0;
 
         for (int i = 1; i <= MaxEnemyMoveCount; i++)
         {
-            // 적 이동
-            float waitTime = enemyWaitTime;
-            foreach (Enemy enemy in spawner.activeEnemies)
+            // 적 AI 실행
+            foreach (EnemyAbstract enemy in spawner.activeEnemies)
             {
                 if (enemy == null)
                 {
                     continue;
                 }
 
-                enemy.AutoMove(waitTime);
+                enemy.ExecuteAI();
             }
             yield return new WaitUntil(() => spawner.activeEnemies.TrueForAll(x => !x.IsMoving));
 

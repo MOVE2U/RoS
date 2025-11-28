@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType { MoveCount, Level, Turn, Kill, Coin, Exp, ProtoTurn, AttackRange }
+    public enum InfoType { TurnCount, Level, Turn, Kill, Coin, Exp, ProtoTurn, AttackRange }
     public InfoType type;
 
     Text myText;
@@ -28,7 +28,7 @@ public class HUD : MonoBehaviour
 
     private void Start()
     {
-        if (type != InfoType.MoveCount)
+        if (type != InfoType.TurnCount)
             return;
 
         for (int i = 1; i <= myTexts.Length; i++)
@@ -41,19 +41,8 @@ public class HUD : MonoBehaviour
     {
         switch (type)
         {
-            case InfoType.MoveCount:
-                if (TurnManager.instance.CurState == TurnState.PlayerTurn)
-                {
-                    float curCount = TurnManager.instance.MoveCount;
-                    float maxCount = TurnManager.instance.MaxPlayerMoveCount;
-                    mySlider.value = curCount / maxCount;
-                }
-                if (TurnManager.instance.CurState == TurnState.EnemyTurn)
-                {
-                    float curCount = TurnManager.instance.MaxEnemyMoveCount - TurnManager.instance.MoveCount;
-                    float maxCount = TurnManager.instance.MaxEnemyMoveCount;
-                    mySlider.value = curCount / maxCount;
-                }
+            case InfoType.TurnCount:
+                mySlider.value = (float)TurnManager.instance.TurnCount / TurnManager.instance.MaxTurnCount;
                 break;
             case InfoType.Level:
                 myText.text = string.Format("Lv.{0:F0}", GameManager.instance.level);
@@ -105,7 +94,7 @@ public class HUD : MonoBehaviour
 
     private void SetTurnColors(int index, string textColorHex, string imageColorHex)
     {
-        if (type != InfoType.MoveCount)
+        if (type != InfoType.TurnCount)
             return;
 
         if (ColorUtility.TryParseHtmlString(textColorHex, out Color textColor))

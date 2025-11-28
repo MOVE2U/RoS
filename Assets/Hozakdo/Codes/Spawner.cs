@@ -10,7 +10,7 @@ public class Spawner : MonoBehaviour
 
     private List<Vector2Int> spawnPoints = new List<Vector2Int>();
     
-    public List<Enemy> activeEnemies = new List<Enemy>();
+    public List<EnemyAbstract> activeEnemies = new List<EnemyAbstract>();
 
     private void Awake()
     {
@@ -72,7 +72,7 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    public void AddEnemy(Enemy e)
+    public void AddEnemy(EnemyAbstract e)
     {
         if (!activeEnemies.Contains(e))
         {
@@ -80,7 +80,7 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    public void RemoveEnemy(Enemy e)
+    public void RemoveEnemy(EnemyAbstract e)
     {
         activeEnemies.Remove(e);
     }

@@ -36,7 +36,7 @@ public class Player : Unit
     {
         if (TurnManager.instance.CurState == TurnState.PlayerTurn
             && inputDir != Vector2Int.zero
-            && TurnManager.instance.MaxPlayerMoveCount - TurnManager.instance.MoveCount >0
+            && TurnManager.instance.MaxPlayerMoveCount - TurnManager.instance.MoveCount > 0
             && StageManager.instance.isStageInProgress)
         {
             TryMove(inputDir);
@@ -45,14 +45,14 @@ public class Player : Unit
 
     private void OnMove(InputValue value)
     {
-        if(GameManager.instance.isLive == false)
+        if (GameManager.instance.isLive == false)
         {
             return;
         }
 
         inputVec = value.Get<Vector2>();
 
-        if(inputVec.x != 0 && Mathf.Abs(inputVec.x) >= Mathf.Abs(inputVec.y))
+        if (inputVec.x != 0 && Mathf.Abs(inputVec.x) >= Mathf.Abs(inputVec.y))
         {
             inputDir = new Vector2Int((int)Mathf.Sign(inputVec.x), 0);
             lastInputDir = inputDir;
@@ -73,13 +73,13 @@ public class Player : Unit
 
     private void OnAttack(InputValue value)
     {
-        if(GameManager.instance.isLive == false)
+        if (GameManager.instance.isLive == false)
         {
             return;
         }
 
-        if(TurnManager.instance.CurState == TurnState.PlayerTurn
-            && TurnManager.instance.MaxPlayerMoveCount - TurnManager.instance.MoveCount >0)
+        if (TurnManager.instance.CurState == TurnState.PlayerTurn
+            && TurnManager.instance.MaxPlayerMoveCount - TurnManager.instance.MoveCount > 0)
         {
             basicAttackController.AttackMelee();
         }
@@ -98,13 +98,13 @@ public class Player : Unit
     //     {
     //         // 1. 마우스 스크린 좌표 가져오기
     //         Vector2 mousePosition = Mouse.current.position.ReadValue();
-            
+
     //         // 2. 스크린 좌표를 월드 좌표로 변환
     //         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-            
+
     //         // 3. 월드 좌표를 그리드 좌표로 변환
     //         Vector2Int mouseGridPos = gridManager.WorldToGrid(worldPosition);
-            
+
     //         // 4. 해당 그리드 위치에 공격 실행
     //         basicAttackController.AttackMouse(mouseGridPos);
     //     }
@@ -126,14 +126,14 @@ public class Player : Unit
         return false;
     }
 
-    private bool TryPush(Enemy firstEnemy, Vector2Int dir)
+    private bool TryPush(EnemyAbstract firstEnemy, Vector2Int dir)
     {
         // 1. 밀어낼 적들을 수집
-        List<Enemy> pushChain = new List<Enemy>();
+        List<EnemyAbstract> pushChain = new List<EnemyAbstract>();
         pushChain.Add(firstEnemy);
-        Enemy lastEnemy = firstEnemy;
+        EnemyAbstract lastEnemy = firstEnemy;
 
-        while(true)
+        while (true)
         {
             Vector2Int nextGridPos = lastEnemy.gridPos + dir * grid;
 
@@ -152,7 +152,7 @@ public class Player : Unit
             }
 
             // case2: 다음 칸이 Enemy면 pushChain에 추가하고 계속 진행
-            else if (nextObject.TryGetComponent<Enemy>(out var nextEnemy))
+            else if (nextObject.TryGetComponent<EnemyAbstract>(out var nextEnemy))
             {
                 pushChain.Add(nextEnemy);
                 lastEnemy = nextEnemy;
@@ -208,7 +208,7 @@ public class Player : Unit
             GameObject occupant = GridManager.instance.GetOccupant(targetPos);
 
             // 4. 객체가 존재하고 Enemy 컴포넌트를 가지고 있는지 확인
-            if (occupant != null && occupant.TryGetComponent<Enemy>(out _))
+            if (occupant != null && occupant.TryGetComponent<EnemyAbstract>(out _))
             {
                 enemyAroundCount++;
             }
@@ -220,5 +220,11 @@ public class Player : Unit
             GameManager.instance.Stop();
             gameOver.SetActive(true);
         }
+    }
+
+    public override void Dead()
+    {
+        GameManager.instance.Stop();
+        gameOver.SetActive(true);
     }
 }

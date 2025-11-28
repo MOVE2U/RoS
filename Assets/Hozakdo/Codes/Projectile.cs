@@ -52,7 +52,7 @@ public class Projectile : MonoBehaviour
         this.gameObject.SetActive(false);
 
         // 4. Enemy면 대미지 적용
-        if (obj.TryGetComponent<Enemy>(out var enemy))
+        if (obj.TryGetComponent<EnemyAbstract>(out var enemy))
         {
             enemy.Attacked(basicAttackController, damage);
         }

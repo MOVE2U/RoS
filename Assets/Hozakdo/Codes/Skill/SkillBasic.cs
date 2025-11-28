@@ -11,7 +11,7 @@ public class SkillBasic : SkillAbstract
 
         // 2. 대미지 적용
         GameObject obj = GridManager.instance.GetOccupant(attackTile);
-        if (obj != null && obj.TryGetComponent<Enemy>(out var enemy))
+        if (obj != null && obj.TryGetComponent<EnemyAbstract>(out var enemy))
         {
             enemy.ProtoAttacked(damage);
         }
