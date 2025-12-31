@@ -70,6 +70,7 @@ public class TurnManager : MonoBehaviour
 
         MoveCount = 0;
 
+        // 여기서 IntentExecute 실행하고, 플레이어 패배 조건 확인. 끝나면 다음 for문 돌도록 해야함.
         for (int i = 1; i <= MaxEnemyMoveCount; i++)
         {
             // 적 AI 실행
@@ -80,9 +81,8 @@ public class TurnManager : MonoBehaviour
                     continue;
                 }
 
-                enemy.ExecuteAI();
+                enemy.IntentExecute();
             }
-            yield return new WaitUntil(() => spawner.activeEnemies.TrueForAll(x => !x.IsMoving));
 
             // 플레이어 패배 조건 확인
             GameManager.instance.player.CheckSurrounded();
@@ -93,6 +93,23 @@ public class TurnManager : MonoBehaviour
 
             // 적 이동 후 이동 횟수 증가
             MoveCountAdd(enemyMoveCount);
+        }
+
+        yield return new WaitForSeconds(2f);
+
+        for (int i = 1; i <= MaxEnemyMoveCount; i++)
+        {
+            // 적 AI 실행
+            foreach (EnemyAbstract enemy in spawner.activeEnemies)
+            {
+                if (enemy == null)
+                {
+                    continue;
+                }
+
+                enemy.IntentCalculate();
+            }
+            yield return new WaitUntil(() => spawner.activeEnemies.TrueForAll(x => !x.IsMoving));
         }
     }
 

@@ -14,12 +14,18 @@ public abstract class EnemyAbstract : Unit, ISpawnable
     private Player player;
     private Spawner spawner;
 
-    public abstract void ExecuteAI();
+    [Header("Intent")]
+    public EnemyIntent intent;
+    public EnemyIntentState intentState;
+
+    public abstract void IntentCalculate();
+    public abstract void IntentExecute();
 
     #region LifeCycle
     private new void Awake()
     {
         base.Awake();
+        intentState = EnemyIntentState.None;
     }
 
     // 활성화 될 때

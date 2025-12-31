@@ -8,26 +8,43 @@ public class TigerBasic : EnemyAbstract
     public float moveRate;
     public float skillRate;
 
-    public override void ExecuteAI()
+    public override void IntentCalculate()
     {
         // 1. 플레이어가 근접해있으면 기본 공격
         if (IsPlayerAdjacent())
         {
-            GameManager.instance.player.ProtoAttacked(baseDamage);
+            intentState = EnemyIntentState.Attack;
         }
-        // 2. 플레이어가 근접해있지 않으면 이동 또는 스킬 공격
+        // 2. 플레이어가 근접해있지 않은데 x 또는 y 좌표가 같으면 스킬 공격
+        else if (gridPos.x == GameManager.instance.player.gridPos.x || gridPos.y == GameManager.instance.player.gridPos.y)
+        {
+            intentState = EnemyIntentState.Skill;
+        }
+        // 3. 그 외엔 이동
         else
         {
-            float ran = Random.value;
+            intentState = EnemyIntentState.Move;
+        }
+    }
 
-            if (ran < moveRate)
-            {
-                EnemyMoveJudge();
-            }
-            else
-            {
+    public override void IntentExecute()
+    {
+        switch (intentState)
+        {
+            case EnemyIntentState.Attack:
+                Debug.Log("TigerAttack");
+                if (IsPlayerAdjacent())
+                {
+                    GameManager.instance.player.ProtoAttacked(baseDamage);
+                }
+                break;
+            case EnemyIntentState.Skill:
                 TigerDash();
-            }
+                break;
+            case EnemyIntentState.Move:
+                Debug.Log("TigerMove");
+                EnemyMoveJudge();
+                break;
         }
     }
 
